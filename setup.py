@@ -8,7 +8,7 @@ except ImportError:
 setup(name='splot', #name of package
       version='1.0.0dev',
       description= 'plotting for PySAL',
-      url= 'https://github.com/pysal/splot'
+      url= 'https://github.com/pysal/splot',
       maintainer= 'Serge Rey',
       maintainer_email= 'sjsrey@gmail.com',
       test_suite = 'nose.collector',
