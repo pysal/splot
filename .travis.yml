@@ -33,6 +33,8 @@ install:
   - conda install --yes --file requirements.txt
   - pip install -r requirements_dev.txt
 
+script:
+  - python setup.py sdist > /dev/null
 
 notifications:
     email:
