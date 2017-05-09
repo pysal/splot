@@ -12,7 +12,8 @@ __author__ = "Sergio Rey <sjsrey@gmail.com>", "Dani Arribas-Bel <daniel.arribas.
 
 from warnings import warn
 import pandas as pd
-import pysal as ps
+import libpysal as ps
+import mapclassify.api as mc
 import numpy as np
 import  matplotlib.pyplot as plt
 from matplotlib import colors as clrs
@@ -33,8 +34,8 @@ except:
     warn('Bokeh not installed. Functionality ' \
             'related to it will not work')
 # Classifier helper
-classifiers = ps.esda.mapclassify.CLASSIFIERS
-classifier = {c.lower():getattr(ps.esda.mapclassify,c) for c in classifiers}
+classifiers = mc.CLASSIFIERS
+classifier = {c.lower():getattr(mc,c) for c in classifiers}
 
 def value_classifier(y, scheme='Quantiles', **kwargs):
     """
@@ -411,18 +412,18 @@ def base_choropleth_classif(map_obj, values, classification='quantiles',
 
     '''
     if classification == 'quantiles':
-        classification = ps.Quantiles(values, k)
+        classification = mc.Quantiles(values, k)
         boundaries = classification.bins.tolist()
 
     if classification == 'equal_interval':
-        classification = ps.Equal_Interval(values, k)
+        classification = mc.Equal_Interval(values, k)
         boundaries = classification.bins.tolist()
 
     if classification == 'fisher_jenks':
         if sample_fisher:
-            classification = ps.esda.mapclassify.Fisher_Jenks_Sampled(values,k)
+            classification = mc.Fisher_Jenks_Sampled(values,k)
         else:
-            classification = ps.Fisher_Jenks(values,k)
+            classification = mc.Fisher_Jenks(values,k)
         boundaries = classification.bins[:]
 
     map_obj.set_alpha(0.4)
