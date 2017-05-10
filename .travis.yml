@@ -37,8 +37,8 @@ install:
 
 script:
   - python setup.py sdist > /dev/null
-  - cd notebooks
-  - make test
+#  - cd notebooks
+#  - make test
 
 notifications:
     email:
