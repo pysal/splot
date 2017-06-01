@@ -827,7 +827,7 @@ def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
             tips = []
             ds = dict(x=patch_xs, y=patch_ys)
             for k,v in col.items():
-                ds[k] = v
+                ds[k] = pd.Series(v, index=gc.index).reindex(ids)
                 tips.append((k, "@"+k))
             cds = bk.ColumnDataSource(data=ds)
             h = p.select_one(HoverTool)
