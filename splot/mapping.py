@@ -704,7 +704,7 @@ def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
     ids = []
     ## Polygons
     if geom == ps.cg.shapes.Polygon:
-        for id, shape in gc.iteritems():
+        for id, shape in gc.items():
             for ring in shape.parts:
                 xy = np.array(ring)
                 patches.append(xy)
@@ -712,7 +712,7 @@ def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
         mpl_col = PolyCollection(patches)
     ## Lines
     elif geom == ps.cg.shapes.Chain:
-        for id, shape in gc.iteritems():
+        for id, shape in gc.items():
             for xy in shape.parts:
                 patches.append(xy)
                 ids.append(id)
@@ -817,7 +817,7 @@ def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
     ## Polygons + Lines
     if (geom == ps.cg.shapes.Polygon) or \
             (geom == ps.cg.shapes.Chain):
-        for idx, shape in gc.iteritems():
+        for idx, shape in gc.items():
             for ring in shape.parts:
                 xs, ys = zip(*ring)
                 patch_xs.append(xs)
@@ -826,8 +826,8 @@ def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
         if hover and col:
             tips = []
             ds = dict(x=patch_xs, y=patch_ys)
-            for k,v in col.iteritems():
-                ds[k] = v
+            for k,v in col.items():
+                ds[k] = pd.Series(v, index=gc.index).reindex(ids)
                 tips.append((k, "@"+k))
             cds = bk.ColumnDataSource(data=ds)
             h = p.select_one(HoverTool)
