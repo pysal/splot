@@ -7,15 +7,12 @@ ToDo:
 
 """
 
-__author__ = "Sergio Rey <sjsrey@gmail.com>", "Dani Arribas-Bel <daniel.arribas.bel@gmail.com"
-
-
 from warnings import warn
 import pandas as pd
 import libpysal as ps
 import mapclassify.api as mc
 import numpy as np
-import  matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from matplotlib import colors as clrs
 import matplotlib as mpl
 from matplotlib.pyplot import fill, text
@@ -23,7 +20,9 @@ from matplotlib import cm
 from matplotlib.patches import Polygon
 import collections
 from matplotlib.path import Path
-from matplotlib.collections import LineCollection, PathCollection, PolyCollection, PathCollection, PatchCollection, CircleCollection
+from matplotlib.collections import (
+    LineCollection, PathCollection, PolyCollection, PathCollection,
+    PatchCollection, CircleCollection)
 
 from color import get_color_map
 
@@ -31,11 +30,18 @@ try:
     import bokeh.plotting as bk
     from bokeh.models import HoverTool
 except:
-    warn('Bokeh not installed. Functionality ' \
-            'related to it will not work')
+    warn('Bokeh not installed. Functionality '
+         'related to it will not work')
+
+
+__author__ = ("Sergio Rey <sjsrey@gmail.com>",
+              "Dani Arribas-Bel <daniel.arribas.bel@gmail.com")
+
+
 # Classifier helper
 classifiers = mc.CLASSIFIERS
 classifier = {c.lower():getattr(mc,c) for c in classifiers}
+
 
 def value_classifier(y, scheme='Quantiles', **kwargs):
     """
@@ -110,6 +116,7 @@ def map_point_shp(shp, which='all', bbox=None):
     #print(sc.get_axes().get_xlim())
     return sc
 
+
 def map_line_shp(shp, which='all', bbox=None):
     '''
     Create a map object from a line shape
@@ -163,6 +170,7 @@ def map_line_shp(shp, which='all', bbox=None):
     #_ = _add_axes2col(lc, bbox)
     lc.shp2dbf_row = rows
     return lc
+
 
 def map_poly_shp(shp, which='all', bbox=None):
     '''
@@ -220,7 +228,9 @@ def map_poly_shp(shp, which='all', bbox=None):
     pc.shp2dbf_row = rows
     return pc
 
+
 # Mid-level pieces
+
 
 def setup_ax(polyCos_list, bboxs, ax=None):
     '''
@@ -253,14 +263,15 @@ def setup_ax(polyCos_list, bboxs, ax=None):
         polyCo.axes.set_xlim((bbox[0], bbox[2]))
         polyCo.axes.set_ylim((bbox[1], bbox[3]))
     abboxs = np.array(bboxs)
-    ax.set_xlim((abboxs[:, 0].min(), \
+    ax.set_xlim((abboxs[:, 0].min(),
                  abboxs[:, 2].max()))
-    ax.set_ylim((abboxs[:, 1].min(), \
+    ax.set_ylim((abboxs[:, 1].min(),
                  abboxs[:, 3].max()))
     ax.set_frame_on(False)
     ax.axes.get_yaxis().set_visible(False)
     ax.axes.get_xaxis().set_visible(False)
     return ax
+
 
 def _add_axes2col(col, bbox):
     """
