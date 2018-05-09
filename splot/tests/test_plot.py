@@ -1,7 +1,10 @@
 import matplotlib.pyplot as plt
 import pysal as ps
+from libpysal.api import queen_from_shapefile
+from esda.moran import Moran
 from pysal.contrib.pdio import read_files
-from pysal.contrib.viz.plot import mplot
+
+from splot.plot import mplot
 
 
 def test_mplot():
@@ -9,10 +12,10 @@ def test_mplot():
 
     db = read_files(link)
     y = db['HOVAL'].values
-    w = ps.queen_from_shapefile(link)
+    w = queen_from_shapefile(link)
     w.transform = 'R'
 
-    m = ps.Moran(y, w)
+    m = Moran(y, w)
 
     fig = mplot(m, xlabel='Response', ylabel='Spatial Lag',
                 title='Moran Scatterplot', custom=(7,7))
