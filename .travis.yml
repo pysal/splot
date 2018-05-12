@@ -4,16 +4,8 @@ branches:
 only:
   - master
 python:
-  - "2.7"
   - "3.5"
-
-allow_failures:
-    python:
-        - 3.6
-
-env:
-  - PYSAL_PLUS=false
-  - PYSAL_PLUS=true
+  - "3.6"
 
 before_install:
   - wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
@@ -32,11 +24,13 @@ install:
   - conda install --yes pip
   - conda install --yes --file requirements.txt
   - pip install libpysal
+  - pip install esda
   - pip install mapclassify
   - pip install -r requirements_dev.txt
+  - pip install .
 
 script:
-  - python setup.py sdist > /dev/null
+  - nosetests splot
 #  - cd notebooks
 #  - make test
 
