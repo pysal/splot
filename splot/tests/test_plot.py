@@ -1,14 +1,14 @@
 import matplotlib.pyplot as plt
-import pysal as ps
+import libpysal
 from libpysal.api import queen_from_shapefile
 from esda.moran import Moran
-from pysal.contrib.pdio import read_files
+from libpysal.io.geotable import read_files
 
 from splot.plot import mplot
 
 
 def test_mplot():
-    link = ps.examples.get_path('columbus.shp')
+    link = libpysal.examples.get_path('columbus.shp')
 
     db = read_files(link)
     y = db['HOVAL'].values
