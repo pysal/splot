@@ -30,6 +30,10 @@ install:
   - pip install mapclassify
   - pip install -r requirements_dev.txt
   - pip install .
+  # We need the Agg backend to use Matplotlib on TravisCI, otherwise
+  # we get an error "DISPLAY variable not set"
+  - cp utils/matplotlibrc .
+
 
 script:
   - nosetests splot
