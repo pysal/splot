@@ -29,6 +29,6 @@ setup(name='splot', #name of package
       license='3-Clause BSD',
       packages=[],
       install_requires=['numpy', 'scipy', 'libpysal', 'mapclassify', 'palettable',
-                        'esda',],
+                        'esda', 'pysal',],
       zip_safe=False,
       cmdclass = {'build.py':build_py})

@@ -24,6 +24,8 @@ install:
   - conda install --yes pip
   - conda install --yes --file requirements.txt
   - pip install libpysal
+  # Pysal still needed for code not yet moved to libpysal
+  - pip install pysal
   - pip install esda
   - pip install mapclassify
   - pip install -r requirements_dev.txt
