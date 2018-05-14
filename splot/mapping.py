@@ -24,7 +24,7 @@ from matplotlib.collections import (
     LineCollection, PathCollection, PolyCollection, PathCollection,
     PatchCollection, CircleCollection)
 
-from color import get_color_map
+from .color import get_color_map
 
 try:
     import bokeh.plotting as bk
@@ -722,7 +722,7 @@ def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
     ids = []
     # Polygons
     if geom == ps.cg.shapes.Polygon:
-        for id, shape in gc.items():
+        for id, shape in list(gc.items()):
             for ring in shape.parts:
                 xy = np.array(ring)
                 patches.append(xy)
@@ -730,7 +730,7 @@ def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
         mpl_col = PolyCollection(patches)
     # Lines
     elif geom == ps.cg.shapes.Chain:
-        for id, shape in gc.items():
+        for id, shape in list(gc.items()):
             for xy in shape.parts:
                 patches.append(xy)
                 ids.append(id)
@@ -739,7 +739,7 @@ def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
     # Points
     elif geom == ps.cg.shapes.Point:
         edgecolor = facecolor
-        xys = np.array(zip(*gc)).T
+        xys = np.array(list(zip(*gc))).T
         ax.scatter(xys[:, 0], xys[:, 1], marker=marker,
                    s=marker_size, c=facecolor, edgecolors=edgecolor,
                    linewidths=linewidth)
@@ -839,16 +839,16 @@ def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
     # Polygons + Lines
     if (geom == ps.cg.shapes.Polygon) or \
             (geom == ps.cg.shapes.Chain):
-        for idx, shape in gc.items():
+        for idx, shape in list(gc.items()):
             for ring in shape.parts:
-                xs, ys = zip(*ring)
+                xs, ys = list(zip(*ring))
                 patch_xs.append(xs)
                 patch_ys.append(ys)
                 ids.append(idx)
         if hover and col:
             tips = []
             ds = dict(x=patch_xs, y=patch_ys)
-            for k,v in col.items():
+            for k,v in list(col.items()):
                 ds[k] = pd.Series(v, index=gc.index).reindex(ids)
                 tips.append((k, "@"+k))
             cds = bk.ColumnDataSource(data=ds)
@@ -887,7 +887,7 @@ def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
     # Points
     elif geom == ps.cg.shapes.Point:
         edgecolor = facecolor
-        xys = np.array(zip(*gc)).T
+        xys = np.array(list(zip(*gc))).T
         cds = bk.ColumnDataSource(data=dict(
                     x=xys[:, 0],
                     y=xys[:, 1]

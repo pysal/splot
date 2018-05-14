@@ -171,7 +171,7 @@ def choropleth_map(jsonpath, key, attribute, df = None,
     
     #centroid search
     if centroid is None:
-        if 'bbox' in sjson.keys():
+        if 'bbox' in list(sjson.keys()):
             bbox = sjson.bbox
         bbox = bboxsearch(sjson)
         xs = sum([bbox[0], bbox[2]])/2.
@@ -227,7 +227,7 @@ def choropleth_map(jsonpath, key, attribute, df = None,
         elif classification == 'Standard Deviation':
             if bins == None:
                 l = classes / 2
-                bins = range(-l, l+1)
+                bins = list(range(-l, l+1))
                 mapclass = list(ps.Std_Mean(y, bins).bins)
             else:
                 mapclass = list(ps.Std_Mean(y, bins).bins)
