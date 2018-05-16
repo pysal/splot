@@ -88,7 +88,7 @@ def mplot(m, xlabel='', ylabel='', title='', figsize=(7,7), p=None, ax=None):
 
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
-    fig.suptitle(title)
+    ax.set_title(title)
 
     if p is not None:
         ax.scatter(m.z, lag, c=spots, cmap=hmap, s=60)
