@@ -7,19 +7,21 @@ __author__ = "Marynia Kolak <marynia.kolak@gmail.com>"
 import pandas as pd
 import numpy as np
 import pysal as ps
+import esda
 import matplotlib.pyplot as plt
+from matplotlib import colors
 
 
 __all__ = ['mplot']
 
 
-def mplot(m, xlabel='', ylabel='', title='', custom=(7,7)):
+def mplot(m, xlabel='', ylabel='', title='', figsize=(7,7), p=None, ax=None):
     """
     Produce basic Moran Plot 
 
     Parameters
     ----------
-    m : pysal.Moran instance
+    m : esda.moran.Moran or esda.moran.Moran_Local instance
         values of Moran's I Global Autocorrelation Statistic
     xlabel : str
         label for x axis
@@ -27,8 +29,13 @@ def mplot(m, xlabel='', ylabel='', title='', custom=(7,7)):
         label for y axis
     title : str
         title of plot
-    custom : tuple
+    figsize : tuple
         dimensions of figure size
+    p : float
+        If given, the p-value threshold for significance.  Points will
+        be colored by significance.  By default it will not be colored. 
+    ax : Matplotlib Axes instance, optional
+        If given, the Moran plot will be created inside this axis.
 
     Returns
     -------
@@ -39,8 +46,9 @@ def mplot(m, xlabel='', ylabel='', title='', custom=(7,7)):
     --------
     >>> import matplotlib.pyplot as plt
     >>> import pysal as ps
+    >>> import esda
     >>> from pysal.contrib.pdio import read_files
-    >>> from pysal.contrib.viz.plot import mplot
+    >>> from splot.plot import mplot
 
     >>> link = ps.examples.get_path('columbus.shp')
     >>> db = read_files(link)
@@ -48,9 +56,9 @@ def mplot(m, xlabel='', ylabel='', title='', custom=(7,7)):
     >>> w = ps.queen_from_shapefile(link)
     >>> w.transform = 'R'
 
-    >>> m = ps.Moran(y, w)
+    >>> m = esda.moran.Moran_Local(y, w)
     >>> mplot(m, xlabel='Response', ylabel='Spatial Lag',
-    ...       title='Moran Scatterplot', custom=(7,7))
+    ...       title='Moran Scatterplot', figsize=(7,7), p=0.05)
 
     >>> plt.show()
             
@@ -58,18 +66,38 @@ def mplot(m, xlabel='', ylabel='', title='', custom=(7,7)):
     lag = ps.lag_spatial(m.w, m.z)
     fit = ps.spreg.OLS(m.z[:, None], lag[:,None])
 
+    if p is not None:
+        if not isinstance(m, esda.moran.Moran_Local):
+            raise ValueError("`m` is not a Moran_Local instance")
+
+        sig = 1 * (m.p_sim < p)
+        HH = 1 * (sig * m.q==1)
+        LL = 3 * (sig * m.q==3)
+        LH = 2 * (sig * m.q==2)
+        HL = 4 * (sig * m.q==4)
+        spots = HH + LL + LH + HL       
+
+        hmap = colors.ListedColormap([ 'lightgrey', 'red', 'lightblue', 'blue', 'pink'])
+
     # Customize plot
-    fig = plt.figure(figsize=custom)
-    ax = fig.add_subplot(111)
+    if ax is None:
+        fig = plt.figure(figsize=figsize)
+        ax = fig.add_subplot(111)
+    else:
+        fig = ax.get_figure()
 
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     fig.suptitle(title)
 
-    ax.scatter(m.z, lag, s=60, color='k', alpha=.6)
-    ax.plot(lag, fit.predy, color='r')
+    if p is not None:
+        ax.scatter(m.z, lag, c=spots, cmap=hmap, s=60)
+    else:
+        ax.scatter(m.z, lag, s=60, color='k', alpha=.6)
 
-    ax.axvline(0, alpha=0.5)
-    ax.axhline(0, alpha=0.5)
+    ax.plot(lag, fit.predy, color='k', alpha=.8)
+
+    ax.axvline(0, alpha=0.5, linestyle='--')
+    ax.axhline(0, alpha=0.5, linestyle='--')
 
     return fig
