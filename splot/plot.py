@@ -15,13 +15,14 @@ from matplotlib import colors
 __all__ = ['mplot']
 
 
-def mplot(m, xlabel='', ylabel='', title='', figsize=(7,7), p=None, ax=None):
+def mplot(m, xlabel='', ylabel='', title='', figsize=(7,7), p=None, ax=None,
+          alpha=0.6):
     """
     Produce basic Moran Plot 
 
     Parameters
     ----------
-    m : esda.moran.Moran or esda.moran.Moran_Local instance
+    m : esda.moran.Moran_Local instance
         values of Moran's I Global Autocorrelation Statistic
     xlabel : str
         label for x axis
@@ -99,9 +100,9 @@ def mplot(m, xlabel='', ylabel='', title='', figsize=(7,7), p=None, ax=None):
     ax.set_title(title)
 
     if p is not None:
-        ax.scatter(m.z, lag, c=spots, cmap=hmap, s=60)
+        ax.scatter(m.z, lag, c=spots, cmap=hmap, s=60, alpha=alpha)
     else:
-        ax.scatter(m.z, lag, s=60, color='k', alpha=.6)
+        ax.scatter(m.z, lag, s=60, color='k', alpha=alpha)
 
     ax.plot(lag, fit.predy, color='k', alpha=.8)
 
