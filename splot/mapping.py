@@ -15,14 +15,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import colors as clrs
 import matplotlib as mpl
-from matplotlib.pyplot import fill, text
 from matplotlib import cm
-from matplotlib.patches import Polygon
 import collections
-from matplotlib.path import Path
 from matplotlib.collections import (
-    LineCollection, PathCollection, PolyCollection, PathCollection,
-    PatchCollection, CircleCollection)
+    LineCollection, PolyCollection)
 
 from .color import get_color_map
 

@@ -4,8 +4,6 @@ Canned Views using PySAL and Matplotlib
 
 __author__ = "Marynia Kolak <marynia.kolak@gmail.com>"
 
-import pandas as pd
-import numpy as np
 import pysal as ps
 import esda
 import matplotlib.pyplot as plt
