@@ -1,3 +1,10 @@
+"""
+Lightweight visualizations for pysal using Matplotlib and Geopandas
+
+TODO
+add Examples
+change function input naming to be in line with bokeh functionality
+"""
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 
 import matplotlib.pyplot as plt
@@ -64,7 +71,8 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, region_column=N
                                mask=None, mask_color='gold', quadrant=None,
                                figsize=(15, 4), legend=True, scheme='Quantiles', cmap='GnBu'):
     '''
-    Produce three-plot visualization with Moran region and quadrant masking
+    Produce three-plot visualization of Moran Scatteprlot, LISA cluster
+    and Choropleth, with Local Moran region and quadrant masking
     
     Parameters
     ----------

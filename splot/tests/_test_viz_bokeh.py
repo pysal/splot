@@ -4,10 +4,10 @@ from libpysal import examples
 import geopandas as gpd
 import esda
 
-from splot._viz_bokeh import (plot_choropleth_bokeh, lisa_cluster_bokeh,
-                              mplot_bokeh, three_plot_bokeh)
+from splot._viz_bokeh import (plot_choropleth, lisa_cluster,
+                              mplot, plot_local_autocorrelation)
 
-def test_plot_choropleth_bokeh():
+def test_plot_choropleth():
     link = examples.get_path('columbus.shp')
     df = gpd.read_file(link)
 
@@ -15,12 +15,12 @@ def test_plot_choropleth_bokeh():
     w.transform = 'r'
 
     TOOLS = "tap,help"
-    fig = plot_choropleth_bokeh(df, 'HOVAL', title='columbus',
-                                reverse_colors=True, tools=TOOLS)
+    fig = plot_choropleth(df, 'HOVAL', title='columbus',
+                          reverse_colors=True, tools=TOOLS)
     plt.close(fig)
 
 
-def test_lisa_cluster_bokeh():
+def test_lisa_cluster():
     link = examples.get_path('columbus.shp')
     df = gpd.read_file(link)
 
@@ -31,11 +31,11 @@ def test_lisa_cluster_bokeh():
     moran_loc = esda.moran.Moran_Local(y, w)
 
     TOOLS = "tap,reset,help"
-    fig = lisa_cluster_bokeh(moran_loc, df, p=0.05, tools=TOOLS)
+    fig = lisa_cluster(moran_loc, df, p=0.05, tools=TOOLS)
     plt.close(fig)
 
 
-def test_mplot_bokeh():
+def test_mplot():
     link = examples.get_path('columbus.shp')
     df = gpd.read_file(link)
 
@@ -45,11 +45,11 @@ def test_mplot_bokeh():
 
     moran_loc = esda.moran.Moran_Local(y, w)
 
-    fig = mplot_bokeh(moran_loc, p=0.05)
+    fig = mplot(moran_loc, p=0.05)
     plt.close(fig)
 
 
-def test_three_plot_bokeh():
+def test_plot_local_autocorrelation():
     link = examples.get_path('columbus.shp')
     df = gpd.read_file(link)
 
@@ -59,5 +59,5 @@ def test_three_plot_bokeh():
 
     moran_loc = esda.moran.Moran_Local(y, w)
 
-    fig = three_plot_bokeh(moran_loc, df, 'HOVAL')
+    fig = plot_local_autocorrelation(moran_loc, df, 'HOVAL')
     plt.close(fig)

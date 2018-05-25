@@ -1,7 +1,10 @@
 """ 
 Leightweight interactive visualizations in Bokeh.
 
-TODO: fix lisa_cluster_bokeh, mplot_bokeh coloring labels """
+TODO: 
+fix lisa_cluster_bokeh, 
+mplot_bokeh coloring labels 
+add Examples"""
 
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 
@@ -16,7 +19,7 @@ from ._viz_utils import (bin_labels_choropleth, add_legend,
                          mask_local_auto)
 
 
-def plot_choropleth_bokeh(df, attribute, title=None, plot_width=500,
+def plot_choropleth(df, attribute, title=None, plot_width=500,
                         plot_height=500, method='quantiles',
                         k=5, reverse_colors=False, tools=''):
     '''
@@ -87,7 +90,7 @@ def plot_choropleth_bokeh(df, attribute, title=None, plot_width=500,
     return fig
 
 
-def lisa_cluster_bokeh(moran_loc, df, p=0.05, title=None, plot_width=500,
+def lisa_cluster(moran_loc, df, p=0.05, title=None, plot_width=500,
                      plot_height=500, tools=''): 
     '''
     Lisa Cluster map, coloured by local spatial autocorrelation
@@ -148,7 +151,7 @@ def lisa_cluster_bokeh(moran_loc, df, p=0.05, title=None, plot_width=500,
     return fig
 
 
-def mplot_bokeh(moran_loc, p=None, plot_width=500, plot_height=500, tools=''): 
+def mplot(moran_loc, p=None, plot_width=500, plot_height=500, tools=''): 
     '''
     Moran Scatterplot, optional coloured by local spatial autocorrelation
     
@@ -203,9 +206,11 @@ def mplot_bokeh(moran_loc, p=None, plot_width=500, plot_height=500, tools=''):
     return fig
 
 
-def three_plot_bokeh(moran_loc, df, attribute, p=0.05, plot_width=300, plot_height=300,
+def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, plot_width=300, plot_height=300,
                      reverse_colors=False):
-    """Plot Choropleth colored according to attribute
+    """
+    Plot Moran Scatterplot, LISA cluster and Choropleth
+    for Local Spatial Autocorrelation Analysis
     
     Parameters
     ----------
@@ -239,9 +244,9 @@ def three_plot_bokeh(moran_loc, df, attribute, p=0.05, plot_width=300, plot_heig
     """
     TOOLS = "tap,reset,help"
     
-    scatter = mplot_bokeh(moran_loc, p=p, plot_width=plot_width, plot_height=plot_height, tools=TOOLS)
-    LISA = lisa_cluster_bokeh(moran_loc, df, p=p, plot_width=plot_width, plot_height=plot_height, tools=TOOLS)
-    choro = plot_choropleth_bokeh(df, attribute, reverse_colors=reverse_colors, plot_width=plot_width, plot_height=plot_height,
+    scatter = mplot(moran_loc, p=p, plot_width=plot_width, plot_height=plot_height, tools=TOOLS)
+    LISA = lisa_cluster(moran_loc, df, p=p, plot_width=plot_width, plot_height=plot_height, tools=TOOLS)
+    choro = plot_choropleth(df, attribute, reverse_colors=reverse_colors, plot_width=plot_width, plot_height=plot_height,
                                 tools=TOOLS)
     
     fig = gridplot([[scatter, LISA, choro]])
