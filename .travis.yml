@@ -31,7 +31,9 @@ install:
   - pip install esda
   - pip install mapclassify
   - pip install -r requirements_dev.txt
-  - pip install .
+  # Now install splot (don't use 'pip install .', we'll run out of space)
+  - python setup.py sdist
+  - cd dist && pip install splot-*.tar.gz && cd ..
   # We need the Agg backend to use Matplotlib on TravisCI, otherwise
   # we get an error "DISPLAY variable not set"
   - cp utils/matplotlibrc .
