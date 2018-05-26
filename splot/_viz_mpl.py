@@ -124,7 +124,9 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, region_column=N
     
     #Choropleth for attribute
     df.plot(column=attribute, scheme=scheme, cmap=cmap,
-            legend=legend, legend_kwds={'loc': 'upper left', 'bbox_to_anchor': (0.92, 1.05)}, ax=axs[2], alpha=1)
+            legend=legend, legend_kwds={'loc': 'upper left',
+                                        'bbox_to_anchor': (0.92, 1.05)},
+            ax=axs[2], alpha=1)
     axs[2].set_axis_off()
     
     #MASKING QUADRANT VALUES
