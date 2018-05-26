@@ -49,8 +49,17 @@ def mask_local_auto(moran_loc, df=None, p=0.5):
     if df is not None:
         df['labels'] = np.array(labels)
 
-    colors5 = (['lightgrey', 'red', 'lightblue', 'blue', 'pink'])
-    colors = [colors5[i] for i in cluster]
+    colors5 = {0: 'lightgrey',
+               1: 'red',
+               2: 'lightblue',
+               3: 'blue',
+               4: 'pink'}
+    colors = [colors5[i] for i in cluster]  # for Bokeh
+    # for MPL:
+    colors5 = (['red', 'pink', 'lightblue', 'blue', 'lightgrey'])
+
+    # HACK need this, because MPL sorts these labels while Bokeh does not
+    cluster_labels.sort()
     return cluster_labels, colors5, colors, labels
 
 

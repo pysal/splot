@@ -206,8 +206,9 @@ def mplot(moran_loc, p=None, plot_width=500, plot_height=500, tools=''):
     return fig
 
 
-def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, plot_width=300, plot_height=300,
-                     reverse_colors=False):
+def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, plot_width=250,
+                               plot_height=300,
+                               reverse_colors=False):
     """
     Plot Moran Scatterplot, LISA cluster and Choropleth
     for Local Spatial Autocorrelation Analysis
@@ -222,10 +223,10 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, plot_width=300,
         Name of column containing attribute values of interest.
     plot_width : int, optional
         Width dimension of the figure in screen units/ pixels.
-        Default = 500
+        Default = 250
     plot_height : int, optional
         Height dimension of the figure in screen units/ pixels.
-        Default = 500
+        Default = 300
     method : str, optional
         Classification method to be used. Options supported:
         * 'quantiles' (default)
@@ -249,5 +250,6 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, plot_width=300,
     choro = plot_choropleth(df, attribute, reverse_colors=reverse_colors, plot_width=plot_width, plot_height=plot_height,
                                 tools=TOOLS)
     
-    fig = gridplot([[scatter, LISA, choro]])
+    fig = gridplot([[scatter, LISA, choro]],
+                   sizing_mode='scale_width')
     return fig

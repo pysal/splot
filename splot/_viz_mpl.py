@@ -127,6 +127,41 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, region_column=N
             legend=legend, legend_kwds={'loc': 'upper left', 'bbox_to_anchor': (0.92, 1.05)}, ax=axs[2], alpha=1)
     axs[2].set_axis_off()
     
+    #MASKING QUADRANT VALUES
+    if quadrant is not None:
+        #Quadrant masking in Scatterplot
+        mask_angles = {1: 0, 2: 90, 3: 180, 4: 270} #rectangle angles
+        # We don't want to change the axis data limits, so use the current ones
+        xmin, xmax = axs[0].get_xlim()
+        ymin, ymax = axs[0].get_ylim()
+        # We are rotating, so we start from 0 degrees and 
+        # figured out the right dimensions for the rectangles for other angles
+        mask_width = {1: abs(xmax),
+                      2: abs(ymax),
+                      3: abs(xmin),
+                      4: abs(ymin)}
+        mask_height = {1: abs(ymax),
+                      2: abs(xmin),
+                      3: abs(ymin),
+                      4: abs(xmax)}
+        axs[0].add_patch(patches.Rectangle((0,0), width=mask_width[quadrant],
+                                           height=mask_height[quadrant],
+                                           angle=mask_angles[quadrant],
+                                           color='grey', zorder=-1, alpha=0.8))
+        # quadrant selection in maps
+        non_quadrant = ~(moran_loc.q==quadrant)
+        mask_quadrant = df[non_quadrant]
+        df_quadrant = df.iloc[moran_loc.q == quadrant] 
+        union2 = df_quadrant.unary_union.boundary
+        
+        # LISA Cluster mask and cluster boundary
+        mask_quadrant.plot(column=attribute, scheme=scheme, color='white', ax=axs[1], alpha=0.7, zorder=1)
+        gpd.GeoSeries([union2]).plot(linewidth=2, ax=axs[1], color='darkgrey')
+        
+        #CHOROPLETH MASK
+        mask_quadrant.plot(column=attribute, scheme=scheme, color='white', ax=axs[2], alpha=0.7, zorder=1)
+        gpd.GeoSeries([union2]).plot(linewidth=2, ax=axs[2], color='darkgrey')
+    
     # REGION MASKING
     if region_column is not None:
         # masking inside axs[0] or Moran Scatterplot
@@ -144,24 +179,4 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, region_column=N
         
         #masking inside axs[2] or Chloropleth
         gpd.GeoSeries([union]).plot(linewidth=2, ax=axs[2], color=mask_color)
-    
-    #MASKING QUADRANT VALUES
-    if quadrant is not None:
-        #Quadrant masking in Scatterplot
-        mask_angles = {1: 0, 2: 90, 3: 180, 4: 270} #rectangle angles
-        axs[0].add_patch(patches.Rectangle((0,0), width=50, height=50, angle=mask_angles[quadrant],
-                                           color='grey', zorder=-1, alpha=0.8))
-        # quadrant selection in maps
-        non_quadrant = ~(moran_loc.q==quadrant)
-        mask_quadrant = df[non_quadrant]
-        df_quadrant = df.iloc[moran_loc.q == quadrant] 
-        union2 = df_quadrant.unary_union.boundary
-        
-        # LISA Cluster mask and cluster boundary
-        mask_quadrant.plot(column=attribute, scheme=scheme, color='white', ax=axs[1], alpha=0.7, zorder=1)
-        gpd.GeoSeries([union2]).plot(linewidth=2, ax=axs[1], color='darkgrey')
-        
-        #CHOROPLETH MASK
-        mask_quadrant.plot(column=attribute, scheme=scheme, color='white', ax=axs[2], alpha=0.7, zorder=1)
-        gpd.GeoSeries([union2]).plot(linewidth=2, ax=axs[2], color='darkgrey')
     return fig
