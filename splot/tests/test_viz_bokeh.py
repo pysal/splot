@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import libpysal.api as lp
 from libpysal import examples
 import geopandas as gpd
@@ -18,7 +17,6 @@ def test_plot_choropleth():
     TOOLS = "tap,help"
     fig = plot_choropleth(df, 'HOVAL', title='columbus',
                           reverse_colors=True, tools=TOOLS)
-    plt.close(fig)
 
 
 def test_lisa_cluster():
@@ -33,7 +31,6 @@ def test_lisa_cluster():
 
     TOOLS = "tap,reset,help"
     fig = lisa_cluster(moran_loc, df, p=0.05, tools=TOOLS)
-    plt.close(fig)
 
 
 def test_mplot():
@@ -47,7 +44,6 @@ def test_mplot():
     moran_loc = esda.moran.Moran_Local(y, w)
 
     fig = mplot(moran_loc, p=0.05)
-    plt.close(fig)
 
 
 def test_plot_local_autocorrelation():
@@ -61,4 +57,3 @@ def test_plot_local_autocorrelation():
     moran_loc = esda.moran.Moran_Local(y, w)
 
     fig = plot_local_autocorrelation(moran_loc, df, 'HOVAL')
-    plt.close(fig)
