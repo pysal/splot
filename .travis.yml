@@ -29,6 +29,8 @@ install:
   - pip install esda
   - pip install mapclassify
   - pip install -r requirements_dev.txt
+  # We need geopandas master, the legend_kwds is not in 0.3.0
+  - pip install git+https://github.com/geopandas/geopandas.git
   - pip install .
   # We need the Agg backend to use Matplotlib on TravisCI, otherwise
   # we get an error "DISPLAY variable not set"
