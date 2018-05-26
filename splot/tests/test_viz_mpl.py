@@ -31,11 +31,11 @@ def test_plot_local_auto():
 
     moran_loc = esda.moran.Moran_Local(y, w)
 
-    fig = plot_local_autocorrelation(moran_loc, df, y, p=0.05)
+    fig = plot_local_autocorrelation(moran_loc, df, 'HOVAL', p=0.05)
     plt.close(fig)
     
     # also test with quadrant and mask
-    fig = plot_local_autocorrelation(moran_loc, df, y, p=0.05,
+    fig = plot_local_autocorrelation(moran_loc, df, 'HOVAL', p=0.05,
                                      region_column='POLYID',
                                      mask=['1', '2', '3'], quadrant=1)
     plt.close(fig)

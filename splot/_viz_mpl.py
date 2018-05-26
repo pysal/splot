@@ -10,7 +10,7 @@ __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 import matplotlib.pyplot as plt
 import geopandas as gpd
 import pysal as ps
-import splot
+import splot.plot
 
 from matplotlib import patches, colors
 
