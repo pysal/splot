@@ -4,8 +4,8 @@ from libpysal import examples
 import geopandas as gpd
 import esda
 
-from splot.bokeh import (plot_choropleth, lisa_cluster,
-                         mplot, plot_local_autocorrelation)
+from splot.bk import (plot_choropleth, lisa_cluster,
+                      mplot, plot_local_autocorrelation)
 
 
 def test_plot_choropleth():

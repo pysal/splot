@@ -251,5 +251,5 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, plot_width=250,
                                 tools=TOOLS)
     
     fig = gridplot([[scatter, LISA, choro]],
-                   sizing_mode='scale_width')
+                   sizing_mode='fixed')
     return fig
