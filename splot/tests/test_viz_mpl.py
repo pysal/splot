@@ -4,7 +4,8 @@ from libpysal import examples
 import geopandas as gpd
 import esda
 
-from splot._viz_mpl import (plot_local_autocorrelation, lisa_cluster)
+from splot.mpl import plot_local_autocorrelation, lisa_cluster
+
 
 def test_lisa_cluster():
     link = examples.get_path('columbus.shp')
