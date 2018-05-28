@@ -54,6 +54,25 @@ def plot_choropleth(df, attribute, title=None, plot_width=500,
     -------
     fig : Bokeh Figure instance
         Figure of Choropleth
+    
+    Examples
+    --------
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> import geopandas as gpd
+    >>> import esda
+    >>> from splot.bk import plot_choropleth
+    >>> from bokeh.io import show
+
+    >>> link = examples.get_path('columbus.shp')
+    >>> df = gpd.read_file(link)
+    >>> w = lp.Queen.from_dataframe(df)
+    >>> w.transform = 'r'
+
+    >>> TOOLS = "tap,help"
+    >>> fig = plot_choropleth(df, 'HOVAL', title='columbus',
+    ...                       reverse_colors=True, tools=TOOLS)
+    >>> show(fig) 
     '''
     # We're adding columns, do that on a copy rather than on the users' input
     df = df.copy()
@@ -122,6 +141,23 @@ def lisa_cluster(moran_loc, df, p=0.05, title=None, plot_width=500,
 
     Examples
     --------
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> import geopandas as gpd
+    >>> import esda
+    >>> from splot.bk import lisa_cluster
+    >>> from bokeh.io import show
+
+    >>> link = examples.get_path('columbus.shp')
+    >>> df = gpd.read_file(link)
+    >>> y = df['HOVAL'].values
+    >>> w = lp.Queen.from_dataframe(df)
+    >>> w.transform = 'r'
+    >>> moran_loc = esda.moran.Moran_Local(y, w)
+
+    >>> TOOLS = "tap,reset,help"
+    >>> fig = lisa_cluster(moran_loc, df, p=0.05, tools=TOOLS)
+    >>> show(fig)
     '''
     # We're adding columns, do that on a copy rather than on the users' input
     df = df.copy()
@@ -177,6 +213,22 @@ def mplot(moran_loc, p=None, plot_width=500, plot_height=500, tools=''):
 
     Examples
     --------
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> import geopandas as gpd
+    >>> import esda
+    >>> from splot.bk import mplot
+    >>> from bokeh.io import show
+
+    >>> link = examples.get_path('columbus.shp')
+    >>> df = gpd.read_file(link)
+    >>> y = df['HOVAL'].values
+    >>> w = lp.Queen.from_dataframe(df)
+    >>> w.transform = 'r'
+    >>> moran_loc = esda.moran.Moran_Local(y, w)
+
+    >>> fig = mplot(moran_loc, p=0.05)
+    >>> show(fig)
     '''   
     lag = ps.lag_spatial(moran_loc.w, moran_loc.z)
     fit = ps.spreg.OLS(moran_loc.z[:, None], lag[:,None])
@@ -241,7 +293,26 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, plot_width=250,
     Returns
     -------
     fig : Bokeh Figure instance
-        Figure of Choropleth 
+        Figure of Choropleth
+
+    Examples
+    --------
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> import geopandas as gpd
+    >>> import esda
+    >>> from splot.bk import plot_local_autocorrelation
+    >>> from bokeh.io import show
+
+    >>> link = examples.get_path('columbus.shp')
+    >>> df = gpd.read_file(link)
+    >>> y = df['HOVAL'].values
+    >>> w = lp.Queen.from_dataframe(df)
+    >>> w.transform = 'r'
+    >>> moran_loc = esda.moran.Moran_Local(y, w)
+
+    >>> fig = plot_local_autocorrelation(moran_loc, df, 'HOVAL', reverse_colors=True)
+    >>> show(fig) 
     """
     TOOLS = "tap,reset,help"
     

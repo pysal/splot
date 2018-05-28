@@ -47,7 +47,26 @@ def lisa_cluster(moran_loc, df, p=0.05, figsize=None, ax=None,
     Returns
     -------
     fig : matplotlip Figure instance
-        Figure of LISA cluster map 
+        Figure of LISA cluster map
+    
+    Examples
+    --------
+    >>> import matplotlib.pyplot as plt
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> import geopandas as gpd
+    >>> import esda
+    >>> from splot.mpl import lisa_cluster
+
+    >>> link = examples.get_path('columbus.shp')
+    >>> df = gpd.read_file(link)
+    >>> y = df['HOVAL'].values
+    >>> w = lp.Queen.from_dataframe(df)
+    >>> w.transform = 'r'
+    >>> moran_loc = esda.moran.Moran_Local(y, w)
+
+    >>> fig = lisa_cluster(moran_loc, df)
+    >>> plt.show()
     """
     # retrieve colors5 and labels from mask_local_auto
     _, colors5, _, labels = mask_local_auto(moran_loc, p=p, df=df)
@@ -108,7 +127,28 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, region_column=N
     fig : Matplotlib figure instance
         Moran Scatterplot, LISA cluster map and Choropleth
     
-        '''
+    Examples
+    --------
+    >>> import matplotlib.pyplot as plt
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> import geopandas as gpd
+    >>> import esda
+    >>> from splot.mpl import plot_local_autocorrelation
+
+    >>> link = examples.get_path('columbus.shp')
+    >>> df = gpd.read_file(link)
+    >>> y = df['HOVAL'].values
+    >>> w = lp.Queen.from_dataframe(df)
+    >>> w.transform = 'r'
+    >>> moran_loc = esda.moran.Moran_Local(y, w)
+    
+    >>> # test with quadrant and mask
+    >>> fig = plot_local_autocorrelation(moran_loc, df, 'HOVAL', p=0.05,
+    ...                                  region_column='POLYID',
+    ...                                  mask=['1', '2', '3'], quadrant=1)
+    >>> plt.show()
+    '''
     fig, axs = plt.subplots(1, 3, figsize=figsize,
                             subplot_kw={'aspect':'equal'})
     #Moran Scatterplot
