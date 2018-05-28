@@ -14,6 +14,7 @@ from bokeh.plotting import figure
 from bokeh.models import (GeoJSONDataSource,
                           CategoricalColorMapper, Span)
 from bokeh.layouts import gridplot
+from bokeh import palettes 
 
 from ._viz_utils import (bin_labels_choropleth, add_legend,
                          mask_local_auto)
@@ -85,8 +86,16 @@ def plot_choropleth(df, attribute, title=None, plot_width=500,
     
     # Initialize GeoJSONDataSource
     geo_source = GeoJSONDataSource(geojson=df.to_json())
-    
-    from bokeh import palettes 
+
+    fig = _plot_choropleth_fig(geo_source, bin_labels, title=title, plot_width=plot_width,
+                         plot_height=plot_height, method=method,
+                         k=k, reverse_colors=reverse_colors, tools=tools)
+    return fig
+
+
+def _plot_choropleth_fig(geo_source, bin_labels, title=None, plot_width=500,
+                         plot_height=500, method='quantiles',
+                         k=5, reverse_colors=False, tools=''):
     colors = palettes.Blues[k]
     if reverse_colors is True:
         colors.reverse()  # lightest color for lowest values
@@ -94,7 +103,7 @@ def plot_choropleth(df, attribute, title=None, plot_width=500,
     # Create figure
     fig = figure(title=title, plot_width=plot_width, plot_height=plot_height, tools=tools)
     fig.patches('xs', 'ys', fill_alpha=0.7, 
-              fill_color={'field': 'labels',
+              fill_color={'field': 'labels_choro',
                           'transform': CategoricalColorMapper(palette=colors,
                                                               factors=bin_labels)},
               line_color='white', line_width=0.5, source=geo_source)
@@ -168,12 +177,21 @@ def lisa_cluster(moran_loc, df, p=0.05, title=None, plot_width=500,
     # load df into bokeh data source
     geo_source = GeoJSONDataSource(geojson=df.to_json())
 
+    fig = _lisa_cluster_fig(geo_source, cluster_labels, colors5, title=title, plot_width=plot_width,
+                            plot_height=plot_height, tools=tools)
+
+    return fig
+
+
+def _lisa_cluster_fig(geo_source, cluster_labels, colors5, title=None, plot_width=500,
+                      plot_height=500, tools=''): 
     # Create figure
     fig = figure(title=title, toolbar_location='right',
           plot_width=plot_width, plot_height=plot_height, tools=tools)
     fig.patches('xs', 'ys', fill_alpha=0.8, 
-              fill_color={'field': 'labels', 'transform': CategoricalColorMapper(palette=colors5,
-                                                                                 factors=cluster_labels)}, 
+              fill_color={'field': 'labels_lisa',
+                          'transform': CategoricalColorMapper(palette=colors5,
+                                                              factors=cluster_labels)}, 
               line_color='white', line_width=0.5, source=geo_source)
     
     # add legend with add_legend()
@@ -259,7 +277,7 @@ def mplot(moran_loc, p=None, plot_width=500, plot_height=500, tools=''):
 
 
 def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, plot_width=250,
-                               plot_height=300,
+                               plot_height=300, method='quantiles', k=5,
                                reverse_colors=False):
     """
     Plot Moran Scatterplot, LISA cluster and Choropleth
@@ -314,12 +332,27 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, plot_width=250,
     >>> fig = plot_local_autocorrelation(moran_loc, df, 'HOVAL', reverse_colors=True)
     >>> show(fig) 
     """
+    # We're adding columns, do that on a copy rather than on the users' input
+    df = df.copy()
+    
+    # add cluster_labels and colors5 in mask_local_auto
+    cluster_labels, colors5, _, _ = mask_local_auto(moran_loc, df=df, p=0.05)
+    # Extract attribute values from df
+    attribute_values = df[attribute].values
+    # Create bin labels with bin_labels_choropleth()
+    bin_labels = bin_labels_choropleth(df, attribute_values, method, k)
+
+    # load df into bokeh data source
+    geo_source = GeoJSONDataSource(geojson=df.to_json())
+
     TOOLS = "tap,reset,help"
     
     scatter = mplot(moran_loc, p=p, plot_width=plot_width, plot_height=plot_height, tools=TOOLS)
-    LISA = lisa_cluster(moran_loc, df, p=p, plot_width=plot_width, plot_height=plot_height, tools=TOOLS)
-    choro = plot_choropleth(df, attribute, reverse_colors=reverse_colors, plot_width=plot_width, plot_height=plot_height,
-                                tools=TOOLS)
+    LISA = _lisa_cluster_fig(geo_source, cluster_labels, colors5, plot_width=plot_width,
+                             plot_height=plot_height, tools=TOOLS)
+    choro = _plot_choropleth_fig(geo_source, bin_labels, reverse_colors=reverse_colors,
+                                 plot_width=plot_width, plot_height=plot_height,
+                                 tools=TOOLS)
     
     fig = gridplot([[scatter, LISA, choro]],
                    sizing_mode='fixed')

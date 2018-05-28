@@ -47,7 +47,7 @@ def mask_local_auto(moran_loc, df=None, p=0.5):
     labels = [cluster_labels[i] for i in cluster]
     # create a new column with label info
     if df is not None:
-        df['labels'] = np.array(labels)
+        df['labels_lisa'] = np.array(labels)
 
     colors5 = {0: 'lightgrey',
                1: 'red',
@@ -136,7 +136,7 @@ def bin_labels_choropleth(df, attribute_values, method='quantiles', k=5):
         
     # Add labels (which are the labels printed in the legend) to each row of df
     labels = np.array([bin_labels[c] for c in yb])
-    df['labels'] = [str(l) for l in labels]
+    df['labels_choro'] = [str(l) for l in labels]
     return bin_labels
 
 
