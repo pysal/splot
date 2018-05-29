@@ -111,12 +111,13 @@ def _plot_choropleth_fig(geo_source, attribute, bin_labels, title=None, plot_wid
               line_color='white', line_width=0.5, source=geo_source)
 
     # add hover tool
-    hover = fig.select_one(HoverTool)
-    hover.point_policy = "follow_mouse"
-    hover.tooltips = [
-    ("Region", "@Dprtmnt"),
-    ("Attribute", "@" + attribute + "{0.0}"),
-    ]
+    if 'hover' in tools:
+        hover = fig.select_one(HoverTool)
+        hover.point_policy = "follow_mouse"
+        hover.tooltips = [
+        ("Region", "@Dprtmnt"),
+        ("Attribute", "@" + attribute + "{0.0}"),
+        ]
     
     # add legend with add_legend()
     add_legend(fig, bin_labels, colors)
@@ -206,14 +207,15 @@ def _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5, title=None
                                                               factors=cluster_labels)}, 
               line_color='white', line_width=0.5, source=geo_source)
     
-    # add hover tool
-    hover = fig.select_one(HoverTool)
-    hover.point_policy = "follow_mouse"
-    hover.tooltips = [
-    ("Region", "@Dprtmnt"),
-    ("Significance", "@moranloc_psim{0.00}"),
-    ("Quadrant", "@moranloc_q{0}")
-    ]
+    if 'hover' in tools:
+        # add hover tool
+        hover = fig.select_one(HoverTool)
+        hover.point_policy = "follow_mouse"
+        hover.tooltips = [
+        ("Region", "@Dprtmnt"),
+        ("Significance", "@moranloc_psim{0.00}"),
+        ("Quadrant", "@moranloc_q{0}")
+        ]
 
     # add legend with add_legend()
     add_legend(fig, cluster_labels, colors5)
@@ -317,13 +319,14 @@ def _mplot_fig(source, p=None, plot_width=500, plot_height=500, tools=''):
     fig.ygrid.grid_line_color = None
     fig.line(x='lag', y='fit_y', source=source, line_width=2) # fit line
 
-    hover = fig.select_one(HoverTool)
-    hover.point_policy = "follow_mouse"
-    hover.tooltips = [
-    ("Region", "@Dprtmnt"),
-    ("Significance", "@moranloc_psim{0.00}"),
-    ("Quadrant", "@moranloc_q{0}")
-    ]
+    if 'hover' in tools:
+        hover = fig.select_one(HoverTool)
+        hover.point_policy = "follow_mouse"
+        hover.tooltips = [
+        ("Region", "@Dprtmnt"),
+        ("Significance", "@moranloc_psim{0.00}"),
+        ("Quadrant", "@moranloc_q{0}")
+        ]
     return fig
 
 
