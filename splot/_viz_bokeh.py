@@ -8,11 +8,13 @@ add Examples"""
 
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 
+import pandas as pd
 import pysal as ps
 import esda
 from bokeh.plotting import figure
-from bokeh.models import (GeoJSONDataSource,
-                          CategoricalColorMapper, Span)
+from bokeh.models import (GeoJSONDataSource, ColumnDataSource,
+                          CategoricalColorMapper, Span,
+                          HoverTool)
 from bokeh.layouts import gridplot
 from bokeh import palettes 
 
@@ -87,13 +89,13 @@ def plot_choropleth(df, attribute, title=None, plot_width=500,
     # Initialize GeoJSONDataSource
     geo_source = GeoJSONDataSource(geojson=df.to_json())
 
-    fig = _plot_choropleth_fig(geo_source, bin_labels, title=title, plot_width=plot_width,
+    fig = _plot_choropleth_fig(geo_source, attribute, bin_labels, title=title, plot_width=plot_width,
                          plot_height=plot_height, method=method,
                          k=k, reverse_colors=reverse_colors, tools=tools)
     return fig
 
 
-def _plot_choropleth_fig(geo_source, bin_labels, title=None, plot_width=500,
+def _plot_choropleth_fig(geo_source, attribute, bin_labels, title=None, plot_width=500,
                          plot_height=500, method='quantiles',
                          k=5, reverse_colors=False, tools=''):
     colors = palettes.Blues[k]
@@ -107,6 +109,14 @@ def _plot_choropleth_fig(geo_source, bin_labels, title=None, plot_width=500,
                           'transform': CategoricalColorMapper(palette=colors,
                                                               factors=bin_labels)},
               line_color='white', line_width=0.5, source=geo_source)
+
+    # add hover tool
+    hover = fig.select_one(HoverTool)
+    hover.point_policy = "follow_mouse"
+    hover.tooltips = [
+    ("Region", "@Dprtmnt"),
+    ("Attribute", "@" + attribute + "{0.0}"),
+    ]
     
     # add legend with add_legend()
     add_legend(fig, bin_labels, colors)
@@ -173,17 +183,19 @@ def lisa_cluster(moran_loc, df, p=0.05, title=None, plot_width=500,
     
     # add cluster_labels and colors5 in mask_local_auto
     cluster_labels, colors5, _, _ = mask_local_auto(moran_loc, df=df, p=0.05)
-    
+    df['moranloc_psim'] = moran_loc.p_sim
+    df['moranloc_q'] = moran_loc.q
+
     # load df into bokeh data source
     geo_source = GeoJSONDataSource(geojson=df.to_json())
 
-    fig = _lisa_cluster_fig(geo_source, cluster_labels, colors5, title=title, plot_width=plot_width,
+    fig = _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5, title=title, plot_width=plot_width,
                             plot_height=plot_height, tools=tools)
 
     return fig
 
 
-def _lisa_cluster_fig(geo_source, cluster_labels, colors5, title=None, plot_width=500,
+def _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5, title=None, plot_width=500,
                       plot_height=500, tools=''): 
     # Create figure
     fig = figure(title=title, toolbar_location='right',
@@ -194,6 +206,15 @@ def _lisa_cluster_fig(geo_source, cluster_labels, colors5, title=None, plot_widt
                                                               factors=cluster_labels)}, 
               line_color='white', line_width=0.5, source=geo_source)
     
+    # add hover tool
+    hover = fig.select_one(HoverTool)
+    hover.point_policy = "follow_mouse"
+    hover.tooltips = [
+    ("Region", "@Dprtmnt"),
+    ("Significance", "@moranloc_psim{0.00}"),
+    ("Quadrant", "@moranloc_q{0}")
+    ]
+
     # add legend with add_legend()
     add_legend(fig, cluster_labels, colors5)
     
@@ -248,18 +269,40 @@ def mplot(moran_loc, p=None, plot_width=500, plot_height=500, tools=''):
     >>> fig = mplot(moran_loc, p=0.05)
     >>> show(fig)
     '''   
+    data = _mplot_calc(moran_loc, p)
+    source = ColumnDataSource(pd.DataFrame(data))
+    fig = _mplot_fig(source, p=p, plot_width=plot_width,
+                     plot_height=plot_height, tools=tools)
+    return fig
+
+
+def _mplot_calc(moran_loc, p):
     lag = ps.lag_spatial(moran_loc.w, moran_loc.z)
     fit = ps.spreg.OLS(moran_loc.z[:, None], lag[:,None])
-    
     if p is not None:
         if not isinstance(moran_loc, esda.moran.Moran_Local):
             raise ValueError("`moran_loc` is not a Moran_Local instance")
     
-        _, _, colors, _ = mask_local_auto(moran_loc, p=0.05)
-    
+        _, _, colors, _ = mask_local_auto(moran_loc, p=p)
     else:
         colors = 'black'
+
+    data = {'moran_z': moran_loc.z, 'lag': lag,
+            'colors': colors, 'fit_y': fit.predy.flatten(),
+            'moranloc_psim': moran_loc.p_sim, 'moranloc_q': moran_loc.q}
+    return data
+
+
+def _mplot_fig(source, p=None, plot_width=500, plot_height=500, tools=''):
+    """
     
+    Parameters
+    ----------
+    source : Bokeh ColumnDatasource or GeoJSONDataSource instance
+        The data source, should contain the columns ``moran_z`` and ``lag``,
+        which will be used as x and y inputs of the scatterplot.
+
+    """
     # Vertical line
     vline = Span(location=0, dimension='height', line_color='lightskyblue', line_width=2, line_dash = 'dashed')
     # Horizontal line
@@ -268,11 +311,19 @@ def mplot(moran_loc, p=None, plot_width=500, plot_height=500, tools=''):
     # Create figure
     fig = figure(title="Moran Scatterplot", x_axis_label='Response', y_axis_label='Spatial Lag',
                  toolbar_location='left', plot_width=plot_width, plot_height=plot_height, tools=tools)
-    fig.scatter(moran_loc.z, lag, color=colors, size=8, fill_alpha=.6)
+    fig.scatter(x='moran_z', y='lag', source=source, color='colors', size=8, fill_alpha=.6)
     fig.renderers.extend([vline, hline])
     fig.xgrid.grid_line_color = None
     fig.ygrid.grid_line_color = None
-    fig.line(lag, fit.predy.flatten(), line_width = 2) # fit line
+    fig.line(x='lag', y='fit_y', source=source, line_width=2) # fit line
+
+    hover = fig.select_one(HoverTool)
+    hover.point_policy = "follow_mouse"
+    hover.tooltips = [
+    ("Region", "@Dprtmnt"),
+    ("Significance", "@moranloc_psim{0.00}"),
+    ("Quadrant", "@moranloc_q{0}")
+    ]
     return fig
 
 
@@ -332,11 +383,20 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, plot_width=250,
     >>> fig = plot_local_autocorrelation(moran_loc, df, 'HOVAL', reverse_colors=True)
     >>> show(fig) 
     """
+    print(df.columns)
+    exit
     # We're adding columns, do that on a copy rather than on the users' input
     df = df.copy()
     
+    # Add relevant results for mplot as columns to geodataframe
+    mplot_data = _mplot_calc(moran_loc, p)
+    for key in mplot_data:
+        df[key] = mplot_data[key]
+
     # add cluster_labels and colors5 in mask_local_auto
     cluster_labels, colors5, _, _ = mask_local_auto(moran_loc, df=df, p=0.05)
+    df['moranloc_psim'] = moran_loc.p_sim
+    df['moranloc_q'] = moran_loc.q
     # Extract attribute values from df
     attribute_values = df[attribute].values
     # Create bin labels with bin_labels_choropleth()
@@ -345,12 +405,14 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, plot_width=250,
     # load df into bokeh data source
     geo_source = GeoJSONDataSource(geojson=df.to_json())
 
-    TOOLS = "tap,reset,help"
+    TOOLS = "tap,reset,help,hover"
     
-    scatter = mplot(moran_loc, p=p, plot_width=plot_width, plot_height=plot_height, tools=TOOLS)
-    LISA = _lisa_cluster_fig(geo_source, cluster_labels, colors5, plot_width=plot_width,
+    #scatter = mplot(moran_loc, p=p, plot_width=plot_width, plot_height=plot_height, tools=TOOLS)
+    scatter = _mplot_fig(geo_source, p=p, plot_width=plot_width, plot_height=plot_height,
+                         tools=TOOLS)
+    LISA = _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5, plot_width=plot_width,
                              plot_height=plot_height, tools=TOOLS)
-    choro = _plot_choropleth_fig(geo_source, bin_labels, reverse_colors=reverse_colors,
+    choro = _plot_choropleth_fig(geo_source, attribute, bin_labels, reverse_colors=reverse_colors,
                                  plot_width=plot_width, plot_height=plot_height,
                                  tools=TOOLS)
     
