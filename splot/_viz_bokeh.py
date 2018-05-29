@@ -22,7 +22,7 @@ from ._viz_utils import (bin_labels_choropleth, add_legend,
 
 def plot_choropleth(df, attribute, title=None, plot_width=500,
                         plot_height=500, method='quantiles',
-                        k=5, reverse_colors=False, tools=''):
+                        k=5, reverse_colors=False, tools='', region_column=''):
     '''
     Plot Choropleth colored according to attribute
     
@@ -50,6 +50,11 @@ def plot_choropleth(df, attribute, title=None, plot_width=500,
     reverse_colors: boolean
         Reverses the color palette to show lightest colors for
         lowest values. Default reverse_colors=False
+    tools : str, optional
+        Tools used for bokeh plotting. Default = ''
+    region_column : str, optional
+        Column name containing region descpriptions/ names or polygone ids.
+        Default = ''.
     
     Returns
     -------
