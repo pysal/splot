@@ -2,9 +2,7 @@
 Leightweight interactive visualizations in Bokeh.
 
 TODO: 
-fix lisa_cluster_bokeh, 
-mplot_bokeh coloring labels 
-add Examples"""
+"""
 
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 
@@ -89,14 +87,14 @@ def plot_choropleth(df, attribute, title=None, plot_width=500,
     # Initialize GeoJSONDataSource
     geo_source = GeoJSONDataSource(geojson=df.to_json())
 
-    fig = _plot_choropleth_fig(geo_source, attribute, bin_labels, title=title, plot_width=plot_width,
-                         plot_height=plot_height, method=method,
-                         k=k, reverse_colors=reverse_colors, tools=tools)
+    fig = _plot_choropleth_fig(geo_source, attribute, bin_labels, region_column=region_column,
+                               title=title, plot_width=plot_width, plot_height=plot_height,
+                               method=method, k=k, reverse_colors=reverse_colors, tools=tools)
     return fig
 
 
-def _plot_choropleth_fig(geo_source, attribute, bin_labels, title=None, plot_width=500,
-                         plot_height=500, method='quantiles',
+def _plot_choropleth_fig(geo_source, attribute, bin_labels, region_column='', title=None,
+                         plot_width=500, plot_height=500, method='quantiles',
                          k=5, reverse_colors=False, tools=''):
     colors = palettes.Blues[k]
     if reverse_colors is True:
@@ -115,7 +113,7 @@ def _plot_choropleth_fig(geo_source, attribute, bin_labels, title=None, plot_wid
         hover = fig.select_one(HoverTool)
         hover.point_policy = "follow_mouse"
         hover.tooltips = [
-        ("Region", "@Dprtmnt"),
+        ("Region", "@" + region_column),
         ("Attribute", "@" + attribute + "{0.0}"),
         ]
     
@@ -129,7 +127,7 @@ def _plot_choropleth_fig(geo_source, attribute, bin_labels, title=None, plot_wid
     return fig
 
 
-def lisa_cluster(moran_loc, df, p=0.05, title=None, plot_width=500,
+def lisa_cluster(moran_loc, df, p=0.05, region_column='', title=None, plot_width=500,
                      plot_height=500, tools=''): 
     '''
     Lisa Cluster map, coloured by local spatial autocorrelation
@@ -190,13 +188,13 @@ def lisa_cluster(moran_loc, df, p=0.05, title=None, plot_width=500,
     # load df into bokeh data source
     geo_source = GeoJSONDataSource(geojson=df.to_json())
 
-    fig = _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5, title=title, plot_width=plot_width,
+    fig = _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5, region_column=region_column, title=title, plot_width=plot_width,
                             plot_height=plot_height, tools=tools)
 
     return fig
 
 
-def _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5, title=None, plot_width=500,
+def _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5, region_column='', title=None, plot_width=500,
                       plot_height=500, tools=''): 
     # Create figure
     fig = figure(title=title, toolbar_location='right',
@@ -212,7 +210,7 @@ def _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5, title=None
         hover = fig.select_one(HoverTool)
         hover.point_policy = "follow_mouse"
         hover.tooltips = [
-        ("Region", "@Dprtmnt"),
+        ("Region", "@" + region_column),
         ("Significance", "@moranloc_psim{0.00}"),
         ("Quadrant", "@moranloc_q{0}")
         ]
@@ -228,7 +226,7 @@ def _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5, title=None
     return fig
 
 
-def mplot(moran_loc, p=None, plot_width=500, plot_height=500, tools=''): 
+def mplot(moran_loc, p=None, region_column='', plot_width=500, plot_height=500, tools=''): 
     '''
     Moran Scatterplot, optional coloured by local spatial autocorrelation
     
@@ -273,7 +271,7 @@ def mplot(moran_loc, p=None, plot_width=500, plot_height=500, tools=''):
     '''   
     data = _mplot_calc(moran_loc, p)
     source = ColumnDataSource(pd.DataFrame(data))
-    fig = _mplot_fig(source, p=p, plot_width=plot_width,
+    fig = _mplot_fig(source, p=p, region_column=region_column, plot_width=plot_width,
                      plot_height=plot_height, tools=tools)
     return fig
 
@@ -295,7 +293,7 @@ def _mplot_calc(moran_loc, p):
     return data
 
 
-def _mplot_fig(source, p=None, plot_width=500, plot_height=500, tools=''):
+def _mplot_fig(source, p=None, region_column='', plot_width=500, plot_height=500, tools=''):
     """
     
     Parameters
@@ -323,14 +321,14 @@ def _mplot_fig(source, p=None, plot_width=500, plot_height=500, tools=''):
         hover = fig.select_one(HoverTool)
         hover.point_policy = "follow_mouse"
         hover.tooltips = [
-        ("Region", "@Dprtmnt"),
+        ("Region", "@" + region_column),
         ("Significance", "@moranloc_psim{0.00}"),
         ("Quadrant", "@moranloc_q{0}")
         ]
     return fig
 
 
-def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, plot_width=250,
+def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, region_column='', plot_width=250,
                                plot_height=300, method='quantiles', k=5,
                                reverse_colors=False):
     """
@@ -386,8 +384,7 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, plot_width=250,
     >>> fig = plot_local_autocorrelation(moran_loc, df, 'HOVAL', reverse_colors=True)
     >>> show(fig) 
     """
-    print(df.columns)
-    exit
+    #DEBUG: import IPython; IPython.embed()
     # We're adding columns, do that on a copy rather than on the users' input
     df = df.copy()
     
@@ -411,11 +408,11 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, plot_width=250,
     TOOLS = "tap,reset,help,hover"
     
     #scatter = mplot(moran_loc, p=p, plot_width=plot_width, plot_height=plot_height, tools=TOOLS)
-    scatter = _mplot_fig(geo_source, p=p, plot_width=plot_width, plot_height=plot_height,
+    scatter = _mplot_fig(geo_source, p=p, region_column=region_column, plot_width=plot_width, plot_height=plot_height,
                          tools=TOOLS)
-    LISA = _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5, plot_width=plot_width,
+    LISA = _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5, region_column=region_column, plot_width=plot_width,
                              plot_height=plot_height, tools=TOOLS)
-    choro = _plot_choropleth_fig(geo_source, attribute, bin_labels, reverse_colors=reverse_colors,
+    choro = _plot_choropleth_fig(geo_source, attribute, bin_labels, region_column=region_column, reverse_colors=reverse_colors,
                                  plot_width=plot_width, plot_height=plot_height,
                                  tools=TOOLS)
     
