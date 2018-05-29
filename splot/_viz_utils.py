@@ -129,11 +129,11 @@ def bin_labels_choropleth(df, attribute_values, method='quantiles', k=5):
     yb = bin_values.yb
     bins = bin_values.bins
 
-    # Create bin labels
-    bin_edges = [attribute_values.min()] + bins.tolist()  # for use in legend
+    # Create bin labels (smaller version)
+    bin_edges = bins.tolist()
     bin_labels = []
     for i in range(k):
-        bin_labels.append('{:1.1f}-{:1.1f}'.format(bin_edges[i], bin_edges[i+1]))
+        bin_labels.append('<{:1.1f}'.format(bin_edges[i]))
         
     # Add labels (which are the labels printed in the legend) to each row of df
     labels = np.array([bin_labels[c] for c in yb])
