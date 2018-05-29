@@ -12,7 +12,7 @@ import esda
 from bokeh.plotting import figure
 from bokeh.models import (GeoJSONDataSource, ColumnDataSource,
                           CategoricalColorMapper, Span,
-                          HoverTool)
+                          HoverTool, Legend)
 from bokeh.layouts import gridplot
 from bokeh import palettes 
 
@@ -415,10 +415,11 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, region_column='
     #scatter = mplot(moran_loc, p=p, plot_width=plot_width, plot_height=plot_height, tools=TOOLS)
     scatter = _mplot_fig(geo_source, p=p, region_column=region_column, plot_width=plot_width, plot_height=plot_height,
                          tools=TOOLS)
-    LISA = _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5, region_column=region_column, plot_width=plot_width,
+    LISA = _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5, region_column=region_column,
+                             plot_width=int(plot_width*1.3),
                              plot_height=plot_height, tools=TOOLS)
     choro = _plot_choropleth_fig(geo_source, attribute, bin_labels, region_column=region_column, reverse_colors=reverse_colors,
-                                 plot_width=plot_width, plot_height=plot_height,
+                                 plot_width=int(plot_width*1.4), plot_height=plot_height,
                                  tools=TOOLS)
     
     fig = gridplot([[scatter, LISA, choro]],

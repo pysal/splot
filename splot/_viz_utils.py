@@ -7,6 +7,7 @@ __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 
 import numpy as np
 import mapclassify.api as classify
+from bokeh.models import Legend
 
 def mask_local_auto(moran_loc, df=None, p=0.5):
     '''
@@ -155,5 +156,15 @@ def add_legend(fig, labels, colors):
     """
     # add labels to figure (workaround, legend with geojsondatasource doesn't work,
     # see https://github.com/bokeh/bokeh/issues/5904)
+    items = []
     for label, color in zip(labels, colors):
-        fig.patches(xs=[], ys=[], fill_color=color, legend=label)
+        patch = fig.patches(xs=[], ys=[], fill_color=color)#, legend=label)
+        items.append((label, [patch]))
+
+    legend = Legend(items=items, location='top_left', margin=0)
+                    #glyph_width=10, glyph_height=10)
+    legend.label_text_font_size = '8pt'
+    fig.add_layout(legend, 'right')
+    #import IPython; IPython.embed()
+    return legend
+        
