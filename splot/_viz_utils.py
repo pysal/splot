@@ -161,10 +161,36 @@ def add_legend(fig, labels, colors):
         patch = fig.patches(xs=[], ys=[], fill_color=color)#, legend=label)
         items.append((label, [patch]))
 
-    legend = Legend(items=items, location='top_left', margin=0)
+    legend = Legend(items=items, location='top_left', margin=0, orientation='horizontal')
                     #glyph_width=10, glyph_height=10)
     legend.label_text_font_size = '8pt'
-    fig.add_layout(legend, 'right')
+    fig.add_layout(legend, 'below')
     #import IPython; IPython.embed()
     return legend
-        
+
+
+def calc_data_aspect(plot_height,  plot_width, bounds):
+    # Deal with data ranges; make a meter in x and a meter in y the same in pixel lengths
+    aspect_box = plot_height / plot_width # 2 / 1 = 2
+    xmin, ymin, xmax, ymax = bounds
+    x_range = xmax - xmin # 1 = 1 - 0
+    y_range = ymax - ymin # 3 = 3 - 0
+    aspect_data = y_range / x_range # 3 / 1 = 3
+    if aspect_data > aspect_box:
+        # we need to increase x_range, such that aspect_data becomes equal to aspect_box
+        halfrange = 0.5 * x_range * (aspect_data / aspect_box - 1) # 0.5 * 1 * (3 / 2 - 1) = 0.25
+        xmin -= halfrange # 0 - 0.25 = -0.25
+        xmax += halfrange # 1 + 0.25 = 1.25
+    else:
+        # we need to increase y_range
+        halfrange = 0.5 * y_range * (aspect_box / aspect_data - 1)
+        ymin -= halfrange
+        ymax += halfrange
+
+    # Add a bit of margin to both x and y
+    margin = 0.03
+    xmin -= (xmax - xmin) / 2 * margin
+    xmax += (xmax - xmin) / 2 * margin
+    ymin -= (ymax - ymin) / 2 * margin
+    ymax += (ymax - ymin) / 2 * margin
+    return xmin, xmax, ymin, ymax
