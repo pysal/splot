@@ -107,11 +107,18 @@ def _plot_choropleth_fig(geo_source, attribute, bin_labels, region_column='', ti
 
     # Create figure
     fig = figure(title=title, plot_width=plot_width, plot_height=plot_height, tools=tools)
-    fig.patches('xs', 'ys', fill_alpha=0.7, 
-              fill_color={'field': 'labels_choro',
-                          'transform': CategoricalColorMapper(palette=colors,
-                                                              factors=bin_labels)},
-              line_color='white', line_width=0.5, source=geo_source)
+    # The use of `nonselection_fill_*` shouldn't be necessary, but currently it is.
+    # This looks like a bug in Bokeh where gridplot plus taptool chooses the underlay
+    # from the figure that is clicked and applies it to the other figure as well.
+    fill_color={'field': 'labels_choro',
+                'transform': CategoricalColorMapper(palette=colors,
+                                                    factors=bin_labels)}
+    fig.patches('xs', 'ys', fill_alpha=0.7, fill_color=fill_color,
+                line_color='white', nonselection_fill_alpha=0.2,
+                nonselection_fill_color=fill_color,
+                selection_line_color='firebrick',
+                selection_fill_color=fill_color,
+                line_width=0.5, source=geo_source)
 
     # add hover tool
     if 'hover' in tools:
@@ -204,12 +211,15 @@ def _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5, region_col
     # Create figure
     fig = figure(title=title, toolbar_location='right',
           plot_width=plot_width, plot_height=plot_height, tools=tools)
-    fig.patches('xs', 'ys', fill_alpha=0.8, 
-              fill_color={'field': 'labels_lisa',
-                          'transform': CategoricalColorMapper(palette=colors5,
-                                                              factors=cluster_labels)}, 
-              line_color='white', line_width=0.5, source=geo_source)
-    
+    fill_color={'field': 'labels_lisa',
+                'transform': CategoricalColorMapper(palette=colors5,
+                                                    factors=cluster_labels)}
+    fig.patches('xs', 'ys', fill_color=fill_color, fill_alpha=0.8,
+                nonselection_fill_alpha=0.2, nonselection_fill_color=fill_color,
+                line_color='white', selection_line_color='firebrick',
+                selection_fill_color=fill_color,
+                line_width=0.5, source=geo_source)
+
     if 'hover' in tools:
         # add hover tool
         hover = fig.select_one(HoverTool)
