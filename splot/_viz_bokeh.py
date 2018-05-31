@@ -1,14 +1,3 @@
-""" 
-Leightweight interactive visualizations in Bokeh.
-
-TODO: 
-We are not re-projection data into web-mercator atm,
-to allow plotting from raw coordinates.
-The user should however be aware of the projection of his data.
-"""
-
-__author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
-
 import pandas as pd
 import pysal as ps
 import esda
@@ -17,10 +6,21 @@ from bokeh.models import (GeoJSONDataSource, ColumnDataSource,
                           CategoricalColorMapper, Span,
                           HoverTool, Legend)
 from bokeh.layouts import gridplot
-from bokeh import palettes 
+from bokeh import palettes
 
 from ._viz_utils import (bin_labels_choropleth, add_legend,
                          mask_local_auto, calc_data_aspect)
+
+"""
+Leightweight interactive visualizations in Bokeh.
+
+TODO:
+We are not re-projection data into web-mercator atm,
+to allow plotting from raw coordinates.
+The user should however be aware of the projection of his data.
+"""
+
+__author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 
 
 def plot_choropleth(df, attribute, title=None, plot_width=500,
@@ -81,7 +81,7 @@ def plot_choropleth(df, attribute, title=None, plot_width=500,
     >>> TOOLS = "tap,help"
     >>> fig = plot_choropleth(df, 'HOVAL', title='columbus',
     ...                       reverse_colors=True, tools=TOOLS)
-    >>> show(fig) 
+    >>> show(fig)
     '''
     # We're adding columns, do that on a copy rather than on the users' input
     df = df.copy()
@@ -95,13 +95,18 @@ def plot_choropleth(df, attribute, title=None, plot_width=500,
     # Initialize GeoJSONDataSource
     geo_source = GeoJSONDataSource(geojson=df.to_json())
 
-    fig = _plot_choropleth_fig(geo_source, attribute, bin_labels, bounds=df.total_bounds, region_column=region_column,
-                               title=title, plot_width=plot_width, plot_height=plot_height,
-                               method=method, k=k, reverse_colors=reverse_colors, tools=tools)
+    fig = _plot_choropleth_fig(geo_source, attribute, bin_labels,
+                               bounds=df.total_bounds,
+                               region_column=region_column, title=title,
+                               plot_width=plot_width, plot_height=plot_height,
+                               method=method, k=k,
+                               reverse_colors=reverse_colors,
+                               tools=tools)
     return fig
 
 
-def _plot_choropleth_fig(geo_source, attribute, bin_labels, bounds, region_column='', title=None,
+def _plot_choropleth_fig(geo_source, attribute, bin_labels, bounds,
+                         region_column='', title=None,
                          plot_width=500, plot_height=500, method='quantiles',
                          k=5, reverse_colors=False, tools=''):
     colors = palettes.Blues[k]
@@ -110,17 +115,19 @@ def _plot_choropleth_fig(geo_source, attribute, bin_labels, bounds, region_colum
 
     # make data aspect ration match the figure aspect ratio
     # to avoid map distortion (1km=1km)
-    x_min, x_max, y_min, y_max = calc_data_aspect(plot_height, plot_width, bounds)
+    x_min, x_max, y_min, y_max = calc_data_aspect(plot_height, plot_width,
+                                                  bounds)
 
     # Create figure
-    fig = figure(title=title, plot_width=plot_width, plot_height=plot_height, tools=tools,
-                 x_range=(x_min, x_max) , y_range=(y_min, y_max))
-    # The use of `nonselection_fill_*` shouldn't be necessary, but currently it is.
-    # This looks like a bug in Bokeh where gridplot plus taptool chooses the underlay
-    # from the figure that is clicked and applies it to the other figure as well.
-    fill_color={'field': 'labels_choro',
-                'transform': CategoricalColorMapper(palette=colors,
-                                                    factors=bin_labels)}
+    fig = figure(title=title, plot_width=plot_width, plot_height=plot_height,
+                 tools=tools, x_range=(x_min, x_max), y_range=(y_min, y_max))
+    # The use of `nonselection_fill_*` shouldn't be necessary,
+    # but currently it is. This looks like a bug in Bokeh
+    # where gridplot plus taptool chooses the underlay from the figure
+    # that is clicked and applies it to the other figure as well.
+    fill_color = {'field': 'labels_choro',
+                  'transform': CategoricalColorMapper(palette=colors,
+                                                      factors=bin_labels)}
     fig.patches('xs', 'ys', fill_alpha=0.7, fill_color=fill_color,
                 line_color='white', nonselection_fill_alpha=0.2,
                 nonselection_fill_color=fill_color,
@@ -132,10 +139,9 @@ def _plot_choropleth_fig(geo_source, attribute, bin_labels, bounds, region_colum
     if 'hover' in tools:
         hover = fig.select_one(HoverTool)
         hover.point_policy = "follow_mouse"
-        hover.tooltips = [
-        ("Region", "@" + region_column),
-        ("Attribute", "@" + attribute + "{0.0}"),
-        ]
+        hover.tooltips = [("Region", "@" + region_column),
+                          ("Attribute", "@" + attribute + "{0.0}"),
+                          ]
 
     # add legend with add_legend()
     add_legend(fig, bin_labels, colors)
@@ -147,8 +153,8 @@ def _plot_choropleth_fig(geo_source, attribute, bin_labels, bounds, region_colum
     return fig
 
 
-def lisa_cluster(moran_loc, df, p=0.05, region_column='', title=None, plot_width=500,
-                     plot_height=500, tools=''): 
+def lisa_cluster(moran_loc, df, p=0.05, region_column='', title=None,
+                 plot_width=500, plot_height=500, tools=''):
     '''
     Lisa Cluster map, coloured by local spatial autocorrelation
 
@@ -157,7 +163,7 @@ def lisa_cluster(moran_loc, df, p=0.05, region_column='', title=None, plot_width
     moran_loc : esda.moran.Moran_Local instance
         values of Moran's Local Autocorrelation Statistic
     df : geopandas dataframe instance
-        In mask_local_auto(), assign df['labels'] per row. Note that 
+        In mask_local_auto(), assign df['labels'] per row. Note that
         ``df`` will be modified, so calling functions uses a copy of
         the user provided ``df``.
     p : float, optional
@@ -210,7 +216,8 @@ def lisa_cluster(moran_loc, df, p=0.05, region_column='', title=None, plot_width
     geo_source = GeoJSONDataSource(geojson=df.to_json())
 
     fig = _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5,
-                            bounds=df.total_bounds, region_column=region_column,
+                            bounds=df.total_bounds,
+                            region_column=region_column,
                             title=title, plot_width=plot_width,
                             plot_height=plot_height, tools=tools)
     return fig
@@ -218,20 +225,22 @@ def lisa_cluster(moran_loc, df, p=0.05, region_column='', title=None, plot_width
 
 def _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5,
                       bounds, region_column='', title=None, plot_width=500,
-                      plot_height=500, tools=''): 
+                      plot_height=500, tools=''):
     # make data aspect ration match the figure aspect ratio
     # to avoid map distortion (1km=1km)
-    x_min, x_max, y_min, y_max = calc_data_aspect(plot_height, plot_width, bounds)
+    x_min, x_max, y_min, y_max = calc_data_aspect(plot_height, plot_width,
+                                                  bounds)
 
     # Create figure
     fig = figure(title=title, toolbar_location='right',
                  plot_width=plot_width, plot_height=plot_height,
-                 x_range=(x_min, x_max) , y_range=(y_min, y_max), tools=tools)
-    fill_color={'field': 'labels_lisa',
-                'transform': CategoricalColorMapper(palette=colors5,
-                                                    factors=cluster_labels)}
+                 x_range=(x_min, x_max), y_range=(y_min, y_max), tools=tools)
+    fill_color = {'field': 'labels_lisa',
+                  'transform': CategoricalColorMapper(palette=colors5,
+                                                      factors=cluster_labels)}
     fig.patches('xs', 'ys', fill_color=fill_color, fill_alpha=0.8,
-                nonselection_fill_alpha=0.2, nonselection_fill_color=fill_color,
+                nonselection_fill_alpha=0.2,
+                nonselection_fill_color=fill_color,
                 line_color='white', selection_line_color='firebrick',
                 selection_fill_color=fill_color,
                 line_width=0.5, source=geo_source)
@@ -240,11 +249,10 @@ def _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5,
         # add hover tool
         hover = fig.select_one(HoverTool)
         hover.point_policy = "follow_mouse"
-        hover.tooltips = [
-        ("Region", "@" + region_column),
-        ("Significance", "@moranloc_psim{0.00}"),
-        ("Quadrant", "@moranloc_q{0}")
-        ]
+        hover.tooltips = [("Region", "@" + region_column),
+                          ("Significance", "@moranloc_psim{0.00}"),
+                          ("Quadrant", "@moranloc_q{0}")
+                          ]
 
     # add legend with add_legend()
     add_legend(fig, cluster_labels, colors5)
@@ -256,7 +264,8 @@ def _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5,
     return fig
 
 
-def mplot(moran_loc, p=None, region_column='', plot_width=500, plot_height=500, tools=''): 
+def mplot(moran_loc, p=None, region_column='', plot_width=500,
+          plot_height=500, tools=''):
     '''
     Moran Scatterplot, optional coloured by local spatial autocorrelation
 
@@ -298,17 +307,18 @@ def mplot(moran_loc, p=None, region_column='', plot_width=500, plot_height=500, 
 
     >>> fig = mplot(moran_loc, p=0.05)
     >>> show(fig)
-    '''   
+    '''
     data = _mplot_calc(moran_loc, p)
     source = ColumnDataSource(pd.DataFrame(data))
-    fig = _mplot_fig(source, p=p, region_column=region_column, plot_width=plot_width,
-                     plot_height=plot_height, tools=tools)
+    fig = _mplot_fig(source, p=p, region_column=region_column,
+                     plot_width=plot_width, plot_height=plot_height,
+                     tools=tools)
     return fig
 
 
 def _mplot_calc(moran_loc, p):
     lag = ps.lag_spatial(moran_loc.w, moran_loc.z)
-    fit = ps.spreg.OLS(moran_loc.z[:, None], lag[:,None])
+    fit = ps.spreg.OLS(moran_loc.z[:, None], lag[:, None])
     if p is not None:
         if not isinstance(moran_loc, esda.moran.Moran_Local):
             raise ValueError("`moran_loc` is not a Moran_Local instance")
@@ -323,7 +333,8 @@ def _mplot_calc(moran_loc, p):
     return data
 
 
-def _mplot_fig(source, p=None, title="Moran Scatterplot", region_column='', plot_width=500, plot_height=500, tools=''):
+def _mplot_fig(source, p=None, title="Moran Scatterplot", region_column='',
+               plot_width=500, plot_height=500, tools=''):
     """
     Parameters
     ----------
@@ -332,31 +343,35 @@ def _mplot_fig(source, p=None, title="Moran Scatterplot", region_column='', plot
         which will be used as x and y inputs of the scatterplot.
     """
     # Vertical line
-    vline = Span(location=0, dimension='height', line_color='lightskyblue', line_width=2, line_dash = 'dashed')
+    vline = Span(location=0, dimension='height', line_color='lightskyblue',
+                 line_width=2, line_dash='dashed')
     # Horizontal line
-    hline = Span(location=0, dimension='width', line_color='lightskyblue', line_width=2, line_dash = 'dashed')
+    hline = Span(location=0, dimension='width', line_color='lightskyblue',
+                 line_width=2, line_dash='dashed')
 
     # Create figure
-    fig = figure(title= title, x_axis_label='Response', y_axis_label='Spatial Lag',
-                 toolbar_location='left', plot_width=plot_width, plot_height=plot_height, tools=tools)
-    fig.scatter(x='moran_z', y='lag', source=source, color='colors', size=8, fill_alpha=.6)
+    fig = figure(title=title, x_axis_label='Response',
+                 y_axis_label='Spatial Lag', toolbar_location='left',
+                 plot_width=plot_width, plot_height=plot_height, tools=tools)
+    fig.scatter(x='moran_z', y='lag', source=source, color='colors',
+                size=8, fill_alpha=.6)
     fig.renderers.extend([vline, hline])
     fig.xgrid.grid_line_color = None
     fig.ygrid.grid_line_color = None
-    fig.line(x='lag', y='fit_y', source=source, line_width=2) # fit line
+    fig.line(x='lag', y='fit_y', source=source, line_width=2)  # fit line
 
     if 'hover' in tools:
         hover = fig.select_one(HoverTool)
         hover.point_policy = "follow_mouse"
-        hover.tooltips = [
-        ("Region", "@" + region_column),
-        ("Significance", "@moranloc_psim{0.00}"),
-        ("Quadrant", "@moranloc_q{0}")
-        ]
+        hover.tooltips = [("Region", "@" + region_column),
+                          ("Significance", "@moranloc_psim{0.00}"),
+                          ("Quadrant", "@moranloc_q{0}")
+                          ]
     return fig
 
 
-def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, region_column='', plot_width=350,
+def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
+                               region_column='', plot_width=350,
                                plot_height=400, method='quantiles', k=5,
                                reverse_colors=False):
     """
@@ -409,8 +424,9 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, region_column='
     >>> w.transform = 'r'
     >>> moran_loc = esda.moran.Moran_Local(y, w)
 
-    >>> fig = plot_local_autocorrelation(moran_loc, df, 'HOVAL', reverse_colors=True)
-    >>> show(fig) 
+    >>> fig = plot_local_autocorrelation(moran_loc, df, 'HOVAL',
+                                         reverse_colors=True)
+    >>> show(fig)
     """
     # DEBUG: import IPython; IPython.embed()
     # We're adding columns, do that on a copy rather than on the users' input
@@ -436,17 +452,22 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, region_column='
 
     TOOLS = "tap,reset,help,hover"
 
-    # scatter = mplot(moran_loc, p=p, plot_width=plot_width, plot_height=plot_height, tools=TOOLS)
-    scatter = _mplot_fig(geo_source, p=p, region_column=region_column, title="Local Spatial Autocorrelation", plot_width=int(plot_width*1.15),
+    scatter = _mplot_fig(geo_source, p=p, region_column=region_column,
+                         title="Local Spatial Autocorrelation",
+                         plot_width=int(plot_width*1.15),
                          plot_height=plot_height,
                          tools=TOOLS)
     LISA = _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5,
-                             bounds=df.total_bounds, region_column=region_column,
+                             bounds=df.total_bounds,
+                             region_column=region_column,
                              plot_width=plot_width,
                              plot_height=plot_height, tools=TOOLS)
-    choro = _plot_choropleth_fig(geo_source, attribute, bin_labels, bounds=df.total_bounds,
-                                 region_column=region_column, reverse_colors=reverse_colors,
-                                 plot_width=plot_width, plot_height=plot_height,
+    choro = _plot_choropleth_fig(geo_source, attribute, bin_labels,
+                                 bounds=df.total_bounds,
+                                 region_column=region_column,
+                                 reverse_colors=reverse_colors,
+                                 plot_width=plot_width,
+                                 plot_height=plot_height,
                                  tools=TOOLS)
 
     fig = gridplot([[scatter, LISA, choro]],
