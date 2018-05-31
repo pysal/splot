@@ -17,7 +17,7 @@ def test_lisa_cluster():
 
     moran_loc = esda.moran.Moran_Local(y, w)
 
-    fig = lisa_cluster(moran_loc, df)
+    fig, _ = lisa_cluster(moran_loc, df)
     plt.close(fig)
 
 

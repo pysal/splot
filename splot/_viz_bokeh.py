@@ -2,7 +2,8 @@
 Leightweight interactive visualizations in Bokeh.
 
 TODO: 
-We are re-projection data into web-mercator atm, to allow plotting from raw coordinates.
+We are not re-projection data into web-mercator atm,
+to allow plotting from raw coordinates.
 The user should however be aware of the projection of his data.
 """
 
@@ -27,7 +28,7 @@ def plot_choropleth(df, attribute, title=None, plot_width=500,
                     k=5, reverse_colors=False, tools='', region_column=''):
     '''
     Plot Choropleth colored according to attribute
-    
+
     Parameters
     ----------
     df : Geopandas dataframe
@@ -57,12 +58,12 @@ def plot_choropleth(df, attribute, title=None, plot_width=500,
     region_column : str, optional
         Column name containing region descpriptions/ names or polygone ids.
         Default = ''.
-    
+
     Returns
     -------
     fig : Bokeh Figure instance
         Figure of Choropleth
-    
+
     Examples
     --------
     >>> import libpysal.api as lp
@@ -84,13 +85,13 @@ def plot_choropleth(df, attribute, title=None, plot_width=500,
     '''
     # We're adding columns, do that on a copy rather than on the users' input
     df = df.copy()
-    
+
     # Extract attribute values from df
     attribute_values = df[attribute].values
-    
+
     # Create bin labels with bin_labels_choropleth()
     bin_labels = bin_labels_choropleth(df, attribute_values, method, k)
-    
+
     # Initialize GeoJSONDataSource
     geo_source = GeoJSONDataSource(geojson=df.to_json())
 
@@ -135,10 +136,10 @@ def _plot_choropleth_fig(geo_source, attribute, bin_labels, bounds, region_colum
         ("Region", "@" + region_column),
         ("Attribute", "@" + attribute + "{0.0}"),
         ]
-    
+
     # add legend with add_legend()
     add_legend(fig, bin_labels, colors)
-    
+
     # change layout
     fig.xgrid.grid_line_color = None
     fig.ygrid.grid_line_color = None
@@ -150,7 +151,7 @@ def lisa_cluster(moran_loc, df, p=0.05, region_column='', title=None, plot_width
                      plot_height=500, tools=''): 
     '''
     Lisa Cluster map, coloured by local spatial autocorrelation
-    
+
     Parameters
     ----------
     moran_loc : esda.moran.Moran_Local instance
@@ -170,7 +171,7 @@ def lisa_cluster(moran_loc, df, p=0.05, region_column='', title=None, plot_width
     plot_height : int, optional
         Height dimension of the figure in screen units/ pixels.
         Default = 500
-    
+
     Returns
     -------
     fig : Bokeh figure instance
@@ -198,9 +199,10 @@ def lisa_cluster(moran_loc, df, p=0.05, region_column='', title=None, plot_width
     '''
     # We're adding columns, do that on a copy rather than on the users' input
     df = df.copy()
-    
+
     # add cluster_labels and colors5 in mask_local_auto
-    cluster_labels, colors5, _, _ = mask_local_auto(moran_loc, df=df, p=0.05)
+    cluster_labels, colors5, _, labels = mask_local_auto(moran_loc, p=0.05)
+    df['labels_lisa'] = labels
     df['moranloc_psim'] = moran_loc.p_sim
     df['moranloc_q'] = moran_loc.q
 
@@ -246,7 +248,7 @@ def _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5,
 
     # add legend with add_legend()
     add_legend(fig, cluster_labels, colors5)
-    
+
     # change layout
     fig.xgrid.grid_line_color = None
     fig.ygrid.grid_line_color = None
@@ -257,7 +259,7 @@ def _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5,
 def mplot(moran_loc, p=None, region_column='', plot_width=500, plot_height=500, tools=''): 
     '''
     Moran Scatterplot, optional coloured by local spatial autocorrelation
-    
+
     Parameters
     ----------
     moran_loc : esda.moran.Moran_Local instance
@@ -271,7 +273,7 @@ def mplot(moran_loc, p=None, region_column='', plot_width=500, plot_height=500, 
     plot_height : int, optional
         Height dimension of the figure in screen units/ pixels.
         Default = 500
-    
+
     Returns
     -------
     fig : Bokeh figure instance
@@ -310,7 +312,7 @@ def _mplot_calc(moran_loc, p):
     if p is not None:
         if not isinstance(moran_loc, esda.moran.Moran_Local):
             raise ValueError("`moran_loc` is not a Moran_Local instance")
-    
+
         _, _, colors, _ = mask_local_auto(moran_loc, p=p)
     else:
         colors = 'black'
@@ -323,19 +325,17 @@ def _mplot_calc(moran_loc, p):
 
 def _mplot_fig(source, p=None, title="Moran Scatterplot", region_column='', plot_width=500, plot_height=500, tools=''):
     """
-    
     Parameters
     ----------
     source : Bokeh ColumnDatasource or GeoJSONDataSource instance
         The data source, should contain the columns ``moran_z`` and ``lag``,
         which will be used as x and y inputs of the scatterplot.
-
     """
     # Vertical line
     vline = Span(location=0, dimension='height', line_color='lightskyblue', line_width=2, line_dash = 'dashed')
     # Horizontal line
     hline = Span(location=0, dimension='width', line_color='lightskyblue', line_width=2, line_dash = 'dashed')
-    
+
     # Create figure
     fig = figure(title= title, x_axis_label='Response', y_axis_label='Spatial Lag',
                  toolbar_location='left', plot_width=plot_width, plot_height=plot_height, tools=tools)
@@ -362,7 +362,7 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, region_column='
     """
     Plot Moran Scatterplot, LISA cluster and Choropleth
     for Local Spatial Autocorrelation Analysis
-    
+
     Parameters
     ----------
     moran_loc : esda.moran.Moran_Local instance
@@ -387,7 +387,7 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, region_column='
     reverse_colors: boolean
         Reverses the color palette to show lightest colors for
         lowest values in Choropleth map. Default reverse_colors=False
-    
+
     Returns
     -------
     fig : Bokeh Figure instance
@@ -412,7 +412,7 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, region_column='
     >>> fig = plot_local_autocorrelation(moran_loc, df, 'HOVAL', reverse_colors=True)
     >>> show(fig) 
     """
-    #DEBUG: import IPython; IPython.embed()
+    # DEBUG: import IPython; IPython.embed()
     # We're adding columns, do that on a copy rather than on the users' input
     df = df.copy()
 
@@ -422,7 +422,8 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, region_column='
         df[key] = mplot_data[key]
 
     # add cluster_labels and colors5 in mask_local_auto
-    cluster_labels, colors5, _, _ = mask_local_auto(moran_loc, df=df, p=0.05)
+    cluster_labels, colors5, _, labels = mask_local_auto(moran_loc, p=0.05)
+    df['labels_lisa'] = labels
     df['moranloc_psim'] = moran_loc.p_sim
     df['moranloc_q'] = moran_loc.q
     # Extract attribute values from df
@@ -434,8 +435,8 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, region_column='
     geo_source = GeoJSONDataSource(geojson=df.to_json())
 
     TOOLS = "tap,reset,help,hover"
-    
-    #scatter = mplot(moran_loc, p=p, plot_width=plot_width, plot_height=plot_height, tools=TOOLS)
+
+    # scatter = mplot(moran_loc, p=p, plot_width=plot_width, plot_height=plot_height, tools=TOOLS)
     scatter = _mplot_fig(geo_source, p=p, region_column=region_column, title="Local Spatial Autocorrelation", plot_width=int(plot_width*1.15),
                          plot_height=plot_height,
                          tools=TOOLS)
@@ -447,7 +448,7 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05, region_column='
                                  region_column=region_column, reverse_colors=reverse_colors,
                                  plot_width=plot_width, plot_height=plot_height,
                                  tools=TOOLS)
-    
+
     fig = gridplot([[scatter, LISA, choro]],
                    sizing_mode='scale_width')
     return fig
