@@ -109,7 +109,7 @@ def _plot_choropleth_fig(geo_source, attribute, bin_labels, bounds,
                          region_column='', title=None,
                          plot_width=500, plot_height=500, method='quantiles',
                          k=5, reverse_colors=False, tools=''):
-    colors = palettes.Blues[k]
+    colors = palettes.YlGnBu[k]
     if reverse_colors is True:
         colors.reverse()  # lightest color for lowest values
 
@@ -354,7 +354,8 @@ def _mplot_fig(source, p=None, title="Moran Scatterplot", region_column='',
                  y_axis_label='Spatial Lag', toolbar_location='left',
                  plot_width=plot_width, plot_height=plot_height, tools=tools)
     fig.scatter(x='moran_z', y='lag', source=source, color='colors',
-                size=8, fill_alpha=.6)
+                size=8, fill_alpha=.6, selection_fill_alpha=1,
+                selection_line_color='firebrick', selection_fill_color='colors')
     fig.renderers.extend([vline, hline])
     fig.xgrid.grid_line_color = None
     fig.ygrid.grid_line_color = None
@@ -428,7 +429,6 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
                                          reverse_colors=True)
     >>> show(fig)
     """
-    # DEBUG: import IPython; IPython.embed()
     # We're adding columns, do that on a copy rather than on the users' input
     df = df.copy()
 

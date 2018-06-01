@@ -44,13 +44,13 @@ def mask_local_auto(moran_loc, p=0.5):
     labels = [cluster_labels[i] for i in cluster]
 
     colors5 = {0: 'lightgrey',
-               1: 'red',
-               2: 'lightblue',
-               3: 'blue',
-               4: 'pink'}
+               1: '#d7191c',
+               2: '#abd9e9',
+               3: '#2c7bb6',
+               4: '#fdae61'}
     colors = [colors5[i] for i in cluster]  # for Bokeh
     # for MPL:
-    colors5 = (['red', 'pink', 'lightblue', 'blue', 'lightgrey'])
+    colors5 = (['#d7191c', '#fdae61', '#abd9e9', '#2c7bb6', 'lightgrey'])
 
     # HACK need this, because MPL sorts these labels while Bokeh does not
     cluster_labels.sort()
