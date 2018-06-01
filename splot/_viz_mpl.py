@@ -93,9 +93,9 @@ def lisa_cluster(moran_loc, df, p=0.05, figsize=None, ax=None,
 
 def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
                                region_column=None, mask=None,
-                               mask_color='gold', quadrant=None,
+                               mask_color='#636363', quadrant=None,
                                figsize=(15, 4), legend=True,
-                               scheme='Quantiles', cmap='GnBu'):
+                               scheme='Quantiles', cmap='YlGnBu'):
     '''
     Produce three-plot visualization of Moran Scatteprlot, LISA cluster
     and Choropleth, with Local Moran region and quadrant masking
@@ -116,7 +116,7 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
     mask: str, optional
         Identifier or name of the region to highlight. Default = None
     mask_color: str, optional
-        Color of mask. Default = 'gold'
+        Color of mask. Default = '#636363'
     quadrant : int, optional
         Quadrant 1-4 in scatterplot masking values in LISA cluster and
         Choropleth maps. Default = None
@@ -128,7 +128,7 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
         Name of PySAL classifier to be used. Default = 'Quantiles'
     cmap: str, optional
         Name of matplotlib colormap used for plotting the Choropleth.
-        Default = 'GnBU'
+        Default = 'YlGnBU'
 
     Returns
     -------
@@ -222,7 +222,7 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
         x_mask = moran_loc.z[ix]
         y_mask = ps.lag_spatial(moran_loc.w, moran_loc.z)[ix]
         axs[0].plot(x_mask, y_mask, color=mask_color, marker='o',
-                    markersize=14, alpha=.8, zorder=-1)
+                    markersize=14, alpha=.8, linestyle="None", zorder=-1)
 
         # masking inside axs[1] or Lisa cluster map
         union = df_mask.unary_union.boundary

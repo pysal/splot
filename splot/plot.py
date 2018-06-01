@@ -76,7 +76,7 @@ def mplot(m, xlabel='', ylabel='', title='', figsize=(7,7), p=None, ax=None,
         HL = 4 * (sig * m.q==4)
         spots = HH + LL + LH + HL       
 
-        hmap = colors.ListedColormap([ 'lightgrey', 'red', 'lightblue', 'blue', 'pink'])
+        hmap = colors.ListedColormap(['lightgrey', '#d7191c', '#abd9e9', '#2c7bb6', '#fdae61'])
 
     # Customize plot
     if ax is None:
