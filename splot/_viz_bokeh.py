@@ -264,7 +264,7 @@ def _lisa_cluster_fig(geo_source, moran_loc, cluster_labels, colors5,
     return fig
 
 
-def mplot(moran_loc, p=None, region_column='', plot_width=500,
+def moran_scatterplot(moran_loc, p=None, region_column='', plot_width=500,
           plot_height=500, tools=''):
     '''
     Moran Scatterplot, optional coloured by local spatial autocorrelation
@@ -295,7 +295,7 @@ def mplot(moran_loc, p=None, region_column='', plot_width=500,
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> import esda
-    >>> from splot.bk import mplot
+    >>> from splot.bk import moran_scatterplot
     >>> from bokeh.io import show
 
     >>> link = examples.get_path('columbus.shp')
@@ -305,18 +305,18 @@ def mplot(moran_loc, p=None, region_column='', plot_width=500,
     >>> w.transform = 'r'
     >>> moran_loc = esda.moran.Moran_Local(y, w)
 
-    >>> fig = mplot(moran_loc, p=0.05)
+    >>> fig = moran_scatterplot(moran_loc, p=0.05)
     >>> show(fig)
     '''
-    data = _mplot_calc(moran_loc, p)
+    data = _moran_scatterplot_calc(moran_loc, p)
     source = ColumnDataSource(pd.DataFrame(data))
-    fig = _mplot_fig(source, p=p, region_column=region_column,
+    fig = _moran_scatterplot_fig(source, p=p, region_column=region_column,
                      plot_width=plot_width, plot_height=plot_height,
                      tools=tools)
     return fig
 
 
-def _mplot_calc(moran_loc, p):
+def _moran_scatterplot_calc(moran_loc, p):
     lag = ps.lag_spatial(moran_loc.w, moran_loc.z)
     fit = ps.spreg.OLS(moran_loc.z[:, None], lag[:, None])
     if p is not None:
@@ -333,7 +333,7 @@ def _mplot_calc(moran_loc, p):
     return data
 
 
-def _mplot_fig(source, p=None, title="Moran Scatterplot", region_column='',
+def _moran_scatterplot_fig(source, p=None, title="Moran Scatterplot", region_column='',
                plot_width=500, plot_height=500, tools=''):
     """
     Parameters
@@ -432,10 +432,10 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
     # We're adding columns, do that on a copy rather than on the users' input
     df = df.copy()
 
-    # Add relevant results for mplot as columns to geodataframe
-    mplot_data = _mplot_calc(moran_loc, p)
-    for key in mplot_data:
-        df[key] = mplot_data[key]
+    # Add relevant results for moran_scatterplot as columns to geodataframe
+    moran_scatterplot_data = _moran_scatterplot_calc(moran_loc, p)
+    for key in moran_scatterplot_data:
+        df[key] = moran_scatterplot_data[key]
 
     # add cluster_labels and colors5 in mask_local_auto
     cluster_labels, colors5, _, labels = mask_local_auto(moran_loc, p=0.05)
@@ -452,7 +452,7 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
 
     TOOLS = "tap,reset,help,hover"
 
-    scatter = _mplot_fig(geo_source, p=p, region_column=region_column,
+    scatter = _moran_scatterplot_fig(geo_source, p=p, region_column=region_column,
                          title="Local Spatial Autocorrelation",
                          plot_width=int(plot_width*1.15),
                          plot_height=plot_height,

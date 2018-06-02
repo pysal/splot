@@ -4,8 +4,23 @@ from libpysal import examples
 import geopandas as gpd
 import esda
 
-from splot.mpl import plot_local_autocorrelation, lisa_cluster
+from splot.mpl import (moran_scatterplot, plot_local_autocorrelation,
+                       lisa_cluster)
 
+
+def test_moran_scatterplot():
+    link = examples.get_path('columbus.shp')
+    df = gpd.read_file(link)
+
+    y = df['HOVAL'].values
+    w = lp.Queen.from_dataframe(df)
+    w.transform = 'r'
+
+    moran_loc = esda.moran.Moran_Local(y, w)
+
+    # try with p value so points are colored
+    fig, _ = moran_scatterplot(moran_loc, p=0.05)
+    plt.close(fig)
 
 def test_lisa_cluster():
     link = examples.get_path('columbus.shp')
@@ -21,7 +36,7 @@ def test_lisa_cluster():
     plt.close(fig)
 
 
-def test_plot_local_auto():
+def test_plot_local_autocorrelation():
     link = examples.get_path('columbus.shp')
     df = gpd.read_file(link)
 
@@ -33,7 +48,7 @@ def test_plot_local_auto():
 
     fig = plot_local_autocorrelation(moran_loc, df, 'HOVAL', p=0.05)
     plt.close(fig)
-    
+
     # also test with quadrant and mask
     fig = plot_local_autocorrelation(moran_loc, df, 'HOVAL', p=0.05,
                                      region_column='POLYID',

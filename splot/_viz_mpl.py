@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import geopandas as gpd
 import pysal as ps
-import splot.plot
+import esda
 
 from matplotlib import patches, colors
 
@@ -16,6 +16,112 @@ change function input naming to be in line with bokeh functionality
 """
 
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
+
+
+def moran_scatterplot(moran_loc, p=None, figsize=(7,7), xlabel='Attribute',
+                      ylabel='Spatial Lag', title='Moran Scatterplot',
+                      ax=None, alpha=0.6):
+    """
+    Moran Scatterplot with option of coloring of Local Moran Statistics
+
+    Parameters
+    ----------
+    moran_loc : esda.moran.Moran_Local instance
+        Values of Moran's I Local Autocorrelation Statistics
+    p : float, optional
+        If given, the p-value threshold for significance. Points will
+        be colored by significance. By default it will not be colored.
+        Default =None.
+    figsize : tuple, optional
+        W, h of figure. Default =(7,7)
+    xlabel : str, optional
+        Label for x axis. Default ='Spatial Lag'
+    ylabel : str
+        Label for y axis. Default =Attribute
+    title : str, optional
+        Title of plot. Default ='Moran Scatterplot'
+    ax : Matplotlib Axes instance, optional
+        If given, the Moran plot will be created inside this axis.
+        Default =None.
+    alpha : float, optional
+        0.0 transparent through 1.0 opaque
+
+
+    Returns
+    -------
+    fig : Matplotlib Figure instance
+        Moran scatterplot figure
+    ax : matplotlib Axes instance
+        Axes in which the figure is plotted
+
+    Examples
+    --------
+    >>> import matplotlib.pyplot as plt
+    >>> import pysal as ps
+    >>> import esda
+    >>> from pysal.contrib.pdio import read_files
+    >>> from splot.plot import moran_scatterplot
+
+    >>> link = ps.examples.get_path('columbus.shp')
+    >>> db = read_files(link)
+    >>> y = db['HOVAL'].values
+    >>> w = ps.queen_from_shapefile(link)
+    >>> w.transform = 'R'
+
+    >>> m = esda.moran.Moran_Local(y, w)
+    >>> moran_scatterplot(m, xlabel='Response', ylabel='Spatial Lag',
+    ...       title='Moran Scatterplot', figsize=(7,7), p=0.05)
+
+    >>> plt.show()
+            
+    """
+    lag = ps.lag_spatial(moran_loc.w, moran_loc.z)
+    fit = ps.spreg.OLS(moran_loc.z[:, None], lag[:,None])
+
+    if p is not None:
+        if not isinstance(moran_loc, esda.moran.Moran_Local):
+            raise ValueError("`moran_loc` is not a Moran_Local instance")
+        
+        sig = 1 * (moran_loc.p_sim < p)
+        HH = 1 * (sig * moran_loc.q==1)
+        LL = 3 * (sig * moran_loc.q==3)
+        LH = 2 * (sig * moran_loc.q==2)
+        HL = 4 * (sig * moran_loc.q==4)
+        spots = HH + LL + LH + HL       
+
+        hmap = colors.ListedColormap(['lightgrey', '#d7191c', '#abd9e9', '#2c7bb6', '#fdae61'])
+
+    # Customize plot
+    if ax is None:
+        fig = plt.figure(figsize=figsize)
+        ax = fig.add_subplot(111)
+    else:
+        fig = ax.get_figure()
+
+    ax.spines['left'].set_position(('axes', -0.05))
+    ax.spines['right'].set_color('none')
+    ax.spines['bottom'].set_position(('axes', -0.05))
+    ax.spines['top'].set_color('none')
+    ax.spines['left'].set_smart_bounds(True)
+    ax.spines['bottom'].set_smart_bounds(True)
+    ax.xaxis.set_ticks_position('bottom')
+    ax.yaxis.set_ticks_position('left')
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.set_title(title)
+
+    if p is not None:
+        ax.scatter(moran_loc.z, lag, c=spots, cmap=hmap, s=60, alpha=alpha)
+    else:
+        ax.scatter(moran_loc.z, lag, s=60, color='k', alpha=alpha)
+
+    ax.plot(lag, fit.predy, color='k', alpha=.8)
+
+    ax.axvline(0, alpha=0.5, linestyle='--')
+    ax.axhline(0, alpha=0.5, linestyle='--')
+
+    return fig, ax
+
 
 
 def lisa_cluster(moran_loc, df, p=0.05, figsize=None, ax=None,
@@ -160,7 +266,7 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
     fig, axs = plt.subplots(1, 3, figsize=figsize,
                             subplot_kw={'aspect': 'equal'})
     # Moran Scatterplot
-    splot.plot.mplot(moran_loc, xlabel='Response', ylabel='Spatial Lag',
+    moran_scatterplot(moran_loc, xlabel='Response', ylabel='Spatial Lag',
                      title='Moran Scatterplot', p=p, ax=axs[0])
     axs[0].set_aspect('auto')
 

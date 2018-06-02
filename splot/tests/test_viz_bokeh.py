@@ -4,7 +4,7 @@ import geopandas as gpd
 import esda
 
 from splot.bk import (plot_choropleth, lisa_cluster,
-                      mplot, plot_local_autocorrelation)
+                      moran_scatterplot, plot_local_autocorrelation)
 
 
 def test_plot_choropleth():
@@ -33,7 +33,7 @@ def test_lisa_cluster():
     fig = lisa_cluster(moran_loc, df, p=0.05, tools=TOOLS)
 
 
-def test_mplot():
+def test_moran_scatterplot():
     link = examples.get_path('columbus.shp')
     df = gpd.read_file(link)
 
@@ -43,7 +43,7 @@ def test_mplot():
 
     moran_loc = esda.moran.Moran_Local(y, w)
 
-    fig = mplot(moran_loc, p=0.05)
+    fig = moran_scatterplot(moran_loc, p=0.05)
 
 
 def test_plot_local_autocorrelation():
