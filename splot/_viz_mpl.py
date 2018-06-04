@@ -5,7 +5,7 @@ import esda
 
 from matplotlib import patches, colors
 
-from ._viz_utils import mask_local_auto
+from ._viz_utils import mask_local_auto, moran_hot_cold_spots
 
 """
 Lightweight visualizations for pysal using Matplotlib and Geopandas
@@ -82,12 +82,7 @@ def moran_scatterplot(moran_loc, p=None, figsize=(7,7), xlabel='Attribute',
         if not isinstance(moran_loc, esda.moran.Moran_Local):
             raise ValueError("`moran_loc` is not a Moran_Local instance")
         
-        sig = 1 * (moran_loc.p_sim < p)
-        HH = 1 * (sig * moran_loc.q==1)
-        LL = 3 * (sig * moran_loc.q==3)
-        LH = 2 * (sig * moran_loc.q==2)
-        HL = 4 * (sig * moran_loc.q==4)
-        spots = HH + LL + LH + HL       
+        spots = moran_hot_cold_spots(moran_loc, p)
 
         hmap = colors.ListedColormap(['lightgrey', '#d7191c', '#abd9e9', '#2c7bb6', '#fdae61'])
 

@@ -9,6 +9,15 @@ Utility functions for lightweight visualizations in splot
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 
 
+def moran_hot_cold_spots(moran_loc, p=0.05):
+    sig = 1 * (moran_loc.p_sim < p)
+    HH = 1 * (sig * moran_loc.q == 1)
+    LL = 3 * (sig * moran_loc.q == 3)
+    LH = 2 * (sig * moran_loc.q == 2)
+    HL = 4 * (sig * moran_loc.q == 4)
+    cluster = HH + LL + LH + HL
+    return cluster
+
 def mask_local_auto(moran_loc, p=0.5):
     '''
     Create Mask for coloration and labeling of local spatial autocorrelation
@@ -33,13 +42,8 @@ def mask_local_auto(moran_loc, p=0.5):
         List of label for each attribute value/ polygon.
     '''
     # create a mask for local spatial autocorrelation
-    sig = 1 * (moran_loc.p_sim < p)
-    HH = 1 * (sig * moran_loc.q == 1)
-    LL = 3 * (sig * moran_loc.q == 3)
-    LH = 2 * (sig * moran_loc.q == 2)
-    HL = 4 * (sig * moran_loc.q == 4)
+    cluster = moran_hot_cold_spots(moran_loc, p)
 
-    cluster = HH + LL + LH + HL
     cluster_labels = ['ns', 'HH', 'LH', 'LL', 'HL']
     labels = [cluster_labels[i] for i in cluster]
 
