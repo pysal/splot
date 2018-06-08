@@ -15,14 +15,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import colors as clrs
 import matplotlib as mpl
-from matplotlib.pyplot import fill, text
 from matplotlib import cm
-from matplotlib.patches import Polygon
 import collections
-from matplotlib.path import Path
 from matplotlib.collections import (
-    LineCollection, PathCollection, PolyCollection, PathCollection,
-    PatchCollection, CircleCollection)
+    LineCollection, PolyCollection)
 
 from .color import get_color_map
 
@@ -954,7 +950,8 @@ def plot_poly_lines(shp_link,  savein=None, poly_col='none'):
 
 def plot_choropleth(shp_link, values, type, k=5, cmap=None,
                     shp_type='poly', sample_fisher=False, title='',
-                    savein=None, figsize=None, dpi=300, alpha=0.4):
+                    savein=None, figsize=None, dpi=300, alpha=0.4,
+                    colorbar_orientation='horizontal', ax = None):
     '''
     Wrapper to quickly create and plot from a lat/lon shapefile
     ...
@@ -1001,6 +998,8 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None,
         resolution of graphic file
     alpha : float
         [Optional. Default=0.4] Transparency of the map.
+    ax : Matplotlib Axes instance, optional
+        If given, the LISA map will be created inside this axis.
 
     Returns
     -------
@@ -1043,8 +1042,12 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None,
                                           cmap=cmap)
 
     map_obj.set_alpha(alpha)
-    fig = plt.figure(figsize=figsize)
-    ax = fig.add_subplot(111)
+    if ax is None:
+        fig = plt.figure(figsize=figsize)
+        ax = fig.add_subplot(111)
+    else:
+        fig = ax.get_figure()
+
     ax = setup_ax([map_obj], [shp.bbox], ax)
     if title:
         ax.set_title(title)
@@ -1055,7 +1058,7 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None,
         boundaries = np.round(map_obj.norm.boundaries, decimals=3)
         cbar = plt.colorbar(map_obj, cmap=cmap, norm=norm,
                             boundaries=boundaries, ticks=boundaries,
-                            orientation='horizontal', shrink=0.5)
+                            orientation=colorbar_orientation, shrink=0.5)
     if savein:
         plt.savefig(savein, dpi=dpi)
 
@@ -1071,7 +1074,7 @@ lisa_lbls = {1: 'HH', 2: 'LH', 3: 'LL', 4: 'HL',
 
 def plot_lisa_cluster(shp_link, lisa, p_thres=0.01, shp_type='poly',
                       title='', legend=True, savein=None, figsize=None,
-                      dpi=300, alpha=1., leg_loc=0):
+                      dpi=300, alpha=1., leg_loc=0, ax=None):
     '''
     Plot LISA cluster maps easily
     ...
@@ -1106,6 +1109,8 @@ def plot_lisa_cluster(shp_link, lisa, p_thres=0.01, shp_type='poly',
         upper right, 2: upper left, 3: lower left, 4: lower
         right, 5: right, 6: center left, 7: center right, 8: lower
         center, 9: upper center, 10: center.
+    ax : Matplotlib Axes instance, optional
+        If given, the LISA map will be created inside this axis.
 
     Returns
     -------
@@ -1119,8 +1124,11 @@ def plot_lisa_cluster(shp_link, lisa, p_thres=0.01, shp_type='poly',
     lisa_obj = base_lisa_cluster(lisa_obj, lisa, p_thres=p_thres)
     lisa_obj.set_alpha(alpha)
     # Figure
-    fig = plt.figure(figsize=figsize)
-    ax = fig.add_subplot(111)
+    if ax is None:
+        fig = plt.figure(figsize=figsize)
+        ax = fig.add_subplot(111)
+    else:
+        fig = ax.get_figure()
     ax = setup_ax([lisa_obj], [shp.bbox], ax)
     # Legend
     if legend:
