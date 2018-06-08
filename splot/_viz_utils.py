@@ -167,8 +167,8 @@ def add_legend(fig, labels, colors):
     return legend
 
 
-def calc_data_aspect(plot_height,  plot_width, bounds):
-    # Deal with data ranges:
+def calc_data_aspect(plot_height, plot_width, bounds):
+    # Deal with data ranges in Bokeh:
     # make a meter in x and a meter in y the same in pixel lengths
     aspect_box = plot_height / plot_width   # 2 / 1 = 2
     xmin, ymin, xmax, ymax = bounds
