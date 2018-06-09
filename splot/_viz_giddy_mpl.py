@@ -11,6 +11,7 @@ Lightweight visualizations for pysal dynamics using Matplotlib and Geopandas
 
 TODO
 implement **kwgs
+implement LIMA
 """
 
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
