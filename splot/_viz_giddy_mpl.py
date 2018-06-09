@@ -2,6 +2,8 @@ import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 import esda
+import ipywidgets as widgets
+from ipywidgets import interact, fixed
 
 from ._viz_utils import moran_hot_cold_spots
 from ._viz_mpl import lisa_cluster
@@ -12,6 +14,10 @@ Lightweight visualizations for pysal dynamics using Matplotlib and Geopandas
 TODO
 implement **kwgs
 implement LIMA
+allow for different patterns or list of str
+    in dynamic_lisa_composite_explore()
+add x and y label to heatmap
+add title to lisa_cluster plots
 """
 
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
@@ -218,7 +224,7 @@ def dynamic_lisa_vectors(rose, attribute=None, ax=None, arrows=True): #TODO: fix
 
 
 def dynamic_lisa_composite(rose, gdf,
-                      p=0.05, figsize=(13,10)):
+                           p=0.05, figsize=(13,10)):
     """
     Composite visualization for dynamic LISA values over two points in time.
     Includes dynamic lisa heatmap, dynamic lisa rose plot, and LISA cluster plot
@@ -271,3 +277,45 @@ def dynamic_lisa_composite(rose, gdf,
     # Rose diagram: Moran movement vectors:
     dynamic_lisa_rose(rose, ax=axs[2])
     return fig, axs
+
+def _dynamic_lisa_widget_update(rose, gdf, timex, timey,
+                                p=0.05, figsize=(13,10)):
+    """
+    Update rose values if wigets are used
+    """
+    # determine rose object for (timex, timey), which comes from interact widgets
+    y1 = gdf[timex].values
+    y2 = gdf[timey].values
+    Y = np.array([y1, y2]).T
+    rose_update = Rose(Y, rose.w, k=5)
+    
+    fig, _ = dynamic_lisa_composite(rose_update, gdf, p=p, figsize=figsize)
+
+
+def dynamic_lisa_composite_explore(rose, gdf, pattern='',
+                                   p=0.05, figsize=(13,10)):
+    """
+    Interactive exploration of dynamic lisa values
+    for different dates in a dataframe.
+    Note: only possible in jupyter notebooks
+    
+    Parameters:
+    -----------
+    rose : giddy.directional.Rose instance
+        A ``Rose`` object, which contains (among other attributes)
+        weights to calculate `esda.moran.Moran_local` values
+    gdf : geopandas dataframe instance
+        The Dataframe containing information and polygons to plot.
+    pattern : str, optional
+        Option to extract all columns ending with a specific pattern.
+        Only extracted columns will be used for comparison.
+    p : float, optional
+        The p-value threshold for significance. Default =0.05
+    figsize: tuple, optional
+        W, h of figure. Default =(13,10)
+    """
+    coldict = {col: col for col in gdf.columns if
+               col.endswith(pattern)}
+    interact(_dynamic_lisa_widget_update,
+             timex=coldict, timey=coldict, rose=fixed(rose),
+             gdf=fixed(gdf), p=fixed(p), figsize=fixed(figsize))
