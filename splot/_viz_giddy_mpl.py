@@ -15,12 +15,7 @@ TODO
 implement LIMA
 allow for different patterns or list of str
     in dynamic_lisa_composite_explore()
-add x and y label to heatmap
-add title to lisa_cluster plots
-add extended example for dynamic_lisa_composite()
-    change axs labels.
 add tests **kwargs
-add examples
 """
 
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
@@ -85,6 +80,56 @@ def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
         Moran scatterplot figure
     ax : matplotlib Axes instance
         Axes in which the figure is plotted
+    
+    Examples
+    --------
+    >>> import geopandas as gpd
+    >>> import pandas as pd
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> import numpy as np
+    >>> import matplotlib.pyplot as plt
+
+    >>> from giddy.directional import Rose
+    >>> from splot.giddy import dynamic_lisa_heatmap
+    
+    get csv and shp files
+
+    >>> shp_link = examples.get_path('us48.shp')
+    >>> df = gpd.read_file(shp_link)
+    >>> income_table = pd.read_csv(examples.get_path("usjoin.csv"))
+    
+    calculate relative values
+    
+    >>> for year in range(1969, 2010):
+    ...     income_table[str(year) + '_rel'] = (
+    ...         income_table[str(year)] / income_table[str(year)].mean())
+            
+    merge to one gdf
+    
+    >>> gdf = df.merge(income_table,left_on='STATE_NAME',right_on='Name')
+    
+    retrieve spatial weights and data for two points in time
+    
+    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w.transform = 'r'
+    >>> y1 = gdf['1969_rel'].values
+    >>> y2 = gdf['2000_rel'].values
+    
+    calculate rose Object
+    
+    >>> Y = np.array([y1, y2]).T
+    >>> rose = Rose(Y, w, k=5)
+    
+    plot
+    
+    >>> dynamic_lisa_heatmap(rose)
+    
+    customize plot
+    
+    >>> dynamic_lisa_heatmap(rose, cbar='GnBu', ylabel='1969', xlabel='2009')
+    >>> plt.show()
+    
     """
     moran_locy, moran_locx = _moran_loc_from_rose_calc(rose)
     fig, ax = _dynamic_lisa_heatmap(moran_locy, moran_locx, p=p, ax=ax, **kwargs)
@@ -119,7 +164,7 @@ def _dynamic_lisa_heatmap(moran_locy, moran_locx, p, ax, **kwargs):
 
 def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
     """
-    Plot the rose diagram.
+    Plot the dynamic LISA values in a rose diagram.
 
     Parameters
     ----------
@@ -142,6 +187,55 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
         Moran scatterplot figure
     ax : matplotlib Axes instance
         Axes in which the figure is plotted
+    
+    Examples
+    --------
+    >>> import geopandas as gpd
+    >>> import pandas as pd
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> import numpy as np
+    >>> import matplotlib.pyplot as plt
+
+    >>> from giddy.directional import Rose
+    >>> from splot.giddy import dynamic_lisa_rose
+    
+    get csv and shp files
+
+    >>> shp_link = examples.get_path('us48.shp')
+    >>> df = gpd.read_file(shp_link)
+    >>> income_table = pd.read_csv(examples.get_path("usjoin.csv"))
+    
+    calculate relative values
+    
+    >>> for year in range(1969, 2010):
+    ...     income_table[str(year) + '_rel'] = (
+    ...         income_table[str(year)] / income_table[str(year)].mean())
+            
+    merge to one gdf
+    
+    >>> gdf = df.merge(income_table,left_on='STATE_NAME',right_on='Name')
+    
+    retrieve spatial weights and data for two points in time
+    
+    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w.transform = 'r'
+    >>> y1 = gdf['1969_rel'].values
+    >>> y2 = gdf['2000_rel'].values
+    
+    calculate rose Object
+    
+    >>> Y = np.array([y1, y2]).T
+    >>> rose = Rose(Y, w, k=5)
+    
+    plot
+    
+    >>> dynamic_lisa_rose(rose, attribute=y1)
+    
+    customize plot
+    
+    >>> dynamic_lisa_rose(rose, c='r')
+    >>> plt.show()
     """
     if ax is None:
         fig = plt.figure()
@@ -203,6 +297,8 @@ def dynamic_lisa_vectors(rose, attribute=None, ax=None, arrows=True, **kwargs):
     ax : Matplotlib Axes instance, optional
         If given, the figure will be created inside this axis.
         Default =None.
+    arrows : boolean, optional
+        If True show arrowheads of vectors. Default =True
     **kwargs : keyword arguments, optional
         Keywords used for creating and designing the plot.
         Note: 'c' and 'color' cannot be passed when attribute is not None
@@ -213,6 +309,55 @@ def dynamic_lisa_vectors(rose, attribute=None, ax=None, arrows=True, **kwargs):
         Moran scatterplot figure
     ax : matplotlib Axes instance
         Axes in which the figure is plotted
+    
+    Examples
+    --------
+    >>> import geopandas as gpd
+    >>> import pandas as pd
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> import numpy as np
+    >>> import matplotlib.pyplot as plt
+
+    >>> from giddy.directional import Rose
+    >>> from splot.giddy import dynamic_lisa_vectors
+    
+    get csv and shp files
+
+    >>> shp_link = examples.get_path('us48.shp')
+    >>> df = gpd.read_file(shp_link)
+    >>> income_table = pd.read_csv(examples.get_path("usjoin.csv"))
+    
+    calculate relative values
+    
+    >>> for year in range(1969, 2010):
+    ...     income_table[str(year) + '_rel'] = (
+    ...         income_table[str(year)] / income_table[str(year)].mean())
+            
+    merge to one gdf
+    
+    >>> gdf = df.merge(income_table,left_on='STATE_NAME',right_on='Name')
+    
+    retrieve spatial weights and data for two points in time
+    
+    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w.transform = 'r'
+    >>> y1 = gdf['1969_rel'].values
+    >>> y2 = gdf['2000_rel'].values
+    
+    calculate rose Object
+    
+    >>> Y = np.array([y1, y2]).T
+    >>> rose = Rose(Y, w, k=5)
+    
+    plot
+    
+    >>> dynamic_lisa_vectors(rose)
+    
+    customize plot
+    
+    >>> dynamic_lisa_vectors(rose, arrows=False, c='r')
+    >>> plt.show()
     """
     if ax is None:
         fig = plt.figure()
@@ -284,6 +429,59 @@ def dynamic_lisa_composite(rose, gdf,
         Moran scatterplot figure
     axs : matplotlib Axes instance
         Axes in which the figure is plotted
+    
+    Examples
+    --------
+    >>> import geopandas as gpd
+    >>> import pandas as pd
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> import numpy as np
+    >>> import matplotlib.pyplot as plt
+
+    >>> from giddy.directional import Rose
+    >>> from splot.giddy import dynamic_lisa_composite
+    
+    get csv and shp files
+
+    >>> shp_link = examples.get_path('us48.shp')
+    >>> df = gpd.read_file(shp_link)
+    >>> income_table = pd.read_csv(examples.get_path("usjoin.csv"))
+    
+    calculate relative values
+    
+    >>> for year in range(1969, 2010):
+    ...     income_table[str(year) + '_rel'] = (
+    ...         income_table[str(year)] / income_table[str(year)].mean())
+            
+    merge to one gdf
+    
+    >>> gdf = df.merge(income_table,left_on='STATE_NAME',right_on='Name')
+    
+    retrieve spatial weights and data for two points in time
+    
+    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w.transform = 'r'
+    >>> y1 = gdf['1969_rel'].values
+    >>> y2 = gdf['2000_rel'].values
+    
+    calculate rose Object
+    
+    >>> Y = np.array([y1, y2]).T
+    >>> rose = Rose(Y, w, k=5)
+    
+    plot
+    
+    >>> dynamic_lisa_composite(rose, gdf)
+    
+    customize plot
+    
+    >>> fig, axs = dynamic_lisa_composite(rose, gdf)
+    >>> axs[0].set_ylabel('1996')
+    >>> axs[0].set_xlabel('2009')
+    >>> axs[1].set_title('LISA cluster for 1996')
+    >>> axs[3].set_title('LISA clsuter for 2009')
+    >>> plt.show()
     """
     # Moran_Local uses random numbers, which we cannot change between the two years!
     moran_locy, moran_locx = _moran_loc_from_rose_calc(rose)
@@ -351,6 +549,67 @@ def dynamic_lisa_composite_explore(rose, gdf, pattern='',
         The p-value threshold for significance. Default =0.05
     figsize: tuple, optional
         W, h of figure. Default =(13,10)
+    
+    Returns
+    -------
+    None
+    
+    Examples
+    --------
+    **Note**: this function creates Jupyter notebook widgets, so is meant only
+    to run in a notebook.
+    
+    >>> import geopandas as gpd
+    >>> import pandas as pd
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> import numpy as np
+    >>> import matplotlib.pyplot as plt
+    >>> %matplotlib inline
+
+    >>> from giddy.directional import Rose
+    >>> from splot.giddy import dynamic_lisa_composite_explore
+    
+    get csv and shp files
+
+    >>> shp_link = examples.get_path('us48.shp')
+    >>> df = gpd.read_file(shp_link)
+    >>> income_table = pd.read_csv(examples.get_path("usjoin.csv"))
+    
+    calculate relative values
+    
+    >>> for year in range(1969, 2010):
+    ...     income_table[str(year) + '_rel'] = (
+    ...         income_table[str(year)] / income_table[str(year)].mean())
+            
+    merge to one gdf
+    
+    >>> gdf = df.merge(income_table,left_on='STATE_NAME',right_on='Name')
+    
+    retrieve spatial weights and data for two points in time
+    
+    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w.transform = 'r'
+    >>> y1 = gdf['1969_rel'].values
+    >>> y2 = gdf['2000_rel'].values
+    
+    calculate rose Object
+    
+    >>> Y = np.array([y1, y2]).T
+    >>> rose = Rose(Y, w, k=5)
+    
+    plot
+    
+    >>> dynamic_lisa_composite_explore(rose, gdf, pattern='rel')
+    
+    customize plot
+    
+    >>> fig, axs = dynamic_lisa_composite_explore(rose, gdf, pattern='rel')
+    >>> axs[0].set_ylabel('1996')
+    >>> axs[0].set_xlabel('2009')
+    >>> axs[1].set_title('LISA cluster for 1996')
+    >>> axs[3].set_title('LISA clsuter for 2009')
+    >>> plt.show()
     """
     coldict = {col: col for col in gdf.columns if
                col.endswith(pattern)}
