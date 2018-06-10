@@ -35,6 +35,10 @@ def test_dynamic_lisa_heatmap():
     _, _, rose = _data_generation()
     fig, _ = dynamic_lisa_heatmap(rose)
     plt.close(fig)
+    
+    fig2, _ = dynamic_lisa_heatmap(rose, cmap='GnBu',
+                                   xlabel='2009', ylabel='1969')
+    plt.close(fig2)
 
 def test_dynamic_lisa_rose():
     _, y1, rose = _data_generation()
@@ -44,6 +48,9 @@ def test_dynamic_lisa_rose():
     fig2, _ = dynamic_lisa_rose(rose, attribute=y1)
     plt.close(fig2)
     
+    fig3, _ = dynamic_lisa_rose(rose, c='r')
+    plt.close(fig3)
+    
 def test_dynamic_lisa_vectors():
     _, _, rose = _data_generation()
     fig1, _ = dynamic_lisa_vectors(rose)
@@ -51,6 +58,9 @@ def test_dynamic_lisa_vectors():
 
     fig2, _ = dynamic_lisa_vectors(rose, arrows=False)
     plt.close(fig2)
+    
+    fig3, _ = dynamic_lisa_vectors(rose, c='r')
+    plt.close(fig3)
 
 
 def test_dynamic_lisa_composite():
