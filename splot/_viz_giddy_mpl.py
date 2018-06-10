@@ -12,12 +12,15 @@ from ._viz_mpl import lisa_cluster
 Lightweight visualizations for pysal dynamics using Matplotlib and Geopandas
 
 TODO
-implement **kwgs
 implement LIMA
 allow for different patterns or list of str
     in dynamic_lisa_composite_explore()
 add x and y label to heatmap
 add title to lisa_cluster plots
+add extended example for dynamic_lisa_composite()
+    change axs labels.
+add tests **kwargs
+add examples
 """
 
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
@@ -55,7 +58,7 @@ def _moran_loc_from_rose_calc(rose):
     np.random.set_state(old_state)
     return moran_locy, moran_locx
 
-def dynamic_lisa_heatmap(rose, p=0.05, ax=None):
+def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
     """
     Heatmap indicating significant transition of LISA values
     over time in Moran Scatterplot
@@ -70,6 +73,11 @@ def dynamic_lisa_heatmap(rose, p=0.05, ax=None):
     ax : Matplotlib Axes instance, optional
         If given, the figure will be created inside this axis.
         Default =None.
+    **kwargs : keyword arguments, optional
+        Keywords used for creating and designing the heatmap. These are passed
+        on to `sns.heatmap()`. See `sns` documentation for valid keywords.
+        Note: In addition `xlabel` and `ylabel` can be set. "Start time" refers to 
+        `rose.Y[:0]`, "End time" referst to time `rose.Y[:0]`.
 
     Returns
     -------
@@ -79,27 +87,37 @@ def dynamic_lisa_heatmap(rose, p=0.05, ax=None):
         Axes in which the figure is plotted
     """
     moran_locy, moran_locx = _moran_loc_from_rose_calc(rose)
-    fig, ax = _dynamic_lisa_heatmap(moran_locy, moran_locx, p=p, ax=ax)
+    fig, ax = _dynamic_lisa_heatmap(moran_locy, moran_locx, p=p, ax=ax, **kwargs)
     return fig, ax
     
-def _dynamic_lisa_heatmap(moran_locy, moran_locx, p, ax):
+def _dynamic_lisa_heatmap(moran_locy, moran_locx, p, ax, **kwargs):
     """
     Create dynaimc_lisa_heatmap figure from esda.moran.Moran_local values
     """
-    heatmap_data, mask = _dynamic_lisa_heatmap_data(moran_locy, moran_locx, p=p)
-
+    heatmap_data, diagonal_mask = _dynamic_lisa_heatmap_data(moran_locy, moran_locx, p)
+    # set default plot style
+    annot = kwargs.pop('annot', True)
+    cmap = kwargs.pop('cmap', "YlGnBu")
+    mask = kwargs.pop('mask', diagonal_mask)
+    cbar = kwargs.pop('cbar', False)
+    square = kwargs.pop('square', True)
+    ylabel = kwargs.pop('ylabel', 'Start time')
+    xlabel = kwargs.pop('xlabel', 'End time')
+    
     # set name for tick labels
-    xticklabels = ['ns', 'HH', 'HL', 'LH', 'LL'] 
-    yticklabels = ['ns', 'HH', 'HL', 'LH', 'LL']  
-
-    ax = sns.heatmap(heatmap_data, annot=True, cmap="YlGnBu",
+    xticklabels = kwargs.pop('xticklabels', ['ns', 'HH', 'HL', 'LH', 'LL'])
+    yticklabels = kwargs.pop('yticklabels', ['ns', 'HH', 'HL', 'LH', 'LL'])
+    
+    ax = sns.heatmap(heatmap_data, annot=annot, cmap=cmap,
                 xticklabels=xticklabels, yticklabels=yticklabels,
-                mask=mask, center=20, ax=ax, cbar=False, square=True)
+                mask=mask, ax=ax, cbar=cbar, square=square, **kwargs)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
     fig = ax.get_figure()
     return fig, ax
 
 
-def dynamic_lisa_rose(rose, attribute=None, ax=None):
+def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
     """
     Plot the rose diagram.
 
@@ -114,6 +132,9 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None):
     ax : Matplotlib Axes instance, optional
         If given, the figure will be created inside this axis.
         Default =None. Note, this axis should have a polar projection.
+    **kwargs : keyword arguments, optional
+        Keywords used for creating and designing the plot.
+        Note: 'c' and 'color' cannot be passed when attribute is not None
 
     Returns
     -------
@@ -133,9 +154,13 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None):
     ax.set_rlabel_position(315)
 
     if attribute is None:
-        c = ax.scatter(rose.theta, rose.r)
+        c = ax.scatter(rose.theta, rose.r, **kwargs)
     else:
-        c = ax.scatter(rose.theta, rose.r, c=attribute)
+        if 'c' in kwargs.keys() or 'color' in kwargs.keys():
+            raise ValueError('c and color are not valid keywords here; '
+                             'attribute is used for coloring')
+            
+        c = ax.scatter(rose.theta, rose.r, c=attribute, **kwargs)
         if can_insert_colorbar:
             fig.colorbar(c)
     return fig, ax
@@ -161,7 +186,8 @@ def _add_arrow(line, position=None, direction='right', size=15, color=None):
                        arrowprops=dict(arrowstyle="->", color=color),
                        size=size)
 
-def dynamic_lisa_vectors(rose, attribute=None, ax=None, arrows=True): #TODO: fix coloring by attribute
+def dynamic_lisa_vectors(rose, attribute=None, ax=None, arrows=True, **kwargs):
+    #TODO: fix coloring by attribute
     """
     Plot vectors of positional transition of LISA values
     in Moran scatterplot
@@ -177,6 +203,9 @@ def dynamic_lisa_vectors(rose, attribute=None, ax=None, arrows=True): #TODO: fix
     ax : Matplotlib Axes instance, optional
         If given, the figure will be created inside this axis.
         Default =None.
+    **kwargs : keyword arguments, optional
+        Keywords used for creating and designing the plot.
+        Note: 'c' and 'color' cannot be passed when attribute is not None
 
     Returns
     -------
@@ -197,8 +226,15 @@ def dynamic_lisa_vectors(rose, attribute=None, ax=None, arrows=True): #TODO: fix
     ylim = [rose.wY.min(), rose.wY.max()]
  
     if attribute is None:
-        attribute = 'b'
+        if 'c' in kwargs.keys():
+            attribute = kwargs.pop('c', 'b')
+        else:
+            attribute = kwargs.pop('color', 'b')
         can_insert_colorbar = False
+    else:
+        if 'c' in kwargs.keys() or 'color' in kwargs.keys():
+            raise ValueError('c and color are not valid keywords here; '
+                             'attribute is used for coloring')
         
     xs = []
     ys = []
@@ -209,7 +245,7 @@ def dynamic_lisa_vectors(rose, attribute=None, ax=None, arrows=True): #TODO: fix
         
     xs = np.asarray(xs).T
     ys = np.asarray(ys).T
-    lines = ax.plot(xs, ys, c=attribute)
+    lines = ax.plot(xs, ys, c=attribute, **kwargs)
     if can_insert_colorbar:
         fig.colorbar(lines)
         
@@ -270,9 +306,11 @@ def dynamic_lisa_composite(rose, gdf,
     lisa_cluster(moran_locy, gdf, p=p, ax=axs[1], legend=True,
                  legend_kwds={'loc': 'upper left',
                  'bbox_to_anchor': (0.92, 1.05)})
+    axs[1].set_title('Start time')
     lisa_cluster(moran_locx, gdf, p=p, ax=axs[3], legend=True,
                  legend_kwds={'loc': 'upper left',
                  'bbox_to_anchor': (0.92, 1.05)})
+    axs[3].set_title('End time')
 
     # Rose diagram: Moran movement vectors:
     dynamic_lisa_rose(rose, ax=axs[2])
