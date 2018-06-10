@@ -15,7 +15,6 @@ TODO
 implement LIMA
 allow for different patterns or list of str
     in dynamic_lisa_composite_explore()
-add tests **kwargs
 """
 
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
@@ -535,8 +534,8 @@ def dynamic_lisa_composite_explore(rose, gdf, pattern='',
     for different dates in a dataframe.
     Note: only possible in jupyter notebooks
     
-    Parameters:
-    -----------
+    Parameters
+    ----------
     rose : giddy.directional.Rose instance
         A ``Rose`` object, which contains (among other attributes)
         weights to calculate `esda.moran.Moran_local` values
@@ -557,15 +556,17 @@ def dynamic_lisa_composite_explore(rose, gdf, pattern='',
     Examples
     --------
     **Note**: this function creates Jupyter notebook widgets, so is meant only
-    to run in a notebook.
-    
+    to run in a notebook.  
+
     >>> import geopandas as gpd
     >>> import pandas as pd
     >>> import libpysal.api as lp
     >>> from libpysal import examples
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
-    >>> %matplotlib inline
+
+    If you want to see figures embedded inline in a Jupyter notebook,
+    add a line ``%matplotlib inline`` at the top of your notebook.
 
     >>> from giddy.directional import Rose
     >>> from splot.giddy import dynamic_lisa_composite_explore
@@ -601,15 +602,8 @@ def dynamic_lisa_composite_explore(rose, gdf, pattern='',
     plot
     
     >>> dynamic_lisa_composite_explore(rose, gdf, pattern='rel')
-    
-    customize plot
-    
-    >>> fig, axs = dynamic_lisa_composite_explore(rose, gdf, pattern='rel')
-    >>> axs[0].set_ylabel('1996')
-    >>> axs[0].set_xlabel('2009')
-    >>> axs[1].set_title('LISA cluster for 1996')
-    >>> axs[3].set_title('LISA clsuter for 2009')
     >>> plt.show()
+
     """
     coldict = {col: col for col in gdf.columns if
                col.endswith(pattern)}
