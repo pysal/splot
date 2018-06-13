@@ -13,14 +13,16 @@ Lightweight visualizations for pysal using Matplotlib and Geopandas
 TODO
 geopandas plotting, change round shapes in legends to boxes
 change function input naming to be in line with bokeh functionality
+
+
+did: df to gdf
 """
 
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 
 
-def moran_scatterplot(moran_loc, p=None, figsize=(7,7), xlabel='Attribute',
-                      ylabel='Spatial Lag', title='Moran Scatterplot',
-                      ax=None, alpha=0.6):
+def moran_scatterplot(moran_loc, p=None, figsize=(7,7),
+                      ax=None, **kwargs):
     """
     Moran Scatterplot with option of coloring of Local Moran Statistics
 
@@ -34,18 +36,11 @@ def moran_scatterplot(moran_loc, p=None, figsize=(7,7), xlabel='Attribute',
         Default =None.
     figsize : tuple, optional
         W, h of figure. Default =(7,7)
-    xlabel : str, optional
-        Label for x axis. Default ='Spatial Lag'
-    ylabel : str
-        Label for y axis. Default =Attribute
-    title : str, optional
-        Title of plot. Default ='Moran Scatterplot'
     ax : Matplotlib Axes instance, optional
         If given, the Moran plot will be created inside this axis.
         Default =None.
-    alpha : float, optional
-        0.0 transparent through 1.0 opaque
-
+    **kwargs : keyword arguments, optional
+        Keywords used for creating and designing the plot.
 
     Returns
     -------
@@ -69,8 +64,7 @@ def moran_scatterplot(moran_loc, p=None, figsize=(7,7), xlabel='Attribute',
     >>> w.transform = 'R'
 
     >>> m = esda.moran.Moran_Local(y, w)
-    >>> moran_scatterplot(m, xlabel='Response', ylabel='Spatial Lag',
-    ...       title='Moran Scatterplot', figsize=(7,7), p=0.05)
+    >>> moran_scatterplot(m, figsize=(7,7), p=0.05)
 
     >>> plt.show()
             
@@ -92,6 +86,12 @@ def moran_scatterplot(moran_loc, p=None, figsize=(7,7), xlabel='Attribute',
         ax = fig.add_subplot(111)
     else:
         fig = ax.get_figure()
+
+    # customize figure
+    xlabel = kwargs.pop('xlabel', 'Attribute')
+    ylabel = kwargs.pop('ylabel', 'Spatial Lag')
+    title = kwargs.pop('title', 'Moran Scatterplot')
+    figsize = kwargs.pop('alpha', 0.6)
 
     ax.spines['left'].set_position(('axes', -0.05))
     ax.spines['right'].set_color('none')
@@ -119,7 +119,7 @@ def moran_scatterplot(moran_loc, p=None, figsize=(7,7), xlabel='Attribute',
 
 
 
-def lisa_cluster(moran_loc, df, p=0.05, figsize=None, ax=None,
+def lisa_cluster(moran_loc, gdf, p=0.05, figsize=None, ax=None,
                  legend=True, legend_kwds=None):
     """
     Create a LISA Cluster map
@@ -128,10 +128,10 @@ def lisa_cluster(moran_loc, df, p=0.05, figsize=None, ax=None,
     ----------
     moran_loc : esda.moran.Moran_Local instance
         Values of Moran's Local Autocorrelation Statistic
-    df : geopandas dataframe instance
-        The Dataframe containing information to plot. Note that `df` will be
+    gdf : geopandas dataframe instance
+        The Dataframe containing information to plot. Note that `gdf` will be
         modified, so calling functions should use a copy of the user
-        provided `df`. (either using df.assign() or df.copy())
+        provided `gdf`. (either using gdf.assign() or gdf.copy())
     p : float, optional
         The p-value threshold for significance. Points will
         be colored by significance.
@@ -164,13 +164,13 @@ def lisa_cluster(moran_loc, df, p=0.05, figsize=None, ax=None,
     >>> from splot.mpl import lisa_cluster
 
     >>> link = examples.get_path('columbus.shp')
-    >>> df = gpd.read_file(link)
-    >>> y = df['HOVAL'].values
-    >>> w = lp.Queen.from_dataframe(df)
+    >>> gdf = gpd.read_file(link)
+    >>> y = gdf['HOVAL'].values
+    >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     >>> moran_loc = esda.moran.Moran_Local(y, w)
 
-    >>> fig = lisa_cluster(moran_loc, df)
+    >>> fig = lisa_cluster(moran_loc, gdf)
     >>> plt.show()
     """
     # retrieve colors5 and labels from mask_local_auto
@@ -184,7 +184,7 @@ def lisa_cluster(moran_loc, df, p=0.05, figsize=None, ax=None,
     else:
         fig = ax.get_figure()
 
-    df.assign(cl=labels).plot(column='cl', categorical=True,
+    gdf.assign(cl=labels).plot(column='cl', categorical=True,
                               k=2, cmap=hmap, linewidth=0.1, ax=ax,
                               edgecolor='white', legend=legend,
                               legend_kwds=legend_kwds)
@@ -192,7 +192,7 @@ def lisa_cluster(moran_loc, df, p=0.05, figsize=None, ax=None,
     return fig, ax
 
 
-def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
+def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
                                region_column=None, mask=None,
                                mask_color='#636363', quadrant=None,
                                figsize=(15, 4), legend=True,
@@ -205,7 +205,7 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
     ----------
     moran_loc : esda.moran.Moran_Local instance
         Values of Moran's Local Autocorrelation Statistic
-    df : geopandas dataframe
+    gdf : geopandas dataframe
         The Dataframe containing information to plot the two maps.
     attribute : str
         Column name of attribute which should be depicted in Choropleth map.
@@ -246,14 +246,14 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
     >>> from splot.mpl import plot_local_autocorrelation
 
     >>> link = examples.get_path('columbus.shp')
-    >>> df = gpd.read_file(link)
-    >>> y = df['HOVAL'].values
-    >>> w = lp.Queen.from_dataframe(df)
+    >>> gdf = gpd.read_file(link)
+    >>> y = gdf['HOVAL'].values
+    >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     >>> moran_loc = esda.moran.Moran_Local(y, w)
 
     >>> # test with quadrant and mask
-    >>> fig = plot_local_autocorrelation(moran_loc, df, 'HOVAL', p=0.05,
+    >>> fig = plot_local_autocorrelation(moran_loc, gdf, 'HOVAL', p=0.05,
     ...                                  region_column='POLYID',
     ...                                  mask=['1', '2', '3'], quadrant=1)
     >>> plt.show()
@@ -267,12 +267,12 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
 
     # Lisa cluster map
     # TODO: Fix legend_kwds: display boxes instead of points
-    lisa_cluster(moran_loc, df, p=p, ax=axs[1], legend=legend,
+    lisa_cluster(moran_loc, gdf, p=p, ax=axs[1], legend=legend,
                  legend_kwds={'loc': 'upper left',
                  'bbox_to_anchor': (0.92, 1.05)})
 
     # Choropleth for attribute
-    df.plot(column=attribute, scheme=scheme, cmap=cmap,
+    gdf.plot(column=attribute, scheme=scheme, cmap=cmap,
             legend=legend, legend_kwds={'loc': 'upper left',
                                         'bbox_to_anchor': (0.92, 1.05)},
             ax=axs[2], alpha=1)
@@ -301,8 +301,8 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
                                            color='grey', zorder=-1, alpha=0.8))
         # quadrant selection in maps
         non_quadrant = ~(moran_loc.q == quadrant)
-        mask_quadrant = df[non_quadrant]
-        df_quadrant = df.iloc[~non_quadrant]
+        mask_quadrant = gdf[non_quadrant]
+        df_quadrant = gdf.iloc[~non_quadrant]
         union2 = df_quadrant.unary_union.boundary
 
         # LISA Cluster mask and cluster boundary
@@ -318,8 +318,8 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
     # REGION MASKING
     if region_column is not None:
         # masking inside axs[0] or Moran Scatterplot
-        ix = df[region_column].isin(mask)
-        df_mask = df[ix]
+        ix = gdf[region_column].isin(mask)
+        df_mask = gdf[ix]
         x_mask = moran_loc.z[ix]
         y_mask = ps.lag_spatial(moran_loc.w, moran_loc.z)[ix]
         axs[0].plot(x_mask, y_mask, color=mask_color, marker='o',
@@ -331,4 +331,4 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
 
         # masking inside axs[2] or Chloropleth
         gpd.GeoSeries([union]).plot(linewidth=2, ax=axs[2], color=mask_color)
-    return fig
+    return fig, axs

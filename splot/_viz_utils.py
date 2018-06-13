@@ -96,13 +96,13 @@ def bin_values_choropleth(attribute_values, method='quantiles',
     return bin_values
 
 
-def bin_labels_choropleth(df, attribute_values, method='quantiles', k=5):
+def bin_labels_choropleth(gdf, attribute_values, method='quantiles', k=5):
     '''
     Create labels for each bin in the legend
 
     Parameters
     ----------
-    df : Geopandas dataframe
+    gdf : Geopandas dataframe
         Dataframe containign relevant shapes and attribute values.
     attribute_values : array or geopandas.series instance
         Array containing relevant attribute values.
@@ -132,9 +132,9 @@ def bin_labels_choropleth(df, attribute_values, method='quantiles', k=5):
     for i in range(k):
         bin_labels.append('<{:1.1f}'.format(bin_edges[i]))
 
-    # Add labels (which are the labels printed in the legend) to each row of df
+    # Add labels (which are the labels printed in the legend) to each row of gdf
     labels = np.array([bin_labels[c] for c in yb])
-    df['labels_choro'] = [str(l) for l in labels]
+    gdf['labels_choro'] = [str(l) for l in labels]
     return bin_labels
 
 
