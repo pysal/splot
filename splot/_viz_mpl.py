@@ -13,6 +13,7 @@ Lightweight visualizations for pysal using Matplotlib and Geopandas
 TODO
 geopandas plotting, change round shapes in legends to boxes
 change function input naming to be in line with bokeh functionality
+check if geopandas can read **kwargs
 
 
 did: df to gdf
@@ -21,7 +22,7 @@ did: df to gdf
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 
 
-def moran_scatterplot(moran_loc, p=None, figsize=(7,7),
+def moran_scatterplot(moran_loc, p=None,
                       ax=None, **kwargs):
     """
     Moran Scatterplot with option of coloring of Local Moran Statistics
@@ -34,8 +35,6 @@ def moran_scatterplot(moran_loc, p=None, figsize=(7,7),
         If given, the p-value threshold for significance. Points will
         be colored by significance. By default it will not be colored.
         Default =None.
-    figsize : tuple, optional
-        W, h of figure. Default =(7,7)
     ax : Matplotlib Axes instance, optional
         If given, the Moran plot will be created inside this axis.
         Default =None.
@@ -78,10 +77,11 @@ def moran_scatterplot(moran_loc, p=None, figsize=(7,7),
         
         spots = moran_hot_cold_spots(moran_loc, p)
 
-        hmap = colors.ListedColormap(['lightgrey', '#d7191c', '#abd9e9', '#2c7bb6', '#fdae61'])
+    hmap = colors.ListedColormap(['lightgrey', '#d7191c', '#abd9e9', '#2c7bb6', '#fdae61'])
 
     # Customize plot
     if ax is None:
+        figsize = kwargs.pop('figsize', (7,7))
         fig = plt.figure(figsize=figsize)
         ax = fig.add_subplot(111)
     else:
@@ -91,7 +91,7 @@ def moran_scatterplot(moran_loc, p=None, figsize=(7,7),
     xlabel = kwargs.pop('xlabel', 'Attribute')
     ylabel = kwargs.pop('ylabel', 'Spatial Lag')
     title = kwargs.pop('title', 'Moran Scatterplot')
-    figsize = kwargs.pop('alpha', 0.6)
+    alpha = kwargs.pop('alpha', 0.6)
 
     ax.spines['left'].set_position(('axes', -0.05))
     ax.spines['right'].set_color('none')
@@ -119,8 +119,8 @@ def moran_scatterplot(moran_loc, p=None, figsize=(7,7),
 
 
 
-def lisa_cluster(moran_loc, gdf, p=0.05, figsize=None, ax=None,
-                 legend=True, legend_kwds=None):
+def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
+                 legend=True, legend_kwds=None, **kwargs):
     """
     Create a LISA Cluster map
 
@@ -180,6 +180,7 @@ def lisa_cluster(moran_loc, gdf, p=0.05, figsize=None, ax=None,
     hmap = colors.ListedColormap(colors5)
 
     if ax is None:
+        figsize = kwargs.pop('figsize', None)
         fig, ax = plt.subplots(1, figsize=figsize)
     else:
         fig = ax.get_figure()
@@ -187,16 +188,17 @@ def lisa_cluster(moran_loc, gdf, p=0.05, figsize=None, ax=None,
     gdf.assign(cl=labels).plot(column='cl', categorical=True,
                               k=2, cmap=hmap, linewidth=0.1, ax=ax,
                               edgecolor='white', legend=legend,
-                              legend_kwds=legend_kwds)
+                              legend_kwds=legend_kwds, **kwargs)
     ax.set_axis_off()
+    ax.set_aspect('equal')
     return fig, ax
 
 
 def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
                                region_column=None, mask=None,
                                mask_color='#636363', quadrant=None,
-                               figsize=(15, 4), legend=True,
-                               scheme='Quantiles', cmap='YlGnBu'):
+                               legend=True, scheme='Quantiles',
+                               cmap='YlGnBu', **kwargs):
     '''
     Produce three-plot visualization of Moran Scatteprlot, LISA cluster
     and Choropleth, with Local Moran region and quadrant masking
@@ -258,6 +260,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     ...                                  mask=['1', '2', '3'], quadrant=1)
     >>> plt.show()
     '''
+    figsize = kwargs.pop('figsize', (15,4))
     fig, axs = plt.subplots(1, 3, figsize=figsize,
                             subplot_kw={'aspect': 'equal'})
     # Moran Scatterplot
@@ -269,14 +272,16 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     # TODO: Fix legend_kwds: display boxes instead of points
     lisa_cluster(moran_loc, gdf, p=p, ax=axs[1], legend=legend,
                  legend_kwds={'loc': 'upper left',
-                 'bbox_to_anchor': (0.92, 1.05)})
+                 'bbox_to_anchor': (0.92, 1.05)}, **kwargs)
+    axs[1].set_aspect('equal')
 
     # Choropleth for attribute
     gdf.plot(column=attribute, scheme=scheme, cmap=cmap,
             legend=legend, legend_kwds={'loc': 'upper left',
                                         'bbox_to_anchor': (0.92, 1.05)},
-            ax=axs[2], alpha=1)
+            ax=axs[2], alpha=1, **kwargs)
     axs[2].set_axis_off()
+    axs[2].set_aspect('equal')
 
     # MASKING QUADRANT VALUES
     if quadrant is not None:
