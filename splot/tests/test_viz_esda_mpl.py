@@ -2,10 +2,11 @@ import matplotlib.pyplot as plt
 import libpysal.api as lp
 from libpysal import examples
 import geopandas as gpd
-from esda.moran import Moran_Local
 
-from splot.esda import (moran_loc_scatterplot, plot_local_autocorrelation,
-                       lisa_cluster)
+from esda.moran import Moran_Local
+from splot.esda import (moran_loc_scatterplot,
+                        plot_local_autocorrelation,
+                        lisa_cluster)
 
 
 def test_moran_loc_scatterplot():

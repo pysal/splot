@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import geopandas as gpd
 import pysal as ps
-import esda
+from esda.moran import Moran_Local
 
 from matplotlib import patches, colors
 
@@ -50,7 +50,7 @@ def moran_loc_scatterplot(moran_loc, p=None,
     --------
     >>> import matplotlib.pyplot as plt
     >>> import pysal as ps
-    >>> import esda
+    >>> from esda.moran import Moran_Local
     >>> from pysal.contrib.pdio import read_files
     >>> from splot.esda import moran_loc_scatterplot
 
@@ -60,7 +60,7 @@ def moran_loc_scatterplot(moran_loc, p=None,
     >>> w = ps.queen_from_shapefile(link)
     >>> w.transform = 'R'
 
-    >>> m = esda.moran.Moran_Local(y, w)
+    >>> m = Moran_Local(y, w)
     >>> moran_loc_scatterplot(m)
 
     >>> moran_loc_scatterplot(m, figsize=(7,7), p=0.05)
@@ -158,7 +158,7 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
     >>> import libpysal.api as lp
     >>> from libpysal import examples
     >>> import geopandas as gpd
-    >>> import esda
+    >>> from esda.moran import Moran_Local
     >>> from splot.esda import lisa_cluster
 
     >>> link = examples.get_path('columbus.shp')
@@ -166,7 +166,7 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
     >>> y = gdf['HOVAL'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
-    >>> moran_loc = esda.moran.Moran_Local(y, w)
+    >>> moran_loc = Moran_Local(y, w)
 
     >>> fig = lisa_cluster(moran_loc, gdf)
     >>> plt.show()
@@ -242,7 +242,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     >>> import libpysal.api as lp
     >>> from libpysal import examples
     >>> import geopandas as gpd
-    >>> import esda
+    >>> from esda.moran import Moran_Local
     >>> from splot.esda import plot_local_autocorrelation
 
     >>> link = examples.get_path('columbus.shp')
@@ -250,7 +250,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     >>> y = gdf['HOVAL'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
-    >>> moran_loc = esda.moran.Moran_Local(y, w)
+    >>> moran_loc = Moran_Local(y, w)
 
     >>> # test with quadrant and mask
     >>> fig = plot_local_autocorrelation(moran_loc, gdf, 'HOVAL', p=0.05,
