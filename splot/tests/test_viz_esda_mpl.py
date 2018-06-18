@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import libpysal.api as lp
 from libpysal import examples
 import geopandas as gpd
-import esda
+from esda.moran import Moran_Local
 
 from splot.esda import (moran_loc_scatterplot, plot_local_autocorrelation,
                        lisa_cluster)
@@ -16,7 +16,7 @@ def test_moran_loc_scatterplot():
     w = lp.Queen.from_dataframe(df)
     w.transform = 'r'
 
-    moran_loc = esda.moran.Moran_Local(y, w)
+    moran_loc = Moran_Local(y, w)
 
     # try with p value so points are colored
     fig, _ = moran_loc_scatterplot(moran_loc, p=0.05)
@@ -34,7 +34,7 @@ def test_lisa_cluster():
     w = lp.Queen.from_dataframe(df)
     w.transform = 'r'
 
-    moran_loc = esda.moran.Moran_Local(y, w)
+    moran_loc = Moran_Local(y, w)
 
     fig, _ = lisa_cluster(moran_loc, df)
     plt.close(fig)
@@ -48,7 +48,7 @@ def test_plot_local_autocorrelation():
     w = lp.Queen.from_dataframe(df)
     w.transform = 'r'
 
-    moran_loc = esda.moran.Moran_Local(y, w)
+    moran_loc = Moran_Local(y, w)
 
     fig, _ = plot_local_autocorrelation(moran_loc, df, 'HOVAL', p=0.05)
     plt.close(fig)
