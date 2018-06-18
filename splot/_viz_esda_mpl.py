@@ -21,7 +21,7 @@ __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 
 
 def moran_loc_scatterplot(moran_loc, p=None,
-                      ax=None, **kwargs):
+                          ax=None, **kwargs):
     """
     Moran Scatterplot with option of coloring of Local Moran Statistics
 
@@ -71,8 +71,8 @@ def moran_loc_scatterplot(moran_loc, p=None,
     fit = ps.spreg.OLS(moran_loc.z[:, None], lag[:,None])
 
     if p is not None:
-        if not isinstance(moran_loc, esda.moran.Moran_Local):
-            raise ValueError("`moran_loc` is not a Moran_Local instance")
+        if not isinstance(moran_loc, Moran_Local):
+            raise ValueError("`moran_loc` is not a esda.moran.Moran_Local instance")
         
         spots = moran_hot_cold_spots(moran_loc, p)
 
@@ -115,7 +115,6 @@ def moran_loc_scatterplot(moran_loc, p=None,
     ax.axhline(0, alpha=0.5, linestyle='--')
 
     return fig, ax
-
 
 
 def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
