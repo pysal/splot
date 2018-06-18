@@ -52,7 +52,7 @@ def moran_loc_scatterplot(moran_loc, p=None,
     >>> import pysal as ps
     >>> import esda
     >>> from pysal.contrib.pdio import read_files
-    >>> from splot.plot import moran_loc_scatterplot
+    >>> from splot.esda import moran_loc_scatterplot
 
     >>> link = ps.examples.get_path('columbus.shp')
     >>> db = read_files(link)
@@ -160,7 +160,7 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> import esda
-    >>> from splot.mpl import lisa_cluster
+    >>> from splot.esda import lisa_cluster
 
     >>> link = examples.get_path('columbus.shp')
     >>> gdf = gpd.read_file(link)
@@ -244,7 +244,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> import esda
-    >>> from splot.mpl import plot_local_autocorrelation
+    >>> from splot.esda import plot_local_autocorrelation
 
     >>> link = examples.get_path('columbus.shp')
     >>> gdf = gpd.read_file(link)
