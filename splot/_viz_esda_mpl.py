@@ -14,15 +14,13 @@ TODO
 geopandas plotting, change round shapes in legends to boxes
 change function input naming to be in line with bokeh functionality
 check if geopandas can read **kwargs
-
-
-did: df to gdf
+check if attribute in gdf.plot works without attribute str
 """
 
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 
 
-def moran_scatterplot(moran_loc, p=None,
+def moran_loc_scatterplot(moran_loc, p=None,
                       ax=None, **kwargs):
     """
     Moran Scatterplot with option of coloring of Local Moran Statistics
@@ -39,7 +37,7 @@ def moran_scatterplot(moran_loc, p=None,
         If given, the Moran plot will be created inside this axis.
         Default =None.
     **kwargs : keyword arguments, optional
-        Keywords used for creating and designing the plot.
+        Keywords used for creating and designing the plot.TODO fixed amount:list
 
     Returns
     -------
@@ -54,7 +52,7 @@ def moran_scatterplot(moran_loc, p=None,
     >>> import pysal as ps
     >>> import esda
     >>> from pysal.contrib.pdio import read_files
-    >>> from splot.plot import moran_scatterplot
+    >>> from splot.plot import moran_loc_scatterplot
 
     >>> link = ps.examples.get_path('columbus.shp')
     >>> db = read_files(link)
@@ -63,8 +61,9 @@ def moran_scatterplot(moran_loc, p=None,
     >>> w.transform = 'R'
 
     >>> m = esda.moran.Moran_Local(y, w)
-    >>> moran_scatterplot(m, figsize=(7,7), p=0.05)
+    >>> moran_loc_scatterplot(m)
 
+    >>> moran_loc_scatterplot(m, figsize=(7,7), p=0.05)
     >>> plt.show()
             
     """
@@ -135,8 +134,6 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
     p : float, optional
         The p-value threshold for significance. Points will
         be colored by significance.
-    figsize: tuple, optional
-        W, h of figure. Default = None
     ax : matplotlib Axes instance, optional
         Axes in which to plot the figure in multiple Axes layout.
         Default = None
@@ -146,6 +143,8 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
         Dictionary to control legend formatting options. Example:
         ``legend_kwds={'loc': 'upper left', 'bbox_to_anchor': (0.92, 1.05)}``
         Default = None
+    **kwargs : keyword arguments, optional
+        Keywords used for creating and designing the plot. TODO geodataframe.plot
 
     Returns
     -------
@@ -198,7 +197,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
                                region_column=None, mask=None,
                                mask_color='#636363', quadrant=None,
                                legend=True, scheme='Quantiles',
-                               cmap='YlGnBu', **kwargs):
+                               cmap='YlGnBu', figsize=(15,4)):
     '''
     Produce three-plot visualization of Moran Scatteprlot, LISA cluster
     and Choropleth, with Local Moran region and quadrant masking
@@ -260,11 +259,10 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     ...                                  mask=['1', '2', '3'], quadrant=1)
     >>> plt.show()
     '''
-    figsize = kwargs.pop('figsize', (15,4))
     fig, axs = plt.subplots(1, 3, figsize=figsize,
                             subplot_kw={'aspect': 'equal'})
     # Moran Scatterplot
-    moran_scatterplot(moran_loc, xlabel='Response', ylabel='Spatial Lag',
+    moran_loc_scatterplot(moran_loc, xlabel='Response', ylabel='Spatial Lag',
                      title='Moran Scatterplot', p=p, ax=axs[0])
     axs[0].set_aspect('auto')
 
@@ -272,14 +270,14 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     # TODO: Fix legend_kwds: display boxes instead of points
     lisa_cluster(moran_loc, gdf, p=p, ax=axs[1], legend=legend,
                  legend_kwds={'loc': 'upper left',
-                 'bbox_to_anchor': (0.92, 1.05)}, **kwargs)
+                 'bbox_to_anchor': (0.92, 1.05)})
     axs[1].set_aspect('equal')
 
     # Choropleth for attribute
     gdf.plot(column=attribute, scheme=scheme, cmap=cmap,
             legend=legend, legend_kwds={'loc': 'upper left',
                                         'bbox_to_anchor': (0.92, 1.05)},
-            ax=axs[2], alpha=1, **kwargs)
+            ax=axs[2], alpha=1)
     axs[2].set_axis_off()
     axs[2].set_aspect('equal')
 

@@ -6,7 +6,7 @@ import ipywidgets as widgets
 from ipywidgets import interact, fixed
 
 from ._viz_utils import moran_hot_cold_spots
-from ._viz_mpl import lisa_cluster
+from ._viz_esda_mpl import lisa_cluster
 
 """
 Lightweight visualizations for pysal dynamics using Matplotlib and Geopandas
