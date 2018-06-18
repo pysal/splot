@@ -76,7 +76,7 @@ def moran_loc_scatterplot(moran_loc, p=None,
         
         spots = moran_hot_cold_spots(moran_loc, p)
 
-    hmap = colors.ListedColormap(['lightgrey', '#d7191c', '#abd9e9', '#2c7bb6', '#fdae61'])
+        hmap = colors.ListedColormap(['lightgrey', '#d7191c', '#abd9e9', '#2c7bb6', '#fdae61'])
 
     # Customize plot
     if ax is None:
