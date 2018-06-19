@@ -1,6 +1,6 @@
 import pandas as pd
 import pysal as ps
-import esda
+from esda.moran import Moran_Local
 from bokeh.plotting import figure
 from bokeh.models import (GeoJSONDataSource, ColumnDataSource,
                           CategoricalColorMapper, Span,
@@ -188,7 +188,7 @@ def lisa_cluster(moran_loc, df, p=0.05, region_column='', title=None,
     >>> import libpysal.api as lp
     >>> from libpysal import examples
     >>> import geopandas as gpd
-    >>> import esda
+    >>> from esda.moran import Moran_Local
     >>> from splot.bk import lisa_cluster
     >>> from bokeh.io import show
 
@@ -197,7 +197,7 @@ def lisa_cluster(moran_loc, df, p=0.05, region_column='', title=None,
     >>> y = df['HOVAL'].values
     >>> w = lp.Queen.from_dataframe(df)
     >>> w.transform = 'r'
-    >>> moran_loc = esda.moran.Moran_Local(y, w)
+    >>> moran_loc = Moran_Local(y, w)
 
     >>> TOOLS = "tap,reset,help"
     >>> fig = lisa_cluster(moran_loc, df, p=0.05, tools=TOOLS)
@@ -294,7 +294,7 @@ def moran_scatterplot(moran_loc, p=None, region_column='', plot_width=500,
     >>> import libpysal.api as lp
     >>> from libpysal import examples
     >>> import geopandas as gpd
-    >>> import esda
+    >>> from esda.moran import Moran_Local
     >>> from splot.bk import moran_scatterplot
     >>> from bokeh.io import show
 
@@ -303,7 +303,7 @@ def moran_scatterplot(moran_loc, p=None, region_column='', plot_width=500,
     >>> y = df['HOVAL'].values
     >>> w = lp.Queen.from_dataframe(df)
     >>> w.transform = 'r'
-    >>> moran_loc = esda.moran.Moran_Local(y, w)
+    >>> moran_loc = Moran_Local(y, w)
 
     >>> fig = moran_scatterplot(moran_loc, p=0.05)
     >>> show(fig)
@@ -320,8 +320,8 @@ def _moran_scatterplot_calc(moran_loc, p):
     lag = ps.lag_spatial(moran_loc.w, moran_loc.z)
     fit = ps.spreg.OLS(moran_loc.z[:, None], lag[:, None])
     if p is not None:
-        if not isinstance(moran_loc, esda.moran.Moran_Local):
-            raise ValueError("`moran_loc` is not a Moran_Local instance")
+        if not isinstance(moran_loc, Moran_Local):
+            raise ValueError("`moran_loc` is not a esda.moran.Moran_Local instance")
 
         _, _, colors, _ = mask_local_auto(moran_loc, p=p)
     else:
@@ -414,7 +414,7 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
     >>> import libpysal.api as lp
     >>> from libpysal import examples
     >>> import geopandas as gpd
-    >>> import esda
+    >>> from esda.moran import Moran_Local
     >>> from splot.bk import plot_local_autocorrelation
     >>> from bokeh.io import show
 
@@ -423,7 +423,7 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
     >>> y = df['HOVAL'].values
     >>> w = lp.Queen.from_dataframe(df)
     >>> w.transform = 'r'
-    >>> moran_loc = esda.moran.Moran_Local(y, w)
+    >>> moran_loc = Moran_Local(y, w)
 
     >>> fig = plot_local_autocorrelation(moran_loc, df, 'HOVAL',
                                          reverse_colors=True)

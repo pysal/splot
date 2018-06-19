@@ -49,20 +49,28 @@ def moran_loc_scatterplot(moran_loc, p=None,
     Examples
     --------
     >>> import matplotlib.pyplot as plt
-    >>> import pysal as ps
+    >>> import geopandas as gpd
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
     >>> from esda.moran import Moran_Local
-    >>> from pysal.contrib.pdio import read_files
     >>> from splot.esda import moran_loc_scatterplot
 
-    >>> link = ps.examples.get_path('columbus.shp')
-    >>> db = read_files(link)
-    >>> y = db['HOVAL'].values
-    >>> w = ps.queen_from_shapefile(link)
-    >>> w.transform = 'R'
+    Load data and calculate Moran Local statistics
+    
+    >>> link = examples.get_path('columbus.shp')
+    >>> gdf = gpd.read_file(link)
+    >>> y = gdf['HOVAL'].values
+    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w.transform = 'r'
 
     >>> m = Moran_Local(y, w)
+    
+    plot
+    
     >>> moran_loc_scatterplot(m)
-
+    
+    customize plot 
+    
     >>> moran_loc_scatterplot(m, figsize=(7,7), p=0.05)
     >>> plt.show()
             
