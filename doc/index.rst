@@ -18,6 +18,7 @@ to explore their data and quickly iterate through static and dynamic visualisati
    :caption: Contents:
 
    giddy
+   esda
 
 
 Indices and tables
