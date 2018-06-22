@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
 import geopandas as gpd
 import pysal as ps
+import numpy as np
+import libpysal.api as lp
+import seaborn as sbn
 from esda.moran import Moran_Local
 
 from matplotlib import patches, colors
@@ -19,6 +22,72 @@ check if attribute in gdf.plot works without attribute str
 
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 
+def moran_scatterplot(moran, ax=None, **kwargs):
+    """
+    Moran Scatterplot
+    
+    """
+    lag = lp.lag_spatial(moran.w, moran.y)
+    b, a = np.polyfit(moran.y, lag, 1)
+    
+    if ax is None:
+        figsize = kwargs.pop('figsize', (7,7))
+        fig = plt.figure(figsize=figsize)
+        ax = fig.add_subplot(111)
+    else:
+        fig = ax.get_figure()
+    
+    # customize figure
+    xlabel = kwargs.pop('xlabel', 'Attribute')
+    ylabel = kwargs.pop('ylabel', 'Spatial Lag')
+    title = kwargs.pop('title', 'Moran Scatterplot'+' (Moran I: '+str(round(moran.I,2))+')')
+    alpha = kwargs.pop('alpha', 0.6)
+
+    ax.spines['left'].set_position(('axes', -0.05))
+    ax.spines['right'].set_color('none')
+    ax.spines['bottom'].set_position(('axes', -0.05))
+    ax.spines['top'].set_color('none')
+    ax.spines['left'].set_smart_bounds(True)
+    ax.spines['bottom'].set_smart_bounds(True)
+    ax.xaxis.set_ticks_position('bottom')
+    ax.yaxis.set_ticks_position('left')
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.set_title(title)
+    
+    ax.scatter(moran.y, lag, alpha=alpha)
+    
+    # dashed vert at mean of the price
+    ax.vlines(moran.y.mean(), lag.min(), lag.max(),
+              linestyle='--')
+    # dashed horizontal at mean of lagged price 
+    ax.hlines(lag.mean(), moran.y.min(), moran.y.max(),
+              linestyle='--')
+    # red line of best fit using global I as slope
+    ax.plot(moran.y, a + b*moran.y, 'r')
+    
+    return fig, ax
+
+def plot_moran_simulation(moran, ax=None, **kwargs):
+    shade = kwargs.pop('shade', True)
+    xlabel = kwargs.pop('xlabel', "Moran's I")
+    ax = sbn.kdeplot(moran.sim, shade=shade, ax=ax, **kwargs)
+    ax.vlines(moran.I, 0, 1, color='r')
+    ax.vlines(moran.EI, 0,1)
+    ax.set(xlabel=xlabel)
+    fig = ax.get_figure()
+    return fig, ax
+
+
+def plot_moran(moran, **kwargs):
+    figsize = kwargs.pop('figsize', (10,4))
+    fig, axs = plt.subplots(1, 2, figsize=figsize,
+                            subplot_kw={'aspect': 'equal'})
+    plot_moran_simulation(moran, ax=axs[0])
+    moran_scatterplot(moran, ax=axs[1])
+    axs[0].set(aspect="auto")
+    return fig, axs
+    
 
 def moran_loc_scatterplot(moran_loc, p=None,
                           ax=None, **kwargs):
@@ -75,7 +144,7 @@ def moran_loc_scatterplot(moran_loc, p=None,
     >>> plt.show()
             
     """
-    lag = ps.lag_spatial(moran_loc.w, moran_loc.z)
+    lag = lp.lag_spatial(moran_loc.w, moran_loc.z)
     fit = ps.spreg.OLS(moran_loc.z[:, None], lag[:,None])
 
     if p is not None:
