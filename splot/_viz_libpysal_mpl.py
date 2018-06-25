@@ -1,84 +1,83 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
-def plot(w, gdf, indexed_on=None, ax=None, color='k',
-         node_kws=dict(marker='*', color='k'), edge_kws=None, nonplanar_edge_kws=None):
+def plot_spatial_weights(w, gdf, indexed_on=None, ax=None, 
+                         figsize=(10,10), node_kws=None, edge_kws=None,
+                         nonplanar_edge_kws=None):
     """
-    Plot spatial weights objects.
-    NOTE: Requires matplotlib, and implicitly requires geopandas 
-    dataframe as input.
+    Plot spatial weights network.
+    NOTE: Additionally plots `w.non_planar_joins` if
+    `libpysal.weights.util.nonplanar_neighbors()` was applied.
 
     Arguments
     ---------
-    w :
-    
+    w : libpysal.W object
+        Values of libpysal weights object.
     gdf : geopandas dataframe 
-        the original shapes whose topological relations are 
-        modelled in W. ß
-    indexed_on : str 
-        column of gdf which the weights object uses as an index.
-        (Default: None, so the geodataframe's index is used)
-    ax : matplotlib axis
-        axis on which to plot the weights. 
-        (Default: None, so plots on the current figure)
-    color : string
-        matplotlib color string, will color both nodes and edges
-        the same by default. 
-    node_kws : keyword argument dictionary
-        dictionary of keyword arguments to send to pyplot.scatter,
+        The original shapes whose topological relations are 
+        modelled in W.
+    indexed_on : str, optional
+        Column of gdf which the weights object uses as an index.
+        Default =None, so the geodataframe's index is used.
+    ax : matplotlib axis, optional
+        Axis on which to plot the weights. 
+        Default =None, so plots on the current figure.
+    figsize : tuple, optional
+        W, h of figure. Default =(10,10)
+    node_kws : keyword argument dictionary, optional
+        Dictionary of keyword arguments to send to pyplot.scatter,
         which provide fine-grained control over the aesthetics
-        of the nodes in the plot
-    edge_kws : keyword argument dictionary
-        dictionary of keyword arguments to send to pyplot.plot,
+        of the nodes in the plot. Default =None.
+    edge_kws : keyword argument dictionary, optional
+        Dictionary of keyword arguments to send to pyplot.plot,
         which provide fine-grained control over the aesthetics
-        of the edges in the plot.
-    nonplanar_edge_kws : keyword argument dictionary
-                  TODO
+        of the edges in the plot. Default =None.
+    nonplanar_edge_kws : keyword argument dictionary, optional
+        Dictionary of keyword arguments to send to pyplot.plot,
+        which provide fine-grained control over the aesthetics
+        of the edges from `weights.non_planar_joins` in the plot.
+        Default =None.
 
     Returns
     -------
-    fig,ax : matplotlib figure,axis on which the plot is made. 
-
-    NOTE: if you'd like to overlay the actual shapes from the 
-          geodataframe, call gdf.plot(ax=ax) after this. To plot underneath,
-          adjust the z-order of the geopandas plot: gdf.plot(ax=ax,zorder=0)
+    fig : matplotlip Figure instance
+        Figure of spatial weight network.
+    ax : matplotlib Axes instance
+        Axes in which the figure is plotted. 
 
     Examples
     --------
+    Imports
     >>> import libpysal.api as lp
-    >>> import geopandas
-    >>> gdf = geopandas.read_file(lp.get_path("columbus.shp"))
+    >>> import geopandas as gpd
+    Data preparation and statistical analysis
+    >>> gdf = gpd.read_file(examples.get_path('43MUE250GC_SIR.shp'))
     >>> weights = lp.Queen.from_dataframe(gdf)
-    >>> tmp = weights.plot(gdf, color='firebrickred', node_kws=dict(marker='*', color='k'))
-
+    >>> wnp = libpysal.weights.util.nonplanar_neighbors(weights, gdf)
+    Plot weights
+    >>> plot_spatial_weights(weights, gdf)
+    >>> plot_spatial_weights(wnp, gdf)
+    >>> plt.show()
     """
-    try:
-        import matplotlib.pyplot as plt
-    except ImportError:
-        raise ImportError("W.plot depends on matplotlib.pyplot, and this was"
-                          "not able to be imported. \nInstall matplotlib to"
-                          "plot spatial weights.")
     if ax is None:
-        fig = plt.figure()
+        fig = plt.figure(figsize=figsize)
         ax = fig.add_subplot(111)
     else:
         fig = ax.get_figure()
-
-    if node_kws is not None:
-        if 'color' not in node_kws:
-            node_kws['color'] = color
-    else:
-        node_kws=dict(color=color)
-
-    if edge_kws is not None:
-        if 'color' not in edge_kws:
-            edge_kws['color'] = color
-    else:
-        edge_kws=dict(color=color)
-
-    edge_kws.setdefault('lw', 0.5)
+    
+    # default for node_kws
+    if node_kws is None:
+        node_kws = dict(marker='.', s=10, color='#4d4d4d')
+    
+    # default for edge_kws
+    if edge_kws is None:
+        edge_kws = dict(color='#4393c3')
+    
+    # default for nonplanar_edge_kws
     if nonplanar_edge_kws is None:
+        edge_kws.setdefault('lw', 0.7)
         nonplanar_edge_kws = edge_kws.copy()
-        nonplanar_edge_kws['color'] = 'darkgrey'
+        nonplanar_edge_kws['color'] = '#d6604d'
 
     node_has_nonplanar_join = []
     if hasattr(w, 'non_planar_joins'):
@@ -88,7 +87,7 @@ def plot(w, gdf, indexed_on=None, ax=None, color='k',
         node_has_nonplanar_join = w.non_planar_joins.keys()
 
     # Plot the polygons from the geodataframe as a base layer
-    gdf.plot(ax=ax, color='lightgrey', edgecolor='w')
+    gdf.plot(ax=ax, color='#bababa', edgecolor='w')
 
     for idx, neighbors in w:
         if idx in w.islands:
@@ -121,4 +120,6 @@ def plot(w, gdf, indexed_on=None, ax=None, color='k',
     ax.scatter(gdf.centroid.apply(lambda p: p.x),
                gdf.centroid.apply(lambda p: p.y),
                **node_kws)
+    ax.set_axis_off()
+    ax.set_aspect('equal')
     return fig, ax
