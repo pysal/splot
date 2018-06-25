@@ -1,12 +1,12 @@
 import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
-import esda
+from esda.moran import Moran_Local
 import ipywidgets as widgets
 from ipywidgets import interact, fixed
 
 from ._viz_utils import moran_hot_cold_spots
-from ._viz_mpl import lisa_cluster
+from ._viz_esda_mpl import lisa_cluster
 
 """
 Lightweight visualizations for pysal dynamics using Matplotlib and Geopandas
@@ -46,9 +46,9 @@ def _moran_loc_from_rose_calc(rose):
     Calculate esda.moran.Moran_Local values from giddy.rose object
     """
     old_state = np.random.get_state()
-    moran_locy = esda.moran.Moran_Local(rose.Y[:, 0], rose.w)
+    moran_locy = Moran_Local(rose.Y[:, 0], rose.w)
     np.random.set_state(old_state)
-    moran_locx = esda.moran.Moran_Local(rose.Y[:, 1], rose.w)
+    moran_locx = Moran_Local(rose.Y[:, 1], rose.w)
     np.random.set_state(old_state)
     return moran_locy, moran_locx
 
