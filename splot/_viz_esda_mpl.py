@@ -30,15 +30,14 @@ def moran_scatterplot(moran, zstandard=True, ax=None, **kwargs):
     ----------
     moran : esda.moran.Moran instance
         Values of Moran's I Global Autocorrelation Statistics
-    p : float, optional
-        If given, the p-value threshold for significance. Points will
-        be colored by significance. By default it will not be colored.
-        Default =None.
+    zstandard : bool, optional
+        If True, Moran Scatterplot will show z-standardized attribute and
+        spatial lag values. Default =True.
     ax : Matplotlib Axes instance, optional
         If given, the Moran plot will be created inside this axis.
         Default =None.
     **kwargs : keyword arguments, optional
-        Keywords used for creating and designing the plot.TODO fixed amount:list
+        Keywords used for creating and designing the figure.
 
     Returns
     -------
@@ -77,35 +76,67 @@ def moran_scatterplot(moran, zstandard=True, ax=None, **kwargs):
     ax.set_title(title)
     
     if zstandard is True:
-        print('I WAS HERE!')
         lag = lp.lag_spatial(moran.w, moran.z)
         fit = ps.spreg.OLS(moran.z[:, None], lag[:,None])
         # plot
-        ax.scatter(moran.z, lag, s=40, color='k', alpha=alpha)
-        ax.plot(lag, fit.predy, color='r', alpha=.8)
+        ax.scatter(moran.z, lag, s=40, color='#bababa', alpha=alpha)
+        ax.plot(lag, fit.predy, color='#d6604d', alpha=.9)
         # v- and hlines
-        ax.axvline(0, alpha=0.5, linestyle='--')
-        ax.axhline(0, alpha=0.5, linestyle='--')
+        ax.axvline(0, alpha=0.5, color='k', linestyle='--')
+        ax.axhline(0, alpha=0.5, color='k', linestyle='--')
     else: 
         lag = lp.lag_spatial(moran.w, moran.y)
         b, a = np.polyfit(moran.y, lag, 1)
         #plot
-        ax.scatter(moran.y, lag, color='k', alpha=alpha)
+        ax.scatter(moran.y, lag, color='#bababa', alpha=alpha)
         # dashed vert at mean of the attribute
-        ax.vlines(moran.y.mean(), lag.min(), lag.max(),
+        ax.vlines(moran.y.mean(), lag.min(), lag.max(), alpha=0.5,
                   linestyle='--')
         # dashed horizontal at mean of lagged attribute
-        ax.hlines(lag.mean(), moran.y.min(), moran.y.max(),
+        ax.hlines(lag.mean(), moran.y.min(), moran.y.max(), alpha=0.5,
                   linestyle='--')
         # red line of best fit using global Moran I as slope
-        ax.plot(moran.y, a + b*moran.y, 'r')
+        ax.plot(moran.y, a + b*moran.y, '#d6604d')
     return fig, ax
 
 def plot_moran_simulation(moran, ax=None, **kwargs):
+    """
+    Global Moran's I simulated reference distribution.
+
+    Parameters
+    ----------
+    moran : esda.moran.Moran instance
+        Values of Moran's I Global Autocorrelation Statistics
+    ax : Matplotlib Axes instance, optional
+        If given, the Moran plot will be created inside this axis.
+        Default =None.
+    **kwargs : keyword arguments, optional
+        Keywords used for creating and designing the figure,
+        passed to seaborne.kdeplot.
+
+    Returns
+    -------
+    fig : Matplotlib Figure instance
+        Moran scatterplot figure
+    ax : matplotlib Axes instance
+        Axes in which the figure is plotted
+
+    Examples
+    --------
+    """
+    if ax is None:
+        figsize = kwargs.pop('figsize', (7,7))
+        fig = plt.figure(figsize=figsize)
+    else:
+        fig = ax.get_figure()
+    
     shade = kwargs.pop('shade', True)
     xlabel = kwargs.pop('xlabel', "Moran's I")
-    ax = sbn.kdeplot(moran.sim, shade=shade, ax=ax, **kwargs)
-    ax.vlines(moran.I, 0, 1, color='r')
+    color = kwargs.pop('color', '#bababa')
+    sbn.kdeplot(moran.sim, shade=shade, color=color, ax=ax, **kwargs)
+    
+    # customize plot
+    ax.vlines(moran.I, 0, 1, color='#d6604d')
     ax.vlines(moran.EI, 0, 1)
     ax.spines['left'].set_position(('axes', -0.05))
     ax.spines['right'].set_color('none')
@@ -115,12 +146,33 @@ def plot_moran_simulation(moran, ax=None, **kwargs):
     ax.spines['bottom'].set_smart_bounds(True)
     ax.xaxis.set_ticks_position('bottom')
     ax.yaxis.set_ticks_position('left')
-    ax.set(xlabel=xlabel)
-    fig = ax.get_figure()
+    ax.set_title('Moran I Reference Distribution')
+    ax.set_xlabel('Moran I')
     return fig, ax
 
 
-def plot_moran(moran, zstandard=True, **kwargs):
+def plot_moran(moran, zstandard=True):
+    """
+    Global Moran's I simulated reference distribution and scatterplot.
+
+    Parameters
+    ----------
+    moran : esda.moran.Moran instance
+        Values of Moran's I Global Autocorrelation Statistics
+    zstandard : bool, optional
+        If True, Moran Scatterplot will show z-standardized attribute and
+        spatial lag values. Default =True.
+
+    Returns
+    -------
+    fig : Matplotlib Figure instance
+        Moran scatterplot figure
+    ax : matplotlib Axes instance
+        Axes in which the figure is plotted
+
+    Examples
+    --------
+    """
     figsize = kwargs.pop('figsize', (10,4))
     fig, axs = plt.subplots(1, 2, figsize=figsize,
                             subplot_kw={'aspect': 'equal'})
