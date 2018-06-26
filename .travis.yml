@@ -22,7 +22,7 @@ install:
   - conda install --yes -c conda-forge --file requirements.txt
   # We need geopandas master, the legend_kwds is not in 0.3.0
   - pip install https://github.com/geopandas/geopandas/archive/master.zip
-  - pip install libpysal
+  - pip install https://github.com/pysal/libpysal/archive/master.zip
   # Pysal still needed for code not yet moved to libpysal
   - pip install pysal
   - pip install esda
