@@ -73,7 +73,15 @@ def plot_moran_simulation(moran, ax=None, **kwargs):
     xlabel = kwargs.pop('xlabel', "Moran's I")
     ax = sbn.kdeplot(moran.sim, shade=shade, ax=ax, **kwargs)
     ax.vlines(moran.I, 0, 1, color='r')
-    ax.vlines(moran.EI, 0,1)
+    ax.vlines(moran.EI, 0, 1)
+    ax.spines['left'].set_position(('axes', -0.05))
+    ax.spines['right'].set_color('none')
+    ax.spines['bottom'].set_position(('axes', -0.05))
+    ax.spines['top'].set_color('none')
+    ax.spines['left'].set_smart_bounds(True)
+    ax.spines['bottom'].set_smart_bounds(True)
+    ax.xaxis.set_ticks_position('bottom')
+    ax.yaxis.set_ticks_position('left')
     ax.set(xlabel=xlabel)
     fig = ax.get_figure()
     return fig, ax
@@ -86,6 +94,7 @@ def plot_moran(moran, **kwargs):
     plot_moran_simulation(moran, ax=axs[0])
     moran_scatterplot(moran, ax=axs[1])
     axs[0].set(aspect="auto")
+    axs[1].set(aspect="auto")
     return fig, axs
     
 
