@@ -24,11 +24,34 @@ __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 
 def moran_scatterplot(moran, ax=None, **kwargs):
     """
-    Moran Scatterplot
-    
+    Global Moran's I Scatterplot.
+
+    Parameters
+    ----------
+    moran_loc : esda.moran.Moran_Local instance
+        Values of Moran's I Local Autocorrelation Statistics
+    p : float, optional
+        If given, the p-value threshold for significance. Points will
+        be colored by significance. By default it will not be colored.
+        Default =None.
+    ax : Matplotlib Axes instance, optional
+        If given, the Moran plot will be created inside this axis.
+        Default =None.
+    **kwargs : keyword arguments, optional
+        Keywords used for creating and designing the plot.TODO fixed amount:list
+
+    Returns
+    -------
+    fig : Matplotlib Figure instance
+        Moran scatterplot figure
+    ax : matplotlib Axes instance
+        Axes in which the figure is plotted
+
+    Examples
+    --------
     """
-    lag = lp.lag_spatial(moran.w, moran.y)
-    b, a = np.polyfit(moran.y, lag, 1)
+    lag = lp.lag_spatial(moran.w, moran.z)
+    b, a = np.polyfit(moran.z, lag, 1)
     
     if ax is None:
         figsize = kwargs.pop('figsize', (7,7))
@@ -55,7 +78,7 @@ def moran_scatterplot(moran, ax=None, **kwargs):
     ax.set_ylabel(ylabel)
     ax.set_title(title)
     
-    ax.scatter(moran.y, lag, alpha=alpha)
+    ax.scatter(moran.z, lag, alpha=alpha)
     
     # dashed vert at mean of the price
     ax.vlines(moran.y.mean(), lag.min(), lag.max(),
