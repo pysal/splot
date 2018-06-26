@@ -22,14 +22,14 @@ check if attribute in gdf.plot works without attribute str
 
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 
-def moran_scatterplot(moran, ax=None, **kwargs):
+def moran_scatterplot(moran, zstandard=True, ax=None, **kwargs):
     """
     Global Moran's I Scatterplot.
 
     Parameters
     ----------
-    moran_loc : esda.moran.Moran_Local instance
-        Values of Moran's I Local Autocorrelation Statistics
+    moran : esda.moran.Moran instance
+        Values of Moran's I Global Autocorrelation Statistics
     p : float, optional
         If given, the p-value threshold for significance. Points will
         be colored by significance. By default it will not be colored.
@@ -50,9 +50,6 @@ def moran_scatterplot(moran, ax=None, **kwargs):
     Examples
     --------
     """
-    lag = lp.lag_spatial(moran.w, moran.z)
-    b, a = np.polyfit(moran.z, lag, 1)
-    
     if ax is None:
         figsize = kwargs.pop('figsize', (7,7))
         fig = plt.figure(figsize=figsize)
@@ -63,7 +60,8 @@ def moran_scatterplot(moran, ax=None, **kwargs):
     # customize figure
     xlabel = kwargs.pop('xlabel', 'Attribute')
     ylabel = kwargs.pop('ylabel', 'Spatial Lag')
-    title = kwargs.pop('title', 'Moran Scatterplot'+' (Moran I: '+str(round(moran.I,2))+')')
+    title = kwargs.pop('title', 'Moran Scatterplot'+
+                       ' (Moran I: '+str(round(moran.I,2))+')')
     alpha = kwargs.pop('alpha', 0.6)
 
     ax.spines['left'].set_position(('axes', -0.05))
@@ -78,17 +76,29 @@ def moran_scatterplot(moran, ax=None, **kwargs):
     ax.set_ylabel(ylabel)
     ax.set_title(title)
     
-    ax.scatter(moran.z, lag, alpha=alpha)
-    
-    # dashed vert at mean of the price
-    ax.vlines(moran.y.mean(), lag.min(), lag.max(),
-              linestyle='--')
-    # dashed horizontal at mean of lagged price 
-    ax.hlines(lag.mean(), moran.y.min(), moran.y.max(),
-              linestyle='--')
-    # red line of best fit using global I as slope
-    ax.plot(moran.y, a + b*moran.y, 'r')
-    
+    if zstandard is True:
+        print('I WAS HERE!')
+        lag = lp.lag_spatial(moran.w, moran.z)
+        fit = ps.spreg.OLS(moran.z[:, None], lag[:,None])
+        # plot
+        ax.scatter(moran.z, lag, s=40, color='k', alpha=alpha)
+        ax.plot(lag, fit.predy, color='r', alpha=.8)
+        # v- and hlines
+        ax.axvline(0, alpha=0.5, linestyle='--')
+        ax.axhline(0, alpha=0.5, linestyle='--')
+    else: 
+        lag = lp.lag_spatial(moran.w, moran.y)
+        b, a = np.polyfit(moran.y, lag, 1)
+        #plot
+        ax.scatter(moran.y, lag, color='k', alpha=alpha)
+        # dashed vert at mean of the attribute
+        ax.vlines(moran.y.mean(), lag.min(), lag.max(),
+                  linestyle='--')
+        # dashed horizontal at mean of lagged attribute
+        ax.hlines(lag.mean(), moran.y.min(), moran.y.max(),
+                  linestyle='--')
+        # red line of best fit using global Moran I as slope
+        ax.plot(moran.y, a + b*moran.y, 'r')
     return fig, ax
 
 def plot_moran_simulation(moran, ax=None, **kwargs):
@@ -110,12 +120,12 @@ def plot_moran_simulation(moran, ax=None, **kwargs):
     return fig, ax
 
 
-def plot_moran(moran, **kwargs):
+def plot_moran(moran, zstandard=True, **kwargs):
     figsize = kwargs.pop('figsize', (10,4))
     fig, axs = plt.subplots(1, 2, figsize=figsize,
                             subplot_kw={'aspect': 'equal'})
     plot_moran_simulation(moran, ax=axs[0])
-    moran_scatterplot(moran, ax=axs[1])
+    moran_scatterplot(moran, zstandard=zstandard, ax=axs[1])
     axs[0].set(aspect="auto")
     axs[1].set(aspect="auto")
     return fig, axs
