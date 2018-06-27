@@ -75,6 +75,7 @@ def moran_scatterplot(moran, zstandard=True, ax=None, **kwargs):
     ax.set_ylabel(ylabel)
     ax.set_title(title)
     
+    #plot and set standards
     if zstandard is True:
         lag = lp.lag_spatial(moran.w, moran.z)
         fit = ps.spreg.OLS(moran.z[:, None], lag[:,None])
@@ -98,6 +99,7 @@ def moran_scatterplot(moran, zstandard=True, ax=None, **kwargs):
         # red line of best fit using global Moran I as slope
         ax.plot(moran.y, a + b*moran.y, '#d6604d')
     return fig, ax
+
 
 def plot_moran_simulation(moran, ax=None, **kwargs):
     """
@@ -146,12 +148,12 @@ def plot_moran_simulation(moran, ax=None, **kwargs):
     ax.spines['bottom'].set_smart_bounds(True)
     ax.xaxis.set_ticks_position('bottom')
     ax.yaxis.set_ticks_position('left')
-    ax.set_title('Moran I Reference Distribution')
-    ax.set_xlabel('Moran I')
+    ax.set_title('Reference Distribution')
+    ax.set_xlabel('Moran I: '+str(round(moran.I,2)))
     return fig, ax
 
 
-def plot_moran(moran, zstandard=True):
+def plot_moran(moran, zstandard=True, **kwargs): #TODO pass in kwargs dicts
     """
     Global Moran's I simulated reference distribution and scatterplot.
 
@@ -183,7 +185,7 @@ def plot_moran(moran, zstandard=True):
     return fig, axs
     
 
-def moran_loc_scatterplot(moran_loc, p=None,
+def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
                           ax=None, **kwargs):
     """
     Moran Scatterplot with option of coloring of Local Moran Statistics
@@ -238,15 +240,12 @@ def moran_loc_scatterplot(moran_loc, p=None,
     >>> plt.show()
             
     """
-    lag = lp.lag_spatial(moran_loc.w, moran_loc.z)
-    fit = ps.spreg.OLS(moran_loc.z[:, None], lag[:,None])
-
     if p is not None:
         if not isinstance(moran_loc, Moran_Local):
             raise ValueError("`moran_loc` is not a esda.moran.Moran_Local instance")
         
+        # colors
         spots = moran_hot_cold_spots(moran_loc, p)
-
         hmap = colors.ListedColormap(['lightgrey', '#d7191c', '#abd9e9', '#2c7bb6', '#fdae61'])
 
     # Customize plot
@@ -261,7 +260,7 @@ def moran_loc_scatterplot(moran_loc, p=None,
     xlabel = kwargs.pop('xlabel', 'Attribute')
     ylabel = kwargs.pop('ylabel', 'Spatial Lag')
     title = kwargs.pop('title', 'Moran Scatterplot')
-    alpha = kwargs.pop('alpha', 0.6)
+    alpha = kwargs.pop('alpha', 0.8)
 
     ax.spines['left'].set_position(('axes', -0.05))
     ax.spines['right'].set_color('none')
@@ -274,16 +273,37 @@ def moran_loc_scatterplot(moran_loc, p=None,
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     ax.set_title(title)
-
-    if p is not None:
-        ax.scatter(moran_loc.z, lag, c=spots, cmap=hmap, s=60, alpha=alpha)
-    else:
-        ax.scatter(moran_loc.z, lag, s=60, color='k', alpha=alpha)
-
-    ax.plot(lag, fit.predy, color='k', alpha=.8)
-
-    ax.axvline(0, alpha=0.5, linestyle='--')
-    ax.axhline(0, alpha=0.5, linestyle='--')
+    
+    #plot and set standards
+    if zstandard is True:
+        lag = lp.lag_spatial(moran_loc.w, moran_loc.z)
+        fit = ps.spreg.OLS(moran_loc.z[:, None], lag[:,None])
+        # v- and hlines
+        ax.axvline(0, alpha=0.5, color='k', linestyle='--')
+        ax.axhline(0, alpha=0.5, color='k', linestyle='--')
+        if p is not None:
+            ax.plot(lag, fit.predy, color='k', alpha=.9)
+            ax.scatter(moran_loc.z, fit.predy, c=spots, cmap=hmap, s=40, alpha=alpha)
+        else:
+            ax.plot(lag, fit.predy, color='#d6604d', alpha=.9)
+            ax.scatter(moran_loc.z, fit.predy, s=40, color='#bababa', alpha=alpha)
+    else: 
+        lag = lp.lag_spatial(moran_loc.w, moran_loc.y)
+        b, a = np.polyfit(moran_loc.y, lag, 1)
+        # dashed vert at mean of the attribute
+        ax.vlines(moran_loc.y.mean(), lag.min(), lag.max(), alpha=0.5,
+                  linestyle='--')
+        # dashed horizontal at mean of lagged attribute
+        ax.hlines(lag.mean(), moran_loc.y.min(), moran_loc.y.max(), alpha=0.5,
+                  linestyle='--')
+        # red line of best fit using global Moran I as slope
+        ax.plot(moran_loc.y, a + b*moran_loc.y, '#d6604d')
+        if p is not None:
+            ax.plot(moran_loc.y, a + b*moran_loc.y, 'k')
+            ax.scatter(moran_loc.y, lag, c=spots, cmap=hmap, s=40, alpha=alpha)
+        else:
+            ax.plot(moran_loc.y, a + b*moran_loc.y, '#d6604d')
+            ax.scatter(moran_loc.y, lag, s=40, color='#bababa', alpha=alpha)
 
     return fig, ax
 
