@@ -129,6 +129,7 @@ def plot_moran_simulation(moran, ax=None, **kwargs):
     if ax is None:
         figsize = kwargs.pop('figsize', (7,7))
         fig = plt.figure(figsize=figsize)
+        ax = fig.add_subplot(111)
     else:
         fig = ax.get_figure()
     

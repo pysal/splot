@@ -3,10 +3,67 @@ import libpysal.api as lp
 from libpysal import examples
 import geopandas as gpd
 
-from esda.moran import Moran_Local
-from splot.esda import (moran_loc_scatterplot,
+from esda.moran import Moran_Local, Moran
+from splot.esda import (moran_scatterplot,
+                        plot_moran_simulation,
+                        plot_moran,
+                        moran_loc_scatterplot,
                         plot_local_autocorrelation,
                         lisa_cluster)
+
+
+def test_moran_scatterplot():
+    # Load data and apply statistical analysis
+    link_to_data = examples.get_path('Guerry.shp')
+    gdf = gpd.read_file(link_to_data)
+    y = gdf['Donatns'].values
+    w = lp.Queen.from_dataframe(gdf)
+    w.transform = 'r'
+    # Calc Global Moran
+    w = lp.Queen.from_dataframe(gdf)
+    moran = Moran(y, w)
+    # plot
+    fig, _ = moran_scatterplot(moran)
+    plt.close(fig)
+    # customize
+    fig, _ = moran_scatterplot(moran, zstandard=False, figsize=(4,4))
+    plt.close(fig)
+
+
+def test_plot_moran_simulation():
+    # Load data and apply statistical analysis
+    link_to_data = examples.get_path('Guerry.shp')
+    gdf = gpd.read_file(link_to_data)
+    y = gdf['Donatns'].values
+    w = lp.Queen.from_dataframe(gdf)
+    w.transform = 'r'
+    # Calc Global Moran
+    w = lp.Queen.from_dataframe(gdf)
+    moran = Moran(y, w)
+    # plot
+    fig, _ = plot_moran_simulation(moran)
+    plt.close(fig)
+    # customize
+    fig, _ = plot_moran_simulation(moran, figsize=(4,4))
+    plt.close(fig)
+
+
+def test_plot_moran():
+    # Load data and apply statistical analysis
+    link_to_data = examples.get_path('Guerry.shp')
+    gdf = gpd.read_file(link_to_data)
+    y = gdf['Donatns'].values
+    w = lp.Queen.from_dataframe(gdf)
+    w.transform = 'r'
+    # Calc Global Moran
+    w = lp.Queen.from_dataframe(gdf)
+    moran = Moran(y, w)
+    # plot
+    fig, _ = plot_moran(moran)
+    plt.close(fig)
+    # customize
+    fig, _ = plot_moran(moran, zstandard=False, figsize=(4,4))
+    plt.close(fig)
 
 
 def test_moran_loc_scatterplot():
