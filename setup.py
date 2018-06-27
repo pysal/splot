@@ -1,12 +1,8 @@
 from setuptools import setup
 
-try:
-    from distutils.command.build_py import build_py_2to3 as build_py
-except ImportError:
-    from distutils.command.build_py import build_py
 
 setup(name='splot', #name of package
-      version='1.0.0dev',
+      version='1.0.0.dev0',
       description= 'plotting for PySAL',
       url= 'https://github.com/pysal/splot',
       maintainer= 'Serge Rey',
@@ -27,8 +23,8 @@ setup(name='splot', #name of package
         'Programming Language :: Python :: 3.6'
         ],
       license='3-Clause BSD',
-      packages=[],
+      packages=['splot'],
+      include_package_data=True,
       install_requires=['numpy', 'scipy', 'libpysal', 'mapclassify', 'palettable',
                         'esda', 'pysal',],
-      zip_safe=False,
-      cmdclass = {'build.py':build_py})
+      zip_safe=False)
