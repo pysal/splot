@@ -48,6 +48,28 @@ def moran_scatterplot(moran, zstandard=True, ax=None, **kwargs):
 
     Examples
     --------
+    Imports
+    >>> import matplotlib.pyplot as plt
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> import geopandas as gpd
+    >>> from esda.moran import Moran
+    >>> from splot.esda import moran_scatterplot
+    Load data and calculate weights
+    >>> link_to_data = examples.get_path('Guerry.shp')
+    >>> gdf = gpd.read_file(link_to_data)
+    >>> y = gdf['Donatns'].values
+    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w.transform = 'r'
+    Calculate Global Moran
+    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> moran = Moran(y, w)
+    plot
+    >>> moran_scatterplot(moran)
+    >>> plt.show()
+    customize plot
+    >>> moran_scatterplot(moran, zstandard=False, figsize=(4,4))
+    >>> plt.show()
     """
     if ax is None:
         figsize = kwargs.pop('figsize', (7,7))
@@ -125,6 +147,28 @@ def plot_moran_simulation(moran, ax=None, **kwargs):
 
     Examples
     --------
+    Imports
+    >>> import matplotlib.pyplot as plt
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> import geopandas as gpd
+    >>> from esda.moran import Moran
+    >>> from splot.esda import plot_moran_simulation
+    Load data and calculate weights
+    >>> link_to_data = examples.get_path('Guerry.shp')
+    >>> gdf = gpd.read_file(link_to_data)
+    >>> y = gdf['Donatns'].values
+    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w.transform = 'r'
+    Calculate Global Moran
+    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> moran = Moran(y, w)
+    plot
+    >>> plot_moran_simulation(moran)
+    >>> plt.show()
+    customize plot
+    >>> plot_moran_simulation(moran, figsize=(4,4))
+    >>> plt.show()
     """
     if ax is None:
         figsize = kwargs.pop('figsize', (7,7))
@@ -175,6 +219,28 @@ def plot_moran(moran, zstandard=True, **kwargs): #TODO pass in kwargs dicts
 
     Examples
     --------
+    Imports
+    >>> import matplotlib.pyplot as plt
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> import geopandas as gpd
+    >>> from esda.moran import Moran
+    >>> from splot.esda import plot_moran
+    Load data and calculate weights
+    >>> link_to_data = examples.get_path('Guerry.shp')
+    >>> gdf = gpd.read_file(link_to_data)
+    >>> y = gdf['Donatns'].values
+    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w.transform = 'r'
+    Calculate Global Moran
+    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> moran = Moran(y, w)
+    plot
+    >>> plot_moran(moran)
+    >>> plt.show()
+    customize plot
+    >>> plot_moran(moran, zstandard=False, figsize=(4,4))
+    >>> plt.show()
     """
     figsize = kwargs.pop('figsize', (10,4))
     fig, axs = plt.subplots(1, 2, figsize=figsize,
