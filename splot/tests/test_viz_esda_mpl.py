@@ -26,7 +26,7 @@ def test_moran_scatterplot():
     fig, _ = moran_scatterplot(moran)
     plt.close(fig)
     # customize
-    fig, _ = moran_scatterplot(moran, zstandard=False, figsize=(4,4))
+    fig, _ = moran_scatterplot(moran, zstandard=False, figsize=(4, 4))
     plt.close(fig)
 
 
@@ -44,7 +44,7 @@ def test_plot_moran_simulation():
     fig, _ = plot_moran_simulation(moran)
     plt.close(fig)
     # customize
-    fig, _ = plot_moran_simulation(moran, figsize=(4,4))
+    fig, _ = plot_moran_simulation(moran, figsize=(4, 4))
     plt.close(fig)
 
 
@@ -62,7 +62,7 @@ def test_plot_moran():
     fig, _ = plot_moran(moran)
     plt.close(fig)
     # customize
-    fig, _ = plot_moran(moran, zstandard=False, figsize=(4,4))
+    fig, _ = plot_moran(moran, zstandard=False, figsize=(4, 4))
     plt.close(fig)
 
 
@@ -81,8 +81,9 @@ def test_moran_loc_scatterplot():
     plt.close(fig)
 
     # try with p value and different figure size
-    fig, _ = moran_loc_scatterplot(moran_loc, p=0.05, figsize=(10,5))
+    fig, _ = moran_loc_scatterplot(moran_loc, p=0.05, figsize=(10, 5))
     plt.close(fig)
+
 
 def test_lisa_cluster():
     link = examples.get_path('columbus.shp')
@@ -113,6 +114,6 @@ def test_plot_local_autocorrelation():
 
     # also test with quadrant and mask
     fig, _ = plot_local_autocorrelation(moran_loc, df, 'HOVAL', p=0.05,
-                                     region_column='POLYID',
-                                     mask=['1', '2', '3'], quadrant=1)
+                                        region_column='POLYID',
+                                        mask=['1', '2', '3'], quadrant=1)
     plt.close(fig)
