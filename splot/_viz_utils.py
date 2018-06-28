@@ -197,9 +197,12 @@ def calc_data_aspect(plot_height, plot_width, bounds):
     return xmin, xmax, ymin, ymax
 
 
-#Utility functions for viz of continuous variables
+# Utility functions for colormaps
+# Color design
+splot_colors = dict(base_grey='#bababa',
+                    moran_fit='#d6604d')
 
-#Utility function #1 - forces diverging colormap to be centered at zero
+# Utility function #1 - forces continuous diverging colormap to be centered at zero
 def shift_colormap(cmap, start=0, midpoint=0.5, stop=1.0, name='shiftedcmap'):
     '''
     Function to offset the "center" of a colormap. Useful for
@@ -262,7 +265,7 @@ def shift_colormap(cmap, start=0, midpoint=0.5, stop=1.0, name='shiftedcmap'):
     return new_cmap
 
 
-#Utility #2 - truncate colorcap in order to grab only positive or negative portion
+# Utility #2 - truncate colorcap in order to grab only positive or negative portion
 def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
     '''
     Function to truncate a colormap by selecting a subset of
