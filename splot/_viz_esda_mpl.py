@@ -23,7 +23,7 @@ check if attribute in gdf.plot works without attribute str
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 
 
-def _scatterplot_fig_ax(ax, figsize):
+def _create_moran_fig_ax(ax, figsize):
     if ax is None:
         fig = plt.figure(figsize=figsize)
         ax = fig.add_subplot(111)
@@ -81,7 +81,6 @@ def moran_scatterplot(moran, zstandard=True, ax=None, **kwargs):
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     Calculate Global Moran
-    >>> w = lp.Queen.from_dataframe(gdf)
     >>> moran = Moran(y, w)
     plot
     >>> moran_scatterplot(moran)
@@ -99,7 +98,7 @@ def moran_scatterplot(moran, zstandard=True, ax=None, **kwargs):
     alpha = kwargs.pop('alpha', 0.6)
     
     # get fig and ax
-    fig, ax = _scatterplot_fig_ax(ax, figsize)
+    fig, ax = _create_moran_fig_ax(ax, figsize)
     
     # set labels
     ax.set_xlabel(xlabel)
@@ -173,7 +172,6 @@ def plot_moran_simulation(moran, ax=None, **kwargs):
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     Calculate Global Moran
-    >>> w = lp.Queen.from_dataframe(gdf)
     >>> moran = Moran(y, w)
     plot
     >>> plot_moran_simulation(moran)
@@ -185,7 +183,7 @@ def plot_moran_simulation(moran, ax=None, **kwargs):
     figsize = kwargs.pop('figsize', (7, 7))
     
     # get fig and ax
-    fig, ax = _scatterplot_fig_ax(ax, figsize)
+    fig, ax = _create_moran_fig_ax(ax, figsize)
 
     # plot distribution
     shade = kwargs.pop('shade', True)
@@ -235,7 +233,6 @@ def plot_moran(moran, zstandard=True, **kwargs):  # TODO pass in kwargs dicts
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     Calculate Global Moran
-    >>> w = lp.Queen.from_dataframe(gdf)
     >>> moran = Moran(y, w)
     plot
     >>> plot_moran(moran)
@@ -261,7 +258,7 @@ def moran_bv_scatterplot(moran_bv, ax=None, **kwargs):
     Parameters
     ----------
     moran_bv : esda.moran.Moran_BV instance
-        Values of Moran's I Global Autocorrelation Statistics
+        Values of Bivariate Moran's I Autocorrelation Statistics
     ax : Matplotlib Axes instance, optional
         If given, the Moran plot will be created inside this axis.
         Default =None.
@@ -282,22 +279,22 @@ def moran_bv_scatterplot(moran_bv, ax=None, **kwargs):
     >>> import libpysal.api as lp
     >>> from libpysal import examples
     >>> import geopandas as gpd
-    >>> from esda.moran import Moran
-    >>> from splot.esda import moran_scatterplot
+    >>> from esda.moran import Moran_BV
+    >>> from splot.esda import moran_bv_scatterplot
     Load data and calculate weights
     >>> link_to_data = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
+    >>> x = df['Suicids'].values
     >>> y = gdf['Donatns'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
-    Calculate Global Moran
-    >>> w = lp.Queen.from_dataframe(gdf)
-    >>> moran = Moran(y, w)
+    Calculate Bivariate Moran
+    >>> moran_bv = Moran_BV(x, y, w)
     plot
-    >>> moran_scatterplot(moran)
+    >>> moran_bv_scatterplot(moran_bv)
     >>> plt.show()
     customize plot
-    >>> moran_scatterplot(moran, zstandard=False, figsize=(4,4))
+    >>> moran_bv_scatterplot(moran_bv, zstandard=False, figsize=(4,4))
     >>> plt.show()
     """
     # define customization
@@ -309,7 +306,7 @@ def moran_bv_scatterplot(moran_bv, ax=None, **kwargs):
     alpha = kwargs.pop('alpha', 0.6)
 
     # get fig and ax
-    fig, ax = _scatterplot_fig_ax(ax, figsize)
+    fig, ax = _create_moran_fig_ax(ax, figsize)
     
     # set labels
     ax.set_xlabel(xlabel)
@@ -331,12 +328,12 @@ def moran_bv_scatterplot(moran_bv, ax=None, **kwargs):
 
 def plot_moran_bv_simulation(moran_bv, ax=None, **kwargs):
     """
-    Global Moran's I simulated reference distribution.
+    Bivariate Moran's I simulated reference distribution.
 
     Parameters
     ----------
     moran_bv : esda.moran.Moran_BV instance
-        Values of Moran's I Global Autocorrelation Statistics
+        Values of Bivariate Moran's I Autocorrelation Statistics
     ax : Matplotlib Axes instance, optional
         If given, the Moran plot will be created inside this axis.
         Default =None.
@@ -358,28 +355,28 @@ def plot_moran_bv_simulation(moran_bv, ax=None, **kwargs):
     >>> import libpysal.api as lp
     >>> from libpysal import examples
     >>> import geopandas as gpd
-    >>> from esda.moran import Moran
-    >>> from splot.esda import plot_moran_simulation
+    >>> from esda.moran import Moran_BV
+    >>> from splot.esda import plot_moran_bv_simulation
     Load data and calculate weights
     >>> link_to_data = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
+    >>> x = df['Suicids'].values
     >>> y = gdf['Donatns'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
-    Calculate Global Moran
-    >>> w = lp.Queen.from_dataframe(gdf)
-    >>> moran = Moran(y, w)
+    Calculate Bivariate Moran
+    >>> moran_bv = Moran_BV(x, y, w)
     plot
-    >>> plot_moran_simulation(moran)
+    >>> plot_moran_bv_simulation(moran_bv)
     >>> plt.show()
     customize plot
-    >>> plot_moran_simulation(moran, figsize=(4,4))
+    >>> plot_moran_bv_simulation(moran_bv, figsize=(4,4))
     >>> plt.show()
     """
     figsize = kwargs.pop('figsize', (7, 7))
 
     # get fig and ax
-    fig, ax = _scatterplot_fig_ax(ax, figsize)
+    fig, ax = _create_moran_fig_ax(ax, figsize)
 
     # plot distribution
     shade = kwargs.pop('shade', True)
@@ -392,6 +389,57 @@ def plot_moran_bv_simulation(moran_bv, ax=None, **kwargs):
     ax.set_title('Reference Distribution')
     ax.set_xlabel('Bivariate Moran I: ' + str(round(moran_bv.I, 2)))
     return fig, ax
+
+
+def plot_moran_bv(moran_bv, **kwargs):  # TODO pass in kwargs dicts
+    """
+    Bivariate Moran's I simulated reference distribution and scatterplot.
+
+    Parameters
+    ----------
+    moran_bv : esda.moran.Moran_BV instance
+        Values of Bivariate Moran's I Autocorrelation Statistics
+
+    Returns
+    -------
+    fig : Matplotlib Figure instance
+        Moran scatterplot figure
+    ax : matplotlib Axes instance
+        Axes in which the figure is plotted
+
+    Examples
+    --------
+    Imports
+    >>> import matplotlib.pyplot as plt
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> import geopandas as gpd
+    >>> from esda.moran import Moran_BV
+    >>> from splot.esda import plot_moran_bv
+    Load data and calculate weights
+    >>> link_to_data = examples.get_path('Guerry.shp')
+    >>> gdf = gpd.read_file(link_to_data)
+    >>> x = df['Suicids'].values
+    >>> y = gdf['Donatns'].values
+    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w.transform = 'r'
+    Calculate Bivariate Moran
+    >>> moran_bv = Moran_BV(x, y, w)
+    plot
+    >>> plot_moran_bv(moran_bv)
+    >>> plt.show()
+    customize plot
+    >>> plot_moran_bv(moran_bv, figsize=(4,4))
+    >>> plt.show()
+    """
+    figsize = kwargs.pop('figsize', (10, 4))
+    fig, axs = plt.subplots(1, 2, figsize=figsize,
+                            subplot_kw={'aspect': 'equal'})
+    plot_moran_bv_simulation(moran_bv, ax=axs[0])
+    moran_bv_scatterplot(moran_bv, ax=axs[1])
+    axs[0].set(aspect="auto")
+    axs[1].set(aspect="auto")
+    return fig, axs
 
 
 def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
@@ -467,7 +515,7 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
     alpha = kwargs.pop('alpha', 0.8)
 
     # get fig and ax
-    fig, ax = _scatterplot_fig_ax(ax, figsize)
+    fig, ax = _create_moran_fig_ax(ax, figsize)
     
     # set labels
     ax.set_xlabel(xlabel)
