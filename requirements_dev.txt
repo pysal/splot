@@ -7,4 +7,3 @@ sphinxcontrib-napoleon
 coveralls
 jupyter
 nbconvert
-bokeh

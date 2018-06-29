@@ -1,6 +1,7 @@
-numpy>=1.3
+numpy
 pandas 
+geopandas
 matplotlib
 seaborn
+bokeh
 ipywidgets
-geopandas
