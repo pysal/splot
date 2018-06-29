@@ -284,7 +284,7 @@ def moran_bv_scatterplot(moran_bv, ax=None, **kwargs):
     Load data and calculate weights
     >>> link_to_data = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
-    >>> x = df['Suicids'].values
+    >>> x = gdf['Suicids'].values
     >>> y = gdf['Donatns'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
@@ -360,7 +360,7 @@ def plot_moran_bv_simulation(moran_bv, ax=None, **kwargs):
     Load data and calculate weights
     >>> link_to_data = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
-    >>> x = df['Suicids'].values
+    >>> x = gdf['Suicids'].values
     >>> y = gdf['Donatns'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
@@ -419,7 +419,7 @@ def plot_moran_bv(moran_bv, **kwargs):  # TODO pass in kwargs dicts
     Load data and calculate weights
     >>> link_to_data = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
-    >>> x = df['Suicids'].values
+    >>> x = gdf['Suicids'].values
     >>> y = gdf['Donatns'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
