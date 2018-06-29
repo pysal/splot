@@ -1,6 +1,5 @@
 import numpy as np
 import mapclassify.api as classify
-from bokeh.models import Legend
 
 """
 Utility functions for lightweight visualizations in splot
@@ -151,6 +150,7 @@ def add_legend(fig, labels, colors):
     colors : Bokeh Palette instance
         Palette instance containing colours of choice.
     """
+    from bokeh.models import Legend
     # add labels to figure (workaround,
     # legend with geojsondatasource doesn't work,
     # see https://github.com/bokeh/bokeh/issues/5904)
