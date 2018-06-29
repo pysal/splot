@@ -3,10 +3,13 @@ import libpysal.api as lp
 from libpysal import examples
 import geopandas as gpd
 
-from esda.moran import Moran_Local, Moran
+from esda.moran import Moran_Local, Moran, Moran_BV
 from splot.esda import (moran_scatterplot,
                         plot_moran_simulation,
                         plot_moran,
+                        moran_bv_scatterplot,
+                        plot_moran_bv_simulation,
+                        plot_moran_bv,
                         moran_loc_scatterplot,
                         plot_local_autocorrelation,
                         lisa_cluster)
@@ -63,6 +66,57 @@ def test_plot_moran():
     plt.close(fig)
     # customize
     fig, _ = plot_moran(moran, zstandard=False, figsize=(4, 4))
+    plt.close(fig)
+
+def test_moran_bv_scatterplot():
+    link_to_data = examples.get_path('Guerry.shp')
+    gdf = gpd.read_file(link_to_data)
+    x = df['Suicids'].values
+    y = gdf['Donatns'].values
+    w = lp.Queen.from_dataframe(gdf)
+    w.transform = 'r'
+    # Calculate Bivariate Moran
+    moran_bv = Moran_BV(x, y, w)
+    # plot
+    fig, _ = moran_bv_scatterplot(moran_bv)
+    plt.close(fig)
+    # customize plot
+    fig, _ = moran_bv_scatterplot(moran_bv, zstandard=False, figsize=(4,4))
+    plt.close(fig)
+
+
+def test_plot_moran_bv_simulation():
+    # Load data and calculate weights
+    link_to_data = examples.get_path('Guerry.shp')
+    gdf = gpd.read_file(link_to_data)
+    x = df['Suicids'].values
+    y = gdf['Donatns'].values
+    w = lp.Queen.from_dataframe(gdf)
+    w.transform = 'r'
+    # Calculate Bivariate Moran
+    moran_bv = Moran_BV(x, y, w)
+    # plot
+    fig, _ = plot_moran_bv_simulation(moran_bv)
+    plt.close(fig)
+    # customize plot
+    fig, _ = plot_moran_bv_simulation(moran_bv, figsize=(4,4))
+    plt.close(fig)
+
+def test_plot_moran_bv():
+    # Load data and calculate weights
+    link_to_data = examples.get_path('Guerry.shp')
+    gdf = gpd.read_file(link_to_data)
+    x = df['Suicids'].values
+    y = gdf['Donatns'].values
+    w = lp.Queen.from_dataframe(gdf)
+    w.transform = 'r'
+    # Calculate Bivariate Moran
+    moran_bv = Moran_BV(x, y, w)
+    # plot
+    fig, _ = plot_moran_bv(moran_bv)
+    plt.close(fig)
+    # customize plot
+    fig, _ = plot_moran_bv(moran_bv, figsize=(4,4))
     plt.close(fig)
 
 
