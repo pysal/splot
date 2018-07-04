@@ -872,20 +872,21 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
     >>> import geopandas as gpd
     >>> import libpysal.api as lp
     >>> from libpysal import examples
-    >>> from esda.moran import Moran_Local
-    >>> from splot.esda import moran_loc_scatterplot
+    >>> from esda.moran import Moran_Local_BV
+    >>> from splot.esda import moran_loc_bv_scatterplot
     Load data and calculate Moran Local statistics
     >>> link = examples.get_path('columbus.shp')
     >>> gdf = gpd.read_file(link)
+    >>> x = gdf['Suicids'].values
     >>> y = gdf['HOVAL'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
-    >>> m = Moran_Local(y, w)
+    >>> m = Moran_Local_BV(x, y, w)
     plot
-    >>> moran_loc_scatterplot(m)
+    >>> moran_loc_bv_scatterplot(m)
     customize plot
-    >>> moran_loc_scatterplot(m, p=0.05,
-    ...                       fitline_kwds=dict(color='#4393c3')))
+    >>> moran_loc_bv_scatterplot(m, p=0.05,
+    ...                          fitline_kwds=dict(color='#4393c3')))
     >>> plt.show()
     """
     if p is not None:
@@ -897,12 +898,7 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
                           ' c defines the LISA category, color will interfere with c')
 
         # colors
-        sig = 1 * (moran_loc_bv.p_sim < p)
-        HH = 1 * (sig * moran_loc_bv.q == 1)
-        LL = 3 * (sig * moran_loc_bv.q == 3)
-        LH = 2 * (sig * moran_loc_bv.q == 2)
-        HL = 4 * (sig * moran_loc_bv.q == 4)
-        spots_bv = HH + LL + LH + HL
+        spots_bv = moran_hot_cold_spots(moran_loc_bv, p)
         hmap = colors.ListedColormap(['#bababa', '#d7191c', '#abd9e9',
                                       '#2c7bb6', '#fdae61'])
 
