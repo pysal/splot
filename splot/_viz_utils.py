@@ -17,6 +17,7 @@ def moran_hot_cold_spots(moran_loc, p=0.05):
     cluster = HH + LL + LH + HL
     return cluster
 
+
 def mask_local_auto(moran_loc, p=0.5):
     '''
     Create Mask for coloration and labeling of local spatial autocorrelation

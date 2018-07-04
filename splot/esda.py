@@ -31,4 +31,5 @@ from ._viz_esda_mpl import (moran_scatterplot,
                             plot_moran_bv,
                             moran_loc_scatterplot,
                             lisa_cluster,
-                            plot_local_autocorrelation)
+                            plot_local_autocorrelation,
+                            moran_loc_bv_scatterplot)

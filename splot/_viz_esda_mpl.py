@@ -4,12 +4,13 @@ import pysal as ps
 import numpy as np
 import libpysal.api as lp
 import seaborn as sbn
-from esda.moran import Moran_Local
+from esda.moran import Moran_Local, Moran_Local_BV
 import warnings
 
 from matplotlib import patches, colors
 
-from ._viz_utils import mask_local_auto, moran_hot_cold_spots, splot_colors
+from ._viz_utils import (mask_local_auto, moran_hot_cold_spots,
+                         splot_colors)
 
 """
 Lightweight visualizations for pysal using Matplotlib and Geopandas
@@ -339,16 +340,16 @@ def moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds={}, fitline_kwds={}):
     fig, ax = _create_moran_fig_ax(ax, figsize=(7,7))
     
     # set labels
-    ax.set_xlabel('Attribute Y')
-    ax.set_ylabel('Spatial Lag of X')
+    ax.set_xlabel('Attribute X')
+    ax.set_ylabel('Spatial Lag of Y')
     ax.set_title('Bivariate Moran Scatterplot' +
                  ' (' + str(round(moran_bv.I, 2)) + ')')
 
     # plot and set standards
-    lag = lp.lag_spatial(moran_bv.w, moran_bv.zx)
-    fit = ps.spreg.OLS(moran_bv.zx[:, None], lag[:, None])
+    lag = lp.lag_spatial(moran_bv.w, moran_bv.zy)
+    fit = ps.spreg.OLS(moran_bv.zy[:, None], lag[:, None])
     # plot
-    ax.scatter(moran_bv.zy, lag, **scatter_kwds)
+    ax.scatter(moran_bv.zx, lag, **scatter_kwds)
     ax.plot(lag, fit.predy, **fitline_kwds)
     # v- and hlines
     ax.axvline(0, alpha=0.5, color='k', linestyle='--')
@@ -544,9 +545,9 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
         if not isinstance(moran_loc, Moran_Local):
             raise ValueError("`moran_loc` is not a " +
                              "esda.moran.Moran_Local instance")
-        if 'color' in scatter_kwds or 'cmap' in scatter_kwds:
-            warnings.warn('To change the color use cmap with a colormap of 5,'
-                          + ' color defines the LISA category')
+        if 'color' in scatter_kwds or 'c' in scatter_kwds or 'cmap' in scatter_kwds:
+            warnings.warn('To change the color use cmap with a colormap of 5,' +
+                          ' color defines the LISA category')
 
         # colors
         spots = moran_hot_cold_spots(moran_loc, p)
@@ -555,11 +556,8 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
 
     # define customization
     scatter_kwds.setdefault('alpha', 0.6)
-    scatter_kwds.setdefault('color', splot_colors['moran_base'])
     scatter_kwds.setdefault('s', 40)
-    
     fitline_kwds.setdefault('alpha', 0.9)
-    fitline_kwds.setdefault('color', splot_colors['moran_fit'])
 
     # get fig and ax
     fig, ax = _create_moran_fig_ax(ax, figsize=(7,7))
@@ -579,11 +577,13 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
         if p is not None:
             fitline_kwds.setdefault('color', 'k')
             scatter_kwds.setdefault('cmap', hmap)
-            scatter_kwds.setdefault('color', spots)
+            scatter_kwds.setdefault('c', spots)
             ax.plot(lag, fit.predy, **fitline_kwds)
             ax.scatter(moran_loc.z, fit.predy,
                        **scatter_kwds)
         else:
+            scatter_kwds.setdefault('color', splot_colors['moran_base'])
+            fitline_kwds.setdefault('color', splot_colors['moran_fit'])
             ax.plot(lag, fit.predy, **fitline_kwds)
             ax.scatter(moran_loc.z, fit.predy, **scatter_kwds)
     else:
@@ -598,10 +598,12 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
         if p is not None:
             fitline_kwds.setdefault('color', 'k')
             scatter_kwds.setdefault('cmap', hmap)
-            scatter_kwds.setdefault('color', spots)
+            scatter_kwds.setdefault('c', spots)
             ax.plot(moran_loc.y, a + b*moran_loc.y, **fitline_kwds)
             ax.scatter(moran_loc.y, lag, **scatter_kwds)
         else:
+            scatter_kwds.setdefault('c', splot_colors['moran_base'])
+            fitline_kwds.setdefault('color', splot_colors['moran_fit'])
             ax.plot(moran_loc.y, a + b*moran_loc.y, **fitline_kwds)
             ax.scatter(moran_loc.y, lag, **scatter_kwds)
     return fig, ax
@@ -832,3 +834,107 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
         # masking inside axs[2] or Chloropleth
         gpd.GeoSeries([union]).plot(linewidth=2, ax=axs[2], color=mask_color)
     return fig, axs
+
+
+def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
+                             ax=None, scatter_kwds={}, fitline_kwds={}):
+    """
+    Moran Bivariate Scatterplot with option of coloring of Local Moran Statistics
+
+    Parameters
+    ----------
+    moran_loc : esda.moran.Moran_Local_BV instance
+        Values of Moran's I Local Autocorrelation Statistics
+    p : float, optional
+        If given, the p-value threshold for significance. Points will
+        be colored by significance. By default it will not be colored.
+        Default =None.
+    ax : Matplotlib Axes instance, optional
+        If given, the Moran plot will be created inside this axis.
+        Default =None.
+    scatter_kwds : keyword arguments, optional
+        Keywords used for creating and designing the scatter points.
+        Default ={}.
+    fitline_kwds : keyword arguments, optional
+        Keywords used for creating and designing the moran fitline.
+        Default ={}.
+
+    Returns
+    -------
+    fig : Matplotlib Figure instance
+        Moran scatterplot figure
+    ax : matplotlib Axes instance
+        Axes in which the figure is plotted
+
+    Examples
+    --------
+    >>> import matplotlib.pyplot as plt
+    >>> import geopandas as gpd
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> from esda.moran import Moran_Local
+    >>> from splot.esda import moran_loc_scatterplot
+    Load data and calculate Moran Local statistics
+    >>> link = examples.get_path('columbus.shp')
+    >>> gdf = gpd.read_file(link)
+    >>> y = gdf['HOVAL'].values
+    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w.transform = 'r'
+    >>> m = Moran_Local(y, w)
+    plot
+    >>> moran_loc_scatterplot(m)
+    customize plot
+    >>> moran_loc_scatterplot(m, p=0.05,
+    ...                       fitline_kwds=dict(color='#4393c3')))
+    >>> plt.show()
+    """
+    if p is not None:
+        if not isinstance(moran_loc_bv, Moran_Local_BV):
+            raise ValueError("`moran_loc_bv` is not a " +
+                             "esda.moran.Moran_Local_BV instance")
+        if 'color' in scatter_kwds or 'c' in scatter_kwds or 'cmap' in scatter_kwds:
+            warnings.warn('To change the color use cmap with a colormap of 5,' +
+                          ' c defines the LISA category, color will interfere with c')
+
+        # colors
+        sig = 1 * (moran_loc_bv.p_sim < p)
+        HH = 1 * (sig * moran_loc_bv.q == 1)
+        LL = 3 * (sig * moran_loc_bv.q == 3)
+        LH = 2 * (sig * moran_loc_bv.q == 2)
+        HL = 4 * (sig * moran_loc_bv.q == 4)
+        spots_bv = HH + LL + LH + HL
+        hmap = colors.ListedColormap(['#bababa', '#d7191c', '#abd9e9',
+                                      '#2c7bb6', '#fdae61'])
+
+    # define customization
+    scatter_kwds.setdefault('alpha', 0.6)
+    scatter_kwds.setdefault('s', 40)
+    fitline_kwds.setdefault('alpha', 0.9)
+
+    # get fig and ax
+    fig, ax = _create_moran_fig_ax(ax, figsize=(7,7))
+    
+    # set labels
+    ax.set_xlabel('Attribute')
+    ax.set_ylabel('Spatial Lag')
+    ax.set_title('Moran BV Local Scatterplot')
+
+    # plot and set standards
+    lag = lp.lag_spatial(moran_loc_bv.w, moran_loc_bv.zy)
+    fit = ps.spreg.OLS(moran_loc_bv.zy[:, None], lag[:, None])
+    # v- and hlines
+    ax.axvline(0, alpha=0.5, color='k', linestyle='--')
+    ax.axhline(0, alpha=0.5, color='k', linestyle='--')
+    if p is not None:
+        fitline_kwds.setdefault('color', 'k')
+        scatter_kwds.setdefault('cmap', hmap)
+        scatter_kwds.setdefault('c', spots_bv)
+        ax.plot(lag, fit.predy, **fitline_kwds)
+        ax.scatter(moran_loc_bv.zx, fit.predy,
+                   **scatter_kwds)
+    else:
+        scatter_kwds.setdefault('color', splot_colors['moran_base'])
+        fitline_kwds.setdefault('color', splot_colors['moran_fit'])
+        ax.plot(lag, fit.predy, **fitline_kwds)
+        ax.scatter(moran_loc_bv.zy, fit.predy, **scatter_kwds)
+    return fig, ax
