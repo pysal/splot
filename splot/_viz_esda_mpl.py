@@ -24,6 +24,10 @@ __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 
 
 def _create_moran_fig_ax(ax, figsize):
+    """
+    Creates matplotlib figure and axes instances
+    for plotting moran visualizations. Adds common viz design.
+    """
     if ax is None:
         fig = plt.figure(figsize=figsize)
         ax = fig.add_subplot(111)
@@ -41,7 +45,8 @@ def _create_moran_fig_ax(ax, figsize):
     return fig, ax
 
 
-def moran_scatterplot(moran, zstandard=True, ax=None, **kwargs):
+def moran_scatterplot(moran, zstandard=True, ax=None,
+                      scatter_kwds={}, fitline_kwds={}):
     """
     Global Moran's I Scatterplot.
 
@@ -55,8 +60,10 @@ def moran_scatterplot(moran, zstandard=True, ax=None, **kwargs):
     ax : Matplotlib Axes instance, optional
         If given, the Moran plot will be created inside this axis.
         Default =None.
-    **kwargs : keyword arguments, optional
-        Keywords used for creating and designing the figure.
+    scatter_kwds : keyword arguments, optional
+        Keywords used for creating and designing the scatter points.
+    fitline_kwds : keyword arguments, optional
+        Keywords used for creating and designing the moran fitline.
 
     Returns
     -------
@@ -86,34 +93,34 @@ def moran_scatterplot(moran, zstandard=True, ax=None, **kwargs):
     >>> moran_scatterplot(moran)
     >>> plt.show()
     customize plot
-    >>> moran_scatterplot(moran, zstandard=False, figsize=(4,4))
+    >>> fig, ax = moran_scatterplot(moran, zstandard=False)
+    >>> ax.set_xlabel('Donations')
     >>> plt.show()
     """
-    # define customization
-    figsize = kwargs.pop('figsize', (7, 7))
-    xlabel = kwargs.pop('xlabel', 'Attribute')
-    ylabel = kwargs.pop('ylabel', 'Spatial Lag')
-    title = kwargs.pop('title', 'Moran Scatterplot' +
-                       ' (Moran I: ' + str(round(moran.I, 2)) + ')')
-    alpha = kwargs.pop('alpha', 0.6)
+    # define customization defaults
+    scatter_kwds.setdefault('alpha', 0.6)
+    scatter_kwds.setdefault('color', splot_colors['moran_base'])
+    scatter_kwds.setdefault('s', 40)
+    
+    fitline_kwds.setdefault('alpha', 0.9)
+    fitline_kwds.setdefault('color', splot_colors['moran_fit'])
     
     # get fig and ax
-    fig, ax = _create_moran_fig_ax(ax, figsize)
+    fig, ax = _create_moran_fig_ax(ax, figsize=(7, 7))
     
     # set labels
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
-    ax.set_title(title)
+    ax.set_xlabel('Attribute')
+    ax.set_ylabel('Spatial Lag')
+    ax.set_title('Moran Scatterplot' +
+                 ' (Moran I: ' + str(round(moran.I, 2)) + ')')
 
     # plot and set standards
     if zstandard is True:
         lag = lp.lag_spatial(moran.w, moran.z)
         fit = ps.spreg.OLS(moran.z[:, None], lag[:, None])
         # plot
-        ax.scatter(moran.z, lag, s=40, color=splot_colors['base_grey'],
-                   alpha=alpha)
-        ax.plot(lag, fit.predy, color=splot_colors['moran_fit'],
-                alpha=.9)
+        ax.scatter(moran.z, lag, **scatter_kwds)
+        ax.plot(lag, fit.predy, **fitline_kwds)
         # v- and hlines
         ax.axvline(0, alpha=0.5, color='k', linestyle='--')
         ax.axhline(0, alpha=0.5, color='k', linestyle='--')
@@ -121,20 +128,18 @@ def moran_scatterplot(moran, zstandard=True, ax=None, **kwargs):
         lag = lp.lag_spatial(moran.w, moran.y)
         b, a = np.polyfit(moran.y, lag, 1)
         # plot
-        ax.scatter(moran.y, lag, color=splot_colors['base_grey'],
-                   alpha=alpha)
+        ax.scatter(moran.y, lag, **scatter_kwds)
+        ax.plot(moran.y, a + b*moran.y, **fitline_kwds)
         # dashed vert at mean of the attribute
         ax.vlines(moran.y.mean(), lag.min(), lag.max(), alpha=0.5,
                   linestyle='--')
         # dashed horizontal at mean of lagged attribute
         ax.hlines(lag.mean(), moran.y.min(), moran.y.max(), alpha=0.5,
                   linestyle='--')
-        # red line of best fit using global Moran I as slope
-        ax.plot(moran.y, a + b*moran.y, splot_colors['moran_fit'])
     return fig, ax
 
 
-def plot_moran_simulation(moran, ax=None, **kwargs):
+def plot_moran_simulation(moran, ax=None, fitline_kwds={}, **kwargs):
     """
     Global Moran's I simulated reference distribution.
 
@@ -145,6 +150,9 @@ def plot_moran_simulation(moran, ax=None, **kwargs):
     ax : Matplotlib Axes instance, optional
         If given, the Moran plot will be created inside this axis.
         Default =None.
+    fitline_kwds : keyword arguments, optional
+        Keywords used for creating and designing the
+        vertical moran fitline.
     **kwargs : keyword arguments, optional
         Keywords used for creating and designing the figure,
         passed to seaborne.kdeplot.
@@ -187,18 +195,20 @@ def plot_moran_simulation(moran, ax=None, **kwargs):
 
     # plot distribution
     shade = kwargs.pop('shade', True)
-    color = kwargs.pop('color', splot_colors['base_grey'])
+    color = kwargs.pop('color', splot_colors['moran_base'])
     sbn.kdeplot(moran.sim, shade=shade, color=color, ax=ax, **kwargs)
 
     # customize plot
-    ax.vlines(moran.I, 0, 1, color=splot_colors['moran_fit'])
+    fitline_kwds.setdefault('color', splot_colors['moran_fit'])
+    ax.vlines(moran.I, 0, 1, **fitline_kwds)
     ax.vlines(moran.EI, 0, 1)
     ax.set_title('Reference Distribution')
     ax.set_xlabel('Moran I: ' + str(round(moran.I, 2)))
     return fig, ax
 
 
-def plot_moran(moran, zstandard=True, **kwargs):  # TODO pass in kwargs dicts
+def plot_moran(moran, zstandard=True, scatter_kwds={},
+               fitline_kwds={}, **kwargs):
     """
     Global Moran's I simulated reference distribution and scatterplot.
 
@@ -209,6 +219,14 @@ def plot_moran(moran, zstandard=True, **kwargs):  # TODO pass in kwargs dicts
     zstandard : bool, optional
         If True, Moran Scatterplot will show z-standardized attribute and
         spatial lag values. Default =True.
+    scatter_kwds : keyword arguments, optional
+        Keywords used for creating and designing the scatter points.
+    fitline_kwds : keyword arguments, optional
+        Keywords used for creating and designing the moran fitline
+        and vertical fitline.
+    **kwargs : keyword arguments, optional
+        Keywords used for creating and designing the figure,
+        passed to seaborne.kdeplot.
 
     Returns
     -------
@@ -244,14 +262,15 @@ def plot_moran(moran, zstandard=True, **kwargs):  # TODO pass in kwargs dicts
     figsize = kwargs.pop('figsize', (10, 4))
     fig, axs = plt.subplots(1, 2, figsize=figsize,
                             subplot_kw={'aspect': 'equal'})
-    plot_moran_simulation(moran, ax=axs[0])
-    moran_scatterplot(moran, zstandard=zstandard, ax=axs[1])
+    plot_moran_simulation(moran, ax=axs[0], fitline_kwds=fitline_kwds, **kwargs)
+    moran_scatterplot(moran, zstandard=zstandard, ax=axs[1],
+                      scatter_kwds=scatter_kwds, fitline_kwds=fitline_kwds)
     axs[0].set(aspect="auto")
     axs[1].set(aspect="auto")
     return fig, axs
 
 
-def moran_bv_scatterplot(moran_bv, ax=None, **kwargs):
+def moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds={}, fitline_kwds={}):
     """
     Bivariate Moran Scatterplot.
 
@@ -262,8 +281,10 @@ def moran_bv_scatterplot(moran_bv, ax=None, **kwargs):
     ax : Matplotlib Axes instance, optional
         If given, the Moran plot will be created inside this axis.
         Default =None.
-    **kwargs : keyword arguments, optional
-        Keywords used for creating and designing the figure.
+    scatter_kwds : keyword arguments, optional
+        Keywords used for creating and designing the scatter points.
+    fitline_kwds : keyword arguments, optional
+        Keywords used for creating and designing the moran fitline.
 
     Returns
     -------
@@ -298,35 +319,35 @@ def moran_bv_scatterplot(moran_bv, ax=None, **kwargs):
     >>> plt.show()
     """
     # define customization
-    figsize = kwargs.pop('figsize', (7, 7))
-    xlabel = kwargs.pop('xlabel', 'Attribute Y')
-    ylabel = kwargs.pop('ylabel', 'Spatial Lag of X')
-    title = kwargs.pop('title', 'Bivariate Moran Scatterplot' +
-                       ' (' + str(round(moran_bv.I, 2)) + ')')
-    alpha = kwargs.pop('alpha', 0.6)
+    scatter_kwds.setdefault('alpha', 0.6)
+    scatter_kwds.setdefault('color', splot_colors['moran_base'])
+    scatter_kwds.setdefault('s', 40)
+    
+    fitline_kwds.setdefault('alpha', 0.9)
+    fitline_kwds.setdefault('color', splot_colors['moran_fit'])
 
     # get fig and ax
-    fig, ax = _create_moran_fig_ax(ax, figsize)
+    fig, ax = _create_moran_fig_ax(ax, figsize=(7,7))
     
     # set labels
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
-    ax.set_title(title)
+    ax.set_xlabel('Attribute Y')
+    ax.set_ylabel('Spatial Lag of X')
+    ax.set_title('Bivariate Moran Scatterplot' +
+                 ' (' + str(round(moran_bv.I, 2)) + ')')
 
     # plot and set standards
     lag = lp.lag_spatial(moran_bv.w, moran_bv.zx)
     fit = ps.spreg.OLS(moran_bv.zx[:, None], lag[:, None])
     # plot
-    ax.scatter(moran_bv.zy, lag, s=40, color=splot_colors['base_grey'],
-               alpha=alpha)
-    ax.plot(lag, fit.predy, color=splot_colors['moran_fit'], alpha=.9)
+    ax.scatter(moran_bv.zy, lag, **scatter_kwds)
+    ax.plot(lag, fit.predy, **fitline_kwds)
     # v- and hlines
     ax.axvline(0, alpha=0.5, color='k', linestyle='--')
     ax.axhline(0, alpha=0.5, color='k', linestyle='--')
     return fig, ax
 
 
-def plot_moran_bv_simulation(moran_bv, ax=None, **kwargs):
+def plot_moran_bv_simulation(moran_bv, ax=None, fitline_kwds={}, **kwargs):
     """
     Bivariate Moran's I simulated reference distribution.
 
@@ -337,6 +358,9 @@ def plot_moran_bv_simulation(moran_bv, ax=None, **kwargs):
     ax : Matplotlib Axes instance, optional
         If given, the Moran plot will be created inside this axis.
         Default =None.
+    fitline_kwds : keyword arguments, optional
+        Keywords used for creating and designing the
+        vertical moran fitline.
     **kwargs : keyword arguments, optional
         Keywords used for creating and designing the figure,
         passed to seaborne.kdeplot.
@@ -380,18 +404,19 @@ def plot_moran_bv_simulation(moran_bv, ax=None, **kwargs):
 
     # plot distribution
     shade = kwargs.pop('shade', True)
-    color = kwargs.pop('color', splot_colors['base_grey'])
+    color = kwargs.pop('color', splot_colors['moran_base'])
     sbn.kdeplot(moran_bv.sim, shade=shade, color=color, ax=ax, **kwargs)
 
     # customize plot
-    ax.vlines(moran_bv.I, 0, 1, color=splot_colors['moran_fit'])
+    fitline_kwds.setdefault('color', splot_colors['moran_fit'])
+    ax.vlines(moran_bv.I, 0, 1, **fitline_kwds)
     ax.vlines(moran_bv.EI_sim, 0, 1)
     ax.set_title('Reference Distribution')
     ax.set_xlabel('Bivariate Moran I: ' + str(round(moran_bv.I, 2)))
     return fig, ax
 
 
-def plot_moran_bv(moran_bv, **kwargs):  # TODO pass in kwargs dicts
+def plot_moran_bv(moran_bv, scatter_kwds={}, fitline_kwds={}, **kwargs):
     """
     Bivariate Moran's I simulated reference distribution and scatterplot.
 
@@ -399,6 +424,14 @@ def plot_moran_bv(moran_bv, **kwargs):  # TODO pass in kwargs dicts
     ----------
     moran_bv : esda.moran.Moran_BV instance
         Values of Bivariate Moran's I Autocorrelation Statistics
+    scatter_kwds : keyword arguments, optional
+        Keywords used for creating and designing the scatter points.
+    fitline_kwds : keyword arguments, optional
+        Keywords used for creating and designing the moran fitline
+        and vertical fitline.
+    **kwargs : keyword arguments, optional
+        Keywords used for creating and designing the figure,
+        passed to seaborne.kdeplot.
 
     Returns
     -------
@@ -435,15 +468,17 @@ def plot_moran_bv(moran_bv, **kwargs):  # TODO pass in kwargs dicts
     figsize = kwargs.pop('figsize', (10, 4))
     fig, axs = plt.subplots(1, 2, figsize=figsize,
                             subplot_kw={'aspect': 'equal'})
-    plot_moran_bv_simulation(moran_bv, ax=axs[0])
-    moran_bv_scatterplot(moran_bv, ax=axs[1])
+    plot_moran_bv_simulation(moran_bv, ax=axs[0], fitline_kwds=fitline_kwds,
+                             **kwargs)
+    moran_bv_scatterplot(moran_bv, ax=axs[1],scatter_kwds=scatter_kwds,
+                         fitline_kwds=fitline_kwds, **kwargs)
     axs[0].set(aspect="auto")
     axs[1].set(aspect="auto")
     return fig, axs
 
 
 def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
-                          ax=None, **kwargs):
+                          ax=None, scatter_kwds={}, fitline_kwds={}):
     """
     Moran Scatterplot with option of coloring of Local Moran Statistics
 
@@ -508,19 +543,20 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
                                       '#2c7bb6', '#fdae61'])
 
     # define customization
-    figsize = kwargs.pop('figsize', (7, 7))
-    xlabel = kwargs.pop('xlabel', 'Attribute')
-    ylabel = kwargs.pop('ylabel', 'Spatial Lag')
-    title = kwargs.pop('title', 'Moran Scatterplot')
-    alpha = kwargs.pop('alpha', 0.8)
+    scatter_kwds.setdefault('alpha', 0.6)
+    scatter_kwds.setdefault('color', splot_colors['moran_base'])
+    scatter_kwds.setdefault('s', 40)
+    
+    fitline_kwds.setdefault('alpha', 0.9)
+    fitline_kwds.setdefault('color', splot_colors['moran_fit'])
 
     # get fig and ax
-    fig, ax = _create_moran_fig_ax(ax, figsize)
+    fig, ax = _create_moran_fig_ax(ax, figsize=(7,7))
     
     # set labels
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
-    ax.set_title(title)
+    ax.set_xlabel('Attribute')
+    ax.set_ylabel('Spatial Lag')
+    ax.set_title('Moran Local Scatterplot')
 
     # plot and set standards
     if zstandard is True:
@@ -534,9 +570,8 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
             ax.scatter(moran_loc.z, fit.predy, c=spots,
                        cmap=hmap, s=40, alpha=alpha)
         else:
-            ax.plot(lag, fit.predy, color=splot_colors['moran_fit'], alpha=.9)
-            ax.scatter(moran_loc.z, fit.predy, s=40,
-                       color=splot_colors['base_grey'], alpha=alpha)
+            ax.plot(lag, fit.predy, **fitline_kwds)
+            ax.scatter(moran_loc.z, fit.predy, **scatter_kwds)
     else:
         lag = lp.lag_spatial(moran_loc.w, moran_loc.y)
         b, a = np.polyfit(moran_loc.y, lag, 1)
@@ -552,9 +587,8 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
             ax.plot(moran_loc.y, a + b*moran_loc.y, 'k')
             ax.scatter(moran_loc.y, lag, c=spots, cmap=hmap, s=40, alpha=alpha)
         else:
-            ax.plot(moran_loc.y, a + b*moran_loc.y, splot_colors['moran_fit'])
-            ax.scatter(moran_loc.y, lag, s=40, color=splot_colors['base_grey'],
-                       alpha=alpha)
+            ax.plot(moran_loc.y, a + b*moran_loc.y, **fitline_kwds, )
+            ax.scatter(moran_loc.y, lag, **scatter_kwds)
     return fig, ax
 
 

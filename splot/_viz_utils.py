@@ -199,7 +199,7 @@ def calc_data_aspect(plot_height, plot_width, bounds):
 
 # Utility functions for colormaps
 # Color design
-splot_colors = dict(base_grey='#bababa',
+splot_colors = dict(moran_base='#bababa',
                     moran_fit='#d6604d')
 
 # Utility function #1 - forces continuous diverging colormap to be centered at zero
