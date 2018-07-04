@@ -63,8 +63,10 @@ def moran_scatterplot(moran, zstandard=True, ax=None,
         Default =None.
     scatter_kwds : keyword arguments, optional
         Keywords used for creating and designing the scatter points.
+        Default ={}.
     fitline_kwds : keyword arguments, optional
         Keywords used for creating and designing the moran fitline.
+        Default ={}.
 
     Returns
     -------
@@ -94,7 +96,8 @@ def moran_scatterplot(moran, zstandard=True, ax=None,
     >>> moran_scatterplot(moran)
     >>> plt.show()
     customize plot
-    >>> fig, ax = moran_scatterplot(moran, zstandard=False)
+    >>> fig, ax = moran_scatterplot(moran, zstandard=False,
+    ...                             fitline_kws=dict(color='#4393c3'))
     >>> ax.set_xlabel('Donations')
     >>> plt.show()
     """
@@ -153,7 +156,7 @@ def plot_moran_simulation(moran, ax=None, fitline_kwds={}, **kwargs):
         Default =None.
     fitline_kwds : keyword arguments, optional
         Keywords used for creating and designing the
-        vertical moran fitline.
+        vertical moran fitline. Default ={}.
     **kwargs : keyword arguments, optional
         Keywords used for creating and designing the figure,
         passed to seaborne.kdeplot.
@@ -186,7 +189,7 @@ def plot_moran_simulation(moran, ax=None, fitline_kwds={}, **kwargs):
     >>> plot_moran_simulation(moran)
     >>> plt.show()
     customize plot
-    >>> plot_moran_simulation(moran, figsize=(4,4))
+    >>> plot_moran_simulation(moran, fitline_kwds=dict(color='#4393c3'))
     >>> plt.show()
     """
     figsize = kwargs.pop('figsize', (7, 7))
@@ -222,9 +225,10 @@ def plot_moran(moran, zstandard=True, scatter_kwds={},
         spatial lag values. Default =True.
     scatter_kwds : keyword arguments, optional
         Keywords used for creating and designing the scatter points.
+        Default ={}.
     fitline_kwds : keyword arguments, optional
         Keywords used for creating and designing the moran fitline
-        and vertical fitline.
+        and vertical fitline. Default ={}.
     **kwargs : keyword arguments, optional
         Keywords used for creating and designing the figure,
         passed to seaborne.kdeplot.
@@ -257,7 +261,8 @@ def plot_moran(moran, zstandard=True, scatter_kwds={},
     >>> plot_moran(moran)
     >>> plt.show()
     customize plot
-    >>> plot_moran(moran, zstandard=False, figsize=(4,4))
+    >>> plot_moran(moran, zstandard=False,
+    ...            fitline_kwds=dict(color='#4393c3'))
     >>> plt.show()
     """
     figsize = kwargs.pop('figsize', (10, 4))
@@ -284,8 +289,10 @@ def moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds={}, fitline_kwds={}):
         Default =None.
     scatter_kwds : keyword arguments, optional
         Keywords used for creating and designing the scatter points.
+        Default ={}.
     fitline_kwds : keyword arguments, optional
         Keywords used for creating and designing the moran fitline.
+        Default ={}.
 
     Returns
     -------
@@ -316,7 +323,8 @@ def moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds={}, fitline_kwds={}):
     >>> moran_bv_scatterplot(moran_bv)
     >>> plt.show()
     customize plot
-    >>> moran_bv_scatterplot(moran_bv, zstandard=False, figsize=(4,4))
+    >>> moran_bv_scatterplot(moran_bv, zstandard=False,
+    ...                      fitline_kwds=dict(color='#4393c3'))
     >>> plt.show()
     """
     # define customization
@@ -361,7 +369,7 @@ def plot_moran_bv_simulation(moran_bv, ax=None, fitline_kwds={}, **kwargs):
         Default =None.
     fitline_kwds : keyword arguments, optional
         Keywords used for creating and designing the
-        vertical moran fitline.
+        vertical moran fitline. Default ={}.
     **kwargs : keyword arguments, optional
         Keywords used for creating and designing the figure,
         passed to seaborne.kdeplot.
@@ -395,7 +403,8 @@ def plot_moran_bv_simulation(moran_bv, ax=None, fitline_kwds={}, **kwargs):
     >>> plot_moran_bv_simulation(moran_bv)
     >>> plt.show()
     customize plot
-    >>> plot_moran_bv_simulation(moran_bv, figsize=(4,4))
+    >>> plot_moran_bv_simulation(moran_bv,
+        ...                      fitline_kwds=dict(color='#4393c3'))
     >>> plt.show()
     """
     figsize = kwargs.pop('figsize', (7, 7))
@@ -427,9 +436,10 @@ def plot_moran_bv(moran_bv, scatter_kwds={}, fitline_kwds={}, **kwargs):
         Values of Bivariate Moran's I Autocorrelation Statistics
     scatter_kwds : keyword arguments, optional
         Keywords used for creating and designing the scatter points.
+        Default ={}.
     fitline_kwds : keyword arguments, optional
         Keywords used for creating and designing the moran fitline
-        and vertical fitline.
+        and vertical fitline. Default ={}.
     **kwargs : keyword arguments, optional
         Keywords used for creating and designing the figure,
         passed to seaborne.kdeplot.
@@ -463,7 +473,7 @@ def plot_moran_bv(moran_bv, scatter_kwds={}, fitline_kwds={}, **kwargs):
     >>> plot_moran_bv(moran_bv)
     >>> plt.show()
     customize plot
-    >>> plot_moran_bv(moran_bv, figsize=(4,4))
+    >>> plot_moran_bv(moran_bv, fitline_kwds=dict(color='#4393c3')))
     >>> plt.show()
     """
     figsize = kwargs.pop('figsize', (10, 4))
@@ -496,8 +506,10 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
         Default =None.
     scatter_kwds : keyword arguments, optional
         Keywords used for creating and designing the scatter points.
+        Default ={}.
     fitline_kwds : keyword arguments, optional
         Keywords used for creating and designing the moran fitline.
+        Default ={}.
 
     Returns
     -------
@@ -514,24 +526,18 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
     >>> from libpysal import examples
     >>> from esda.moran import Moran_Local
     >>> from splot.esda import moran_loc_scatterplot
-
     Load data and calculate Moran Local statistics
-
     >>> link = examples.get_path('columbus.shp')
     >>> gdf = gpd.read_file(link)
     >>> y = gdf['HOVAL'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
-
     >>> m = Moran_Local(y, w)
-
     plot
-
     >>> moran_loc_scatterplot(m)
-
     customize plot
-
-    >>> moran_loc_scatterplot(m, figsize=(7,7), p=0.05)
+    >>> moran_loc_scatterplot(m, p=0.05,
+    ...                       fitline_kwds=dict(color='#4393c3')))
     >>> plt.show()
     """
     if p is not None:
@@ -716,6 +722,12 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     cmap: str, optional
         Name of matplotlib colormap used for plotting the Choropleth.
         Default = 'YlGnBU'
+    scatter_kwds : keyword arguments, optional
+        Keywords used for creating and designing the scatter points.
+        Default ={}.
+    fitline_kwds : keyword arguments, optional
+        Keywords used for creating and designing the moran fitline
+        in the scatterplot. Default ={}.
 
     Returns
     -------
