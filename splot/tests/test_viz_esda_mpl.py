@@ -29,7 +29,8 @@ def test_moran_scatterplot():
     fig, _ = moran_scatterplot(moran)
     plt.close(fig)
     # customize
-    fig, _ = moran_scatterplot(moran, zstandard=False, figsize=(4, 4))
+    fig, _ = moran_scatterplot(moran, zstandard=False,
+                               fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
 
@@ -47,7 +48,8 @@ def test_plot_moran_simulation():
     fig, _ = plot_moran_simulation(moran)
     plt.close(fig)
     # customize
-    fig, _ = plot_moran_simulation(moran, figsize=(4, 4))
+    fig, _ = plot_moran_simulation(moran,
+                                   fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
 
@@ -65,7 +67,8 @@ def test_plot_moran():
     fig, _ = plot_moran(moran)
     plt.close(fig)
     # customize
-    fig, _ = plot_moran(moran, zstandard=False, figsize=(4, 4))
+    fig, _ = plot_moran(moran, zstandard=False,
+                        fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
 def test_moran_bv_scatterplot():
@@ -81,7 +84,8 @@ def test_moran_bv_scatterplot():
     fig, _ = moran_bv_scatterplot(moran_bv)
     plt.close(fig)
     # customize plot
-    fig, _ = moran_bv_scatterplot(moran_bv, zstandard=False, figsize=(4,4))
+    fig, _ = moran_bv_scatterplot(moran_bv,
+                                  fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
 
@@ -99,7 +103,8 @@ def test_plot_moran_bv_simulation():
     fig, _ = plot_moran_bv_simulation(moran_bv)
     plt.close(fig)
     # customize plot
-    fig, _ = plot_moran_bv_simulation(moran_bv, figsize=(4,4))
+    fig, _ = plot_moran_bv_simulation(moran_bv,
+                                      fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
 def test_plot_moran_bv():
@@ -116,7 +121,7 @@ def test_plot_moran_bv():
     fig, _ = plot_moran_bv(moran_bv)
     plt.close(fig)
     # customize plot
-    fig, _ = plot_moran_bv(moran_bv, figsize=(4,4))
+    fig, _ = plot_moran_bv(moran_bv, fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
 
@@ -135,7 +140,8 @@ def test_moran_loc_scatterplot():
     plt.close(fig)
 
     # try with p value and different figure size
-    fig, _ = moran_loc_scatterplot(moran_loc, p=0.05, figsize=(10, 5))
+    fig, _ = moran_loc_scatterplot(moran_loc, p=0.05,
+                                   fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
 
