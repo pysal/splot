@@ -616,7 +616,7 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
 
     Parameters
     ----------
-    moran_loc : esda.moran.Moran_Local instance
+    moran_loc : esda.moran.Moran_Local or Moran_Local_BV instance
         Values of Moran's Local Autocorrelation Statistic
     gdf : geopandas dataframe instance
         The Dataframe containing information to plot. Note that `gdf` will be
@@ -761,8 +761,12 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     fig, axs = plt.subplots(1, 3, figsize=figsize,
                             subplot_kw={'aspect': 'equal'})
     # Moran Scatterplot
-    moran_loc_scatterplot(moran_loc, p=p, ax=axs[0],
-                          scatter_kwds=scatter_kwds, fitline_kwds=fitline_kwds)
+    if isinstance (moran_loc, Moran_Local):
+        moran_loc_scatterplot(moran_loc, p=p, ax=axs[0],
+                              scatter_kwds=scatter_kwds, fitline_kwds=fitline_kwds)
+    else:
+        moran_loc_bv_scatterplot(moran_loc, p=p, ax=axs[0],
+                                 scatter_kwds=scatter_kwds, fitline_kwds=fitline_kwds)
     axs[0].set_aspect('auto')
 
     # Lisa cluster map
