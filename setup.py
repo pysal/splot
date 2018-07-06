@@ -25,6 +25,6 @@ setup(name='splot', #name of package
       license='3-Clause BSD',
       packages=['splot'],
       include_package_data=True,
-      install_requires=['numpy', 'libpysal', 'mapclassify', 'palettable',
+      install_requires=['numpy', 'libpysal', 'mapclassify',
                         'esda', 'spreg','matplotlib','seaborn'],
       zip_safe=False)
