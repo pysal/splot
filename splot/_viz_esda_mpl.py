@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
 import geopandas as gpd
-import pysal as ps
 import numpy as np
 import libpysal.api as lp
 import seaborn as sbn
 from esda.moran import Moran_Local, Moran_Local_BV
 import warnings
+from spreg import OLS
 
 from matplotlib import patches, colors
 
@@ -128,7 +128,7 @@ def moran_scatterplot(moran, zstandard=True, ax=None,
     # plot and set standards
     if zstandard is True:
         lag = lp.lag_spatial(moran.w, moran.z)
-        fit = ps.spreg.OLS(moran.z[:, None], lag[:, None])
+        fit = OLS(moran.z[:, None], lag[:, None])
         # plot
         ax.scatter(moran.z, lag, **scatter_kwds)
         ax.plot(lag, fit.predy, **fitline_kwds)
@@ -363,7 +363,7 @@ def moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=None
 
     # plot and set standards
     lag = lp.lag_spatial(moran_bv.w, moran_bv.zy)
-    fit = ps.spreg.OLS(moran_bv.zy[:, None], lag[:, None])
+    fit = OLS(moran_bv.zy[:, None], lag[:, None])
     # plot
     ax.scatter(moran_bv.zx, lag, **scatter_kwds)
     ax.plot(lag, fit.predy, **fitline_kwds)
@@ -596,7 +596,7 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
     # plot and set standards
     if zstandard is True:
         lag = lp.lag_spatial(moran_loc.w, moran_loc.z)
-        fit = ps.spreg.OLS(moran_loc.z[:, None], lag[:, None])
+        fit = OLS(moran_loc.z[:, None], lag[:, None])
         # v- and hlines
         ax.axvline(0, alpha=0.5, color='k', linestyle='--')
         ax.axhline(0, alpha=0.5, color='k', linestyle='--')
@@ -853,7 +853,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
         ix = gdf[region_column].isin(mask)
         df_mask = gdf[ix]
         x_mask = moran_loc.z[ix]
-        y_mask = ps.lag_spatial(moran_loc.w, moran_loc.z)[ix]
+        y_mask = lp.lag_spatial(moran_loc.w, moran_loc.z)[ix]
         axs[0].plot(x_mask, y_mask, color=mask_color, marker='o',
                     markersize=14, alpha=.8, linestyle="None", zorder=-1)
 
@@ -953,7 +953,7 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
 
     # plot and set standards
     lag = lp.lag_spatial(moran_loc_bv.w, moran_loc_bv.zy)
-    fit = ps.spreg.OLS(moran_loc_bv.zy[:, None], lag[:, None])
+    fit = OLS(moran_loc_bv.zy[:, None], lag[:, None])
     # v- and hlines
     ax.axvline(0, alpha=0.5, color='k', linestyle='--')
     ax.axhline(0, alpha=0.5, color='k', linestyle='--')
