@@ -1,9 +1,11 @@
 import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 from esda.moran import Moran_Local
 import ipywidgets as widgets
 from ipywidgets import interact, fixed
+from giddy.directional import Rose
 
 from ._viz_utils import moran_hot_cold_spots
 from ._viz_esda_mpl import lisa_cluster
@@ -41,6 +43,7 @@ def _dynamic_lisa_heatmap_data(moran_locy, moran_locx, p=0.05):
                 mask[row, col] = True
     return heatmap_data, mask
 
+
 def _moran_loc_from_rose_calc(rose):
     """
     Calculate esda.moran.Moran_Local values from giddy.rose object
@@ -51,6 +54,7 @@ def _moran_loc_from_rose_calc(rose):
     moran_locx = Moran_Local(rose.Y[:, 1], rose.w)
     np.random.set_state(old_state)
     return moran_locy, moran_locx
+
 
 def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
     """
@@ -69,14 +73,14 @@ def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
         Default =None.
     **kwargs : keyword arguments, optional
         Keywords used for creating and designing the heatmap. These are passed
-        on to `sns.heatmap()`. See `sns` documentation for valid keywords.
-        Note: In addition `xlabel` and `ylabel` can be set. "Start time" refers to 
-        `rose.Y[:0]`, "End time" referst to time `rose.Y[:0]`.
+        on to `seaborn.heatmap()`. See `seaborn` documentation for valid keywords.
+        Note: "Start time" refers to `y1` in `Y = np.array([y1, y2]).T`
+        with `giddy.Rose(Y,w, k=5)`, "End time" referst to `y2`.
 
     Returns
     -------
     fig : Matplotlib Figure instance
-        Moran scatterplot figure
+        Heatmap figure
     ax : matplotlib Axes instance
         Axes in which the figure is plotted
     
@@ -88,12 +92,11 @@ def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
     >>> from libpysal import examples
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
-
     >>> from giddy.directional import Rose
     >>> from splot.giddy import dynamic_lisa_heatmap
     
     get csv and shp files
-
+    
     >>> shp_link = examples.get_path('us48.shp')
     >>> df = gpd.read_file(shp_link)
     >>> income_table = pd.read_csv(examples.get_path("usjoin.csv"))
@@ -102,8 +105,7 @@ def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
     
     >>> for year in range(1969, 2010):
     ...     income_table[str(year) + '_rel'] = (
-    ...         income_table[str(year)] / income_table[str(year)].mean())
-            
+    ...         income_table[str(year)] / income_table[str(year)].mean())       
     merge to one gdf
     
     >>> gdf = df.merge(income_table,left_on='STATE_NAME',right_on='Name')
@@ -133,10 +135,11 @@ def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
     moran_locy, moran_locx = _moran_loc_from_rose_calc(rose)
     fig, ax = _dynamic_lisa_heatmap(moran_locy, moran_locx, p=p, ax=ax, **kwargs)
     return fig, ax
-    
+
+
 def _dynamic_lisa_heatmap(moran_locy, moran_locx, p, ax, **kwargs):
     """
-    Create dynaimc_lisa_heatmap figure from esda.moran.Moran_local values
+    Create dynamic_lisa_heatmap figure from esda.moran.Moran_local values
     """
     heatmap_data, diagonal_mask = _dynamic_lisa_heatmap_data(moran_locy, moran_locx, p)
     # set default plot style
@@ -145,8 +148,6 @@ def _dynamic_lisa_heatmap(moran_locy, moran_locx, p, ax, **kwargs):
     mask = kwargs.pop('mask', diagonal_mask)
     cbar = kwargs.pop('cbar', False)
     square = kwargs.pop('square', True)
-    ylabel = kwargs.pop('ylabel', 'Start time')
-    xlabel = kwargs.pop('xlabel', 'End time')
     
     # set name for tick labels
     xticklabels = kwargs.pop('xticklabels', ['ns', 'HH', 'HL', 'LH', 'LL'])
@@ -155,8 +156,8 @@ def _dynamic_lisa_heatmap(moran_locy, moran_locx, p, ax, **kwargs):
     ax = sns.heatmap(heatmap_data, annot=annot, cmap=cmap,
                 xticklabels=xticklabels, yticklabels=yticklabels,
                 mask=mask, ax=ax, cbar=cbar, square=square, **kwargs)
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
+    ax.set_xlabel('End time')
+    ax.set_ylabel('Start time')
     fig = ax.get_figure()
     return fig, ax
 
@@ -195,12 +196,11 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
     >>> from libpysal import examples
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
-
     >>> from giddy.directional import Rose
     >>> from splot.giddy import dynamic_lisa_rose
     
     get csv and shp files
-
+    
     >>> shp_link = examples.get_path('us48.shp')
     >>> df = gpd.read_file(shp_link)
     >>> income_table = pd.read_csv(examples.get_path("usjoin.csv"))
@@ -209,10 +209,8 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
     
     >>> for year in range(1969, 2010):
     ...     income_table[str(year) + '_rel'] = (
-    ...         income_table[str(year)] / income_table[str(year)].mean())
-            
+    ...         income_table[str(year)] / income_table[str(year)].mean())      
     merge to one gdf
-    
     >>> gdf = df.merge(income_table,left_on='STATE_NAME',right_on='Name')
     
     retrieve spatial weights and data for two points in time
@@ -236,6 +234,17 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
     >>> dynamic_lisa_rose(rose, c='r')
     >>> plt.show()
     """
+    # save_old default values
+    old_gridcolor = mpl.rcParams['grid.color']
+    old_facecolor = mpl.rcParams['axes.facecolor']
+    old_edgecolor = mpl.rcParams['axes.edgecolor']
+    # define plotting style
+    mpl.rcParams['grid.color'] = 'w'
+    mpl.rcParams['axes.edgecolor'] = 'w'
+    mpl.rcParams['axes.facecolor'] = '#bababa'
+    alpha = kwargs.pop('alpha', 0.9)
+    cmap = kwargs.pop('cmap', 'YlGnBu')
+
     if ax is None:
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='polar')
@@ -247,15 +256,22 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
     ax.set_rlabel_position(315)
 
     if attribute is None:
-        c = ax.scatter(rose.theta, rose.r, **kwargs)
+        c = ax.scatter(rose.theta, rose.r,
+                       alpha=alpha, cmap=cmap, **kwargs)
     else:
         if 'c' in kwargs.keys() or 'color' in kwargs.keys():
             raise ValueError('c and color are not valid keywords here; '
                              'attribute is used for coloring')
             
-        c = ax.scatter(rose.theta, rose.r, c=attribute, **kwargs)
+        c = ax.scatter(rose.theta, rose.r, c=attribute,
+                       alpha=alpha, cmap=cmap, **kwargs)
         if can_insert_colorbar:
             fig.colorbar(c)
+    
+    # reset style to old default values
+    mpl.rcParams['grid.color'] = old_gridcolor
+    mpl.rcParams['axes.facecolor'] = old_facecolor
+    mpl.rcParams['axes.edgecolor'] = old_edgecolor
     return fig, ax
 
 
@@ -279,7 +295,8 @@ def _add_arrow(line, position=None, direction='right', size=15, color=None):
                        arrowprops=dict(arrowstyle="->", color=color),
                        size=size)
 
-def dynamic_lisa_vectors(rose, attribute=None, ax=None, arrows=True, **kwargs):
+def dynamic_lisa_vectors(rose, attribute=None, ax=None,
+                         arrows=True, **kwargs):
     #TODO: fix coloring by attribute
     """
     Plot vectors of positional transition of LISA values
@@ -425,7 +442,7 @@ def dynamic_lisa_composite(rose, gdf,
     Returns
     -------
     fig : Matplotlib Figure instance
-        Moran scatterplot figure
+        Dynamic lisa composite figure
     axs : matplotlib Axes instance
         Axes in which the figure is plotted
     
@@ -437,12 +454,11 @@ def dynamic_lisa_composite(rose, gdf,
     >>> from libpysal import examples
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
-
     >>> from giddy.directional import Rose
     >>> from splot.giddy import dynamic_lisa_composite
     
     get csv and shp files
-
+    
     >>> shp_link = examples.get_path('us48.shp')
     >>> df = gpd.read_file(shp_link)
     >>> income_table = pd.read_csv(examples.get_path("usjoin.csv"))
@@ -452,7 +468,7 @@ def dynamic_lisa_composite(rose, gdf,
     >>> for year in range(1969, 2010):
     ...     income_table[str(year) + '_rel'] = (
     ...         income_table[str(year)] / income_table[str(year)].mean())
-            
+    
     merge to one gdf
     
     >>> gdf = df.merge(income_table,left_on='STATE_NAME',right_on='Name')
@@ -481,6 +497,7 @@ def dynamic_lisa_composite(rose, gdf,
     >>> axs[1].set_title('LISA cluster for 1996')
     >>> axs[3].set_title('LISA clsuter for 2009')
     >>> plt.show()
+    
     """
     # Moran_Local uses random numbers, which we cannot change between the two years!
     moran_locy, moran_locx = _moran_loc_from_rose_calc(rose)
@@ -491,7 +508,21 @@ def dynamic_lisa_composite(rose, gdf,
     axs = []
     axs.append(plt.subplot(221))
     axs.append(plt.subplot(222))
+    # save_old default values
+    old_gridcolor = mpl.rcParams['grid.color']
+    old_facecolor = mpl.rcParams['axes.facecolor']
+    old_edgecolor = mpl.rcParams['axes.edgecolor']
+    # define plotting style
+    mpl.rcParams['grid.color'] = 'w'
+    mpl.rcParams['axes.edgecolor'] = 'w'
+    mpl.rcParams['axes.facecolor'] = '#bababa'
+    # define axs[2]
     axs.append(plt.subplot(223, projection='polar'))
+    # reset style to old default values
+    mpl.rcParams['grid.color'] = old_gridcolor
+    mpl.rcParams['axes.facecolor'] = old_facecolor
+    mpl.rcParams['axes.edgecolor'] = old_edgecolor
+    #define axs[3]
     axs.append(plt.subplot(224))
     
     # space_time_heatmap
@@ -582,7 +613,7 @@ def dynamic_lisa_composite_explore(rose, gdf, pattern='',
     >>> for year in range(1969, 2010):
     ...     income_table[str(year) + '_rel'] = (
     ...         income_table[str(year)] / income_table[str(year)].mean())
-            
+    
     merge to one gdf
     
     >>> gdf = df.merge(income_table,left_on='STATE_NAME',right_on='Name')
@@ -603,7 +634,7 @@ def dynamic_lisa_composite_explore(rose, gdf, pattern='',
     
     >>> dynamic_lisa_composite_explore(rose, gdf, pattern='rel')
     >>> plt.show()
-
+    
     """
     coldict = {col: col for col in gdf.columns if
                col.endswith(pattern)}
