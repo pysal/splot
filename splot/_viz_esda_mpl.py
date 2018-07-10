@@ -79,28 +79,38 @@ def moran_scatterplot(moran, zstandard=True, ax=None,
     Examples
     --------
     Imports
+    
     >>> import matplotlib.pyplot as plt
     >>> import libpysal.api as lp
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> from esda.moran import Moran
     >>> from splot.esda import moran_scatterplot
+    
     Load data and calculate weights
+    
     >>> link_to_data = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
     >>> y = gdf['Donatns'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
+    
     Calculate Global Moran
+    
     >>> moran = Moran(y, w)
+    
     plot
+    
     >>> moran_scatterplot(moran)
     >>> plt.show()
+    
     customize plot
+    
     >>> fig, ax = moran_scatterplot(moran, zstandard=False,
     ...                             fitline_kws=dict(color='#4393c3'))
     >>> ax.set_xlabel('Donations')
     >>> plt.show()
+    
     """
     # to set default as an empty dictionary that is later filled with defaults
     if scatter_kwds is None:
@@ -166,38 +176,48 @@ def plot_moran_simulation(moran, ax=None, fitline_kwds=None, **kwargs):
         vertical moran fitline. Default =None.
     **kwargs : keyword arguments, optional
         Keywords used for creating and designing the figure,
-        passed to seaborne.kdeplot.
+        passed to seaborn.kdeplot.
 
     Returns
     -------
     fig : Matplotlib Figure instance
-        Moran scatterplot figure
+        Simulated reference distribution figure
     ax : matplotlib Axes instance
         Axes in which the figure is plotted
 
     Examples
     --------
     Imports
+    
     >>> import matplotlib.pyplot as plt
     >>> import libpysal.api as lp
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> from esda.moran import Moran
     >>> from splot.esda import plot_moran_simulation
+    
     Load data and calculate weights
+    
     >>> link_to_data = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
     >>> y = gdf['Donatns'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
+    
     Calculate Global Moran
+    
     >>> moran = Moran(y, w)
+    
     plot
+    
     >>> plot_moran_simulation(moran)
     >>> plt.show()
+    
     customize plot
+    
     >>> plot_moran_simulation(moran, fitline_kwds=dict(color='#4393c3'))
     >>> plt.show()
+    
     """
     # to set default as an empty dictionary that is later filled with defaults
     if fitline_kwds is None:
@@ -247,34 +267,44 @@ def plot_moran(moran, zstandard=True, scatter_kwds=None,
     Returns
     -------
     fig : Matplotlib Figure instance
-        Moran scatterplot figure
+        Moran scatterplot and reference distribution figure
     ax : matplotlib Axes instance
         Axes in which the figure is plotted
 
     Examples
     --------
     Imports
+    
     >>> import matplotlib.pyplot as plt
     >>> import libpysal.api as lp
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> from esda.moran import Moran
     >>> from splot.esda import plot_moran
+    
     Load data and calculate weights
+    
     >>> link_to_data = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
     >>> y = gdf['Donatns'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
+    
     Calculate Global Moran
+    
     >>> moran = Moran(y, w)
+    
     plot
+    
     >>> plot_moran(moran)
     >>> plt.show()
+    
     customize plot
+    
     >>> plot_moran(moran, zstandard=False,
     ...            fitline_kwds=dict(color='#4393c3'))
     >>> plt.show()
+    
     """
     figsize = kwargs.pop('figsize', (10, 4))
     fig, axs = plt.subplots(1, 2, figsize=figsize,
@@ -308,35 +338,45 @@ def moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=None
     Returns
     -------
     fig : Matplotlib Figure instance
-        Moran scatterplot figure
+        Bivariate moran scatterplot figure
     ax : matplotlib Axes instance
         Axes in which the figure is plotted
 
     Examples
     --------
     Imports
+    
     >>> import matplotlib.pyplot as plt
     >>> import libpysal.api as lp
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> from esda.moran import Moran_BV
     >>> from splot.esda import moran_bv_scatterplot
+    
     Load data and calculate weights
+    
     >>> link_to_data = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
     >>> x = gdf['Suicids'].values
     >>> y = gdf['Donatns'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
+    
     Calculate Bivariate Moran
+    
     >>> moran_bv = Moran_BV(x, y, w)
+    
     plot
+    
     >>> moran_bv_scatterplot(moran_bv)
     >>> plt.show()
+    
     customize plot
+    
     >>> moran_bv_scatterplot(moran_bv, zstandard=False,
     ...                      fitline_kwds=dict(color='#4393c3'))
     >>> plt.show()
+    
     """
     # to set default as an empty dictionary that is later filled with defaults
     if scatter_kwds is None:
@@ -394,35 +434,45 @@ def plot_moran_bv_simulation(moran_bv, ax=None, fitline_kwds=None, **kwargs):
     Returns
     -------
     fig : Matplotlib Figure instance
-        Moran scatterplot figure
+        Bivariate moran reference distribution figure
     ax : matplotlib Axes instance
         Axes in which the figure is plotted
 
     Examples
     --------
     Imports
+    
     >>> import matplotlib.pyplot as plt
     >>> import libpysal.api as lp
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> from esda.moran import Moran_BV
     >>> from splot.esda import plot_moran_bv_simulation
+    
     Load data and calculate weights
+    
     >>> link_to_data = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
     >>> x = gdf['Suicids'].values
     >>> y = gdf['Donatns'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
+    
     Calculate Bivariate Moran
+    
     >>> moran_bv = Moran_BV(x, y, w)
+    
     plot
+    
     >>> plot_moran_bv_simulation(moran_bv)
     >>> plt.show()
+    
     customize plot
+    
     >>> plot_moran_bv_simulation(moran_bv,
         ...                      fitline_kwds=dict(color='#4393c3'))
     >>> plt.show()
+    
     """
     # to set default as an empty dictionary that is later filled with defaults
     if fitline_kwds is None:
@@ -468,34 +518,44 @@ def plot_moran_bv(moran_bv, scatter_kwds=None, fitline_kwds=None, **kwargs):
     Returns
     -------
     fig : Matplotlib Figure instance
-        Moran scatterplot figure
+        Bivariate moran scatterplot and reference distribution figure
     ax : matplotlib Axes instance
         Axes in which the figure is plotted
 
     Examples
     --------
     Imports
+    
     >>> import matplotlib.pyplot as plt
     >>> import libpysal.api as lp
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> from esda.moran import Moran_BV
     >>> from splot.esda import plot_moran_bv
+    
     Load data and calculate weights
+    
     >>> link_to_data = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
     >>> x = gdf['Suicids'].values
     >>> y = gdf['Donatns'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
+    
     Calculate Bivariate Moran
+    
     >>> moran_bv = Moran_BV(x, y, w)
+    
     plot
+    
     >>> plot_moran_bv(moran_bv)
     >>> plt.show()
+    
     customize plot
+    
     >>> plot_moran_bv(moran_bv, fitline_kwds=dict(color='#4393c3')))
     >>> plt.show()
+    
     """
     figsize = kwargs.pop('figsize', (10, 4))
     fig, axs = plt.subplots(1, 2, figsize=figsize,
@@ -535,31 +595,40 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
     Returns
     -------
     fig : Matplotlib Figure instance
-        Moran scatterplot figure
+        Moran Local scatterplot figure
     ax : matplotlib Axes instance
         Axes in which the figure is plotted
 
     Examples
     --------
+    Imports
+    
     >>> import matplotlib.pyplot as plt
     >>> import geopandas as gpd
     >>> import libpysal.api as lp
     >>> from libpysal import examples
     >>> from esda.moran import Moran_Local
     >>> from splot.esda import moran_loc_scatterplot
+    
     Load data and calculate Moran Local statistics
+    
     >>> link = examples.get_path('columbus.shp')
     >>> gdf = gpd.read_file(link)
     >>> y = gdf['HOVAL'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     >>> m = Moran_Local(y, w)
+    
     plot
+    
     >>> moran_loc_scatterplot(m)
+    
     customize plot
+    
     >>> moran_loc_scatterplot(m, p=0.05,
     ...                       fitline_kwds=dict(color='#4393c3')))
     >>> plt.show()
+    
     """
     # to set default as an empty dictionary that is later filled with defaults
     if scatter_kwds is None:
@@ -661,8 +730,7 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
         ``legend_kwds={'loc': 'upper left', 'bbox_to_anchor': (0.92, 1.05)}``
         Default = None
     **kwargs : keyword arguments, optional
-        Keywords used for creating and designing the plot.
-        TODO geodataframe.plot
+        Keywords designing and passed to geopandas.GeoDataFrame.plot().
 
     Returns
     -------
@@ -673,6 +741,8 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
 
     Examples
     --------
+    Imports
+    
     >>> import matplotlib.pyplot as plt
     >>> import libpysal.api as lp
     >>> from libpysal import examples
@@ -680,6 +750,8 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
     >>> from esda.moran import Moran_Local
     >>> from splot.esda import lisa_cluster
 
+    Data preparation and statistical analysis
+    
     >>> link = examples.get_path('columbus.shp')
     >>> gdf = gpd.read_file(link)
     >>> y = gdf['HOVAL'].values
@@ -687,8 +759,11 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
     >>> w.transform = 'r'
     >>> moran_loc = Moran_Local(y, w)
 
+    Plotting
+    
     >>> fig = lisa_cluster(moran_loc, gdf)
     >>> plt.show()
+    
     """
     # retrieve colors5 and labels from mask_local_auto
     _, colors5, _, labels = mask_local_auto(moran_loc, p=p)
@@ -718,8 +793,8 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
                                cmap='YlGnBu', figsize=(15, 4),
                                scatter_kwds=None, fitline_kwds=None):
     '''
-    Produce three-plot visualization of Moran Scatteprlot, LISA cluster
-    and Choropleth, with Local Moran region and quadrant masking
+    Produce three-plot visualisation of Moran Scatteprlot, LISA cluster
+    and Choropleth maps, with Local Moran region and quadrant masking
 
     Parameters
     ----------
@@ -760,10 +835,14 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     Returns
     -------
     fig : Matplotlib figure instance
-        Moran Scatterplot, LISA cluster map and Choropleth
+        Moran Scatterplot, LISA cluster map and Choropleth.
+    axs : list of Matplotlib axes
+        Lisat of Matplotlib axes plotted.
 
     Examples
     --------
+    Imports
+    
     >>> import matplotlib.pyplot as plt
     >>> import libpysal.api as lp
     >>> from libpysal import examples
@@ -771,6 +850,8 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     >>> from esda.moran import Moran_Local
     >>> from splot.esda import plot_local_autocorrelation
 
+    Data preparation and analysis
+    
     >>> link = examples.get_path('columbus.shp')
     >>> gdf = gpd.read_file(link)
     >>> y = gdf['HOVAL'].values
@@ -778,11 +859,13 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     >>> w.transform = 'r'
     >>> moran_loc = Moran_Local(y, w)
 
-    >>> # test with quadrant and mask
+    Plotting with quadrant mask and region mask
+    
     >>> fig = plot_local_autocorrelation(moran_loc, gdf, 'HOVAL', p=0.05,
     ...                                  region_column='POLYID',
     ...                                  mask=['1', '2', '3'], quadrant=1)
     >>> plt.show()
+    
     '''
     fig, axs = plt.subplots(1, 3, figsize=figsize,
                             subplot_kw={'aspect': 'equal'})
@@ -892,19 +975,23 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
     Returns
     -------
     fig : Matplotlib Figure instance
-        Moran scatterplot figure
+        Bivariate Moran Local scatterplot figure
     ax : matplotlib Axes instance
         Axes in which the figure is plotted
 
     Examples
     --------
+    Imports
+    
     >>> import matplotlib.pyplot as plt
     >>> import geopandas as gpd
     >>> import libpysal.api as lp
     >>> from libpysal import examples
     >>> from esda.moran import Moran_Local_BV
     >>> from splot.esda import moran_loc_bv_scatterplot
+    
     Load data and calculate Moran Local statistics
+    
     >>> link = examples.get_path('columbus.shp')
     >>> gdf = gpd.read_file(link)
     >>> x = gdf['Suicids'].values
@@ -912,12 +999,17 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     >>> m = Moran_Local_BV(x, y, w)
-    plot
+    
+    Plot
+    
     >>> moran_loc_bv_scatterplot(m)
-    customize plot
+    
+    Customize plot
+    
     >>> moran_loc_bv_scatterplot(m, p=0.05,
     ...                          fitline_kwds=dict(color='#4393c3')))
     >>> plt.show()
+    
     """
     # to set default as an empty dictionary that is later filled with defaults
     if scatter_kwds is None:
@@ -969,5 +1061,4 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
         fitline_kwds.setdefault('color', splot_colors['moran_fit'])
         ax.plot(lag, fit.predy, **fitline_kwds)
         ax.scatter(moran_loc_bv.zy, fit.predy, **scatter_kwds)
-        
     return fig, ax
