@@ -14,21 +14,20 @@ before_install:
   - export PATH=`pwd`/miniconda/bin:$PATH
   - conda update --yes conda
   - conda config --add channels conda-forge
-  - conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION numpy scipy pandas nose
+  - conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION pip
   - source activate test-env
+  - conda install --yes --file requirements.txt
+  - conda list
+  - conda info -a
 
 install:
-  - conda install --yes pip
-  - conda install --yes -c conda-forge --file requirements.txt
   # We need geopandas master, the legend_kwds is not in 0.3.0
   - pip install https://github.com/geopandas/geopandas/archive/master.zip
   - pip install https://github.com/pysal/libpysal/archive/master.zip
   # Pysal still needed for code not yet moved to libpysal
   - pip install pysal
-  - pip install esda
-  - pip install giddy
-  - pip install mapclassify
-  - pip install -r requirements_dev.txt
+  - pip install esda giddy mapclassify palettable
+  - pip install nose coverage coveralls
   # Now install splot (don't use 'pip install .', we'll run out of space)
   - python setup.py sdist
   - cd dist && pip install splot-*.tar.gz && cd ..

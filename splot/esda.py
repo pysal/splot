@@ -14,6 +14,9 @@ Moran Local analytics
    moran_scatterplot
    plot_moran_simulation
    plot_moran
+   moran_bv_scatterplot
+   plot_moran_bv_simulation
+   plot_moran_bv
    moran_loc_scatterplot
    lisa_cluster
    plot_local_autocorrelation
@@ -23,6 +26,9 @@ Moran Local analytics
 from ._viz_esda_mpl import (moran_scatterplot,
                             plot_moran_simulation,
                             plot_moran,
+                            moran_bv_scatterplot,
+                            plot_moran_bv_simulation,
+                            plot_moran_bv,
                             moran_loc_scatterplot,
                             lisa_cluster,
                             plot_local_autocorrelation)

@@ -8,7 +8,7 @@ from esda.moran import Moran_Local
 
 from matplotlib import patches, colors
 
-from ._viz_utils import mask_local_auto, moran_hot_cold_spots
+from ._viz_utils import mask_local_auto, moran_hot_cold_spots, splot_colors
 
 """
 Lightweight visualizations for pysal using Matplotlib and Geopandas
@@ -21,6 +21,24 @@ check if attribute in gdf.plot works without attribute str
 """
 
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
+
+
+def _create_moran_fig_ax(ax, figsize):
+    if ax is None:
+        fig = plt.figure(figsize=figsize)
+        ax = fig.add_subplot(111)
+    else:
+        fig = ax.get_figure()
+    
+    ax.spines['left'].set_position(('axes', -0.05))
+    ax.spines['right'].set_color('none')
+    ax.spines['bottom'].set_position(('axes', -0.05))
+    ax.spines['top'].set_color('none')
+    ax.spines['left'].set_smart_bounds(True)
+    ax.spines['bottom'].set_smart_bounds(True)
+    ax.xaxis.set_ticks_position('bottom')
+    ax.yaxis.set_ticks_position('left')
+    return fig, ax
 
 
 def moran_scatterplot(moran, zstandard=True, ax=None, **kwargs):
@@ -63,7 +81,6 @@ def moran_scatterplot(moran, zstandard=True, ax=None, **kwargs):
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     Calculate Global Moran
-    >>> w = lp.Queen.from_dataframe(gdf)
     >>> moran = Moran(y, w)
     plot
     >>> moran_scatterplot(moran)
@@ -72,28 +89,18 @@ def moran_scatterplot(moran, zstandard=True, ax=None, **kwargs):
     >>> moran_scatterplot(moran, zstandard=False, figsize=(4,4))
     >>> plt.show()
     """
-    if ax is None:
-        figsize = kwargs.pop('figsize', (7, 7))
-        fig = plt.figure(figsize=figsize)
-        ax = fig.add_subplot(111)
-    else:
-        fig = ax.get_figure()
-
-    # customize figure
+    # define customization
+    figsize = kwargs.pop('figsize', (7, 7))
     xlabel = kwargs.pop('xlabel', 'Attribute')
     ylabel = kwargs.pop('ylabel', 'Spatial Lag')
     title = kwargs.pop('title', 'Moran Scatterplot' +
                        ' (Moran I: ' + str(round(moran.I, 2)) + ')')
     alpha = kwargs.pop('alpha', 0.6)
-
-    ax.spines['left'].set_position(('axes', -0.05))
-    ax.spines['right'].set_color('none')
-    ax.spines['bottom'].set_position(('axes', -0.05))
-    ax.spines['top'].set_color('none')
-    ax.spines['left'].set_smart_bounds(True)
-    ax.spines['bottom'].set_smart_bounds(True)
-    ax.xaxis.set_ticks_position('bottom')
-    ax.yaxis.set_ticks_position('left')
+    
+    # get fig and ax
+    fig, ax = _create_moran_fig_ax(ax, figsize)
+    
+    # set labels
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     ax.set_title(title)
@@ -103,8 +110,10 @@ def moran_scatterplot(moran, zstandard=True, ax=None, **kwargs):
         lag = lp.lag_spatial(moran.w, moran.z)
         fit = ps.spreg.OLS(moran.z[:, None], lag[:, None])
         # plot
-        ax.scatter(moran.z, lag, s=40, color='#bababa', alpha=alpha)
-        ax.plot(lag, fit.predy, color='#d6604d', alpha=.9)
+        ax.scatter(moran.z, lag, s=40, color=splot_colors['base_grey'],
+                   alpha=alpha)
+        ax.plot(lag, fit.predy, color=splot_colors['moran_fit'],
+                alpha=.9)
         # v- and hlines
         ax.axvline(0, alpha=0.5, color='k', linestyle='--')
         ax.axhline(0, alpha=0.5, color='k', linestyle='--')
@@ -112,7 +121,8 @@ def moran_scatterplot(moran, zstandard=True, ax=None, **kwargs):
         lag = lp.lag_spatial(moran.w, moran.y)
         b, a = np.polyfit(moran.y, lag, 1)
         # plot
-        ax.scatter(moran.y, lag, color='#bababa', alpha=alpha)
+        ax.scatter(moran.y, lag, color=splot_colors['base_grey'],
+                   alpha=alpha)
         # dashed vert at mean of the attribute
         ax.vlines(moran.y.mean(), lag.min(), lag.max(), alpha=0.5,
                   linestyle='--')
@@ -120,7 +130,7 @@ def moran_scatterplot(moran, zstandard=True, ax=None, **kwargs):
         ax.hlines(lag.mean(), moran.y.min(), moran.y.max(), alpha=0.5,
                   linestyle='--')
         # red line of best fit using global Moran I as slope
-        ax.plot(moran.y, a + b*moran.y, '#d6604d')
+        ax.plot(moran.y, a + b*moran.y, splot_colors['moran_fit'])
     return fig, ax
 
 
@@ -162,7 +172,6 @@ def plot_moran_simulation(moran, ax=None, **kwargs):
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     Calculate Global Moran
-    >>> w = lp.Queen.from_dataframe(gdf)
     >>> moran = Moran(y, w)
     plot
     >>> plot_moran_simulation(moran)
@@ -171,28 +180,19 @@ def plot_moran_simulation(moran, ax=None, **kwargs):
     >>> plot_moran_simulation(moran, figsize=(4,4))
     >>> plt.show()
     """
-    if ax is None:
-        figsize = kwargs.pop('figsize', (7, 7))
-        fig = plt.figure(figsize=figsize)
-        ax = fig.add_subplot(111)
-    else:
-        fig = ax.get_figure()
+    figsize = kwargs.pop('figsize', (7, 7))
+    
+    # get fig and ax
+    fig, ax = _create_moran_fig_ax(ax, figsize)
 
+    # plot distribution
     shade = kwargs.pop('shade', True)
-    color = kwargs.pop('color', '#bababa')
+    color = kwargs.pop('color', splot_colors['base_grey'])
     sbn.kdeplot(moran.sim, shade=shade, color=color, ax=ax, **kwargs)
 
     # customize plot
-    ax.vlines(moran.I, 0, 1, color='#d6604d')
+    ax.vlines(moran.I, 0, 1, color=splot_colors['moran_fit'])
     ax.vlines(moran.EI, 0, 1)
-    ax.spines['left'].set_position(('axes', -0.05))
-    ax.spines['right'].set_color('none')
-    ax.spines['bottom'].set_position(('axes', -0.05))
-    ax.spines['top'].set_color('none')
-    ax.spines['left'].set_smart_bounds(True)
-    ax.spines['bottom'].set_smart_bounds(True)
-    ax.xaxis.set_ticks_position('bottom')
-    ax.yaxis.set_ticks_position('left')
     ax.set_title('Reference Distribution')
     ax.set_xlabel('Moran I: ' + str(round(moran.I, 2)))
     return fig, ax
@@ -233,7 +233,6 @@ def plot_moran(moran, zstandard=True, **kwargs):  # TODO pass in kwargs dicts
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     Calculate Global Moran
-    >>> w = lp.Queen.from_dataframe(gdf)
     >>> moran = Moran(y, w)
     plot
     >>> plot_moran(moran)
@@ -247,6 +246,197 @@ def plot_moran(moran, zstandard=True, **kwargs):  # TODO pass in kwargs dicts
                             subplot_kw={'aspect': 'equal'})
     plot_moran_simulation(moran, ax=axs[0])
     moran_scatterplot(moran, zstandard=zstandard, ax=axs[1])
+    axs[0].set(aspect="auto")
+    axs[1].set(aspect="auto")
+    return fig, axs
+
+
+def moran_bv_scatterplot(moran_bv, ax=None, **kwargs):
+    """
+    Bivariate Moran Scatterplot.
+
+    Parameters
+    ----------
+    moran_bv : esda.moran.Moran_BV instance
+        Values of Bivariate Moran's I Autocorrelation Statistics
+    ax : Matplotlib Axes instance, optional
+        If given, the Moran plot will be created inside this axis.
+        Default =None.
+    **kwargs : keyword arguments, optional
+        Keywords used for creating and designing the figure.
+
+    Returns
+    -------
+    fig : Matplotlib Figure instance
+        Moran scatterplot figure
+    ax : matplotlib Axes instance
+        Axes in which the figure is plotted
+
+    Examples
+    --------
+    Imports
+    >>> import matplotlib.pyplot as plt
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> import geopandas as gpd
+    >>> from esda.moran import Moran_BV
+    >>> from splot.esda import moran_bv_scatterplot
+    Load data and calculate weights
+    >>> link_to_data = examples.get_path('Guerry.shp')
+    >>> gdf = gpd.read_file(link_to_data)
+    >>> x = gdf['Suicids'].values
+    >>> y = gdf['Donatns'].values
+    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w.transform = 'r'
+    Calculate Bivariate Moran
+    >>> moran_bv = Moran_BV(x, y, w)
+    plot
+    >>> moran_bv_scatterplot(moran_bv)
+    >>> plt.show()
+    customize plot
+    >>> moran_bv_scatterplot(moran_bv, zstandard=False, figsize=(4,4))
+    >>> plt.show()
+    """
+    # define customization
+    figsize = kwargs.pop('figsize', (7, 7))
+    xlabel = kwargs.pop('xlabel', 'Attribute Y')
+    ylabel = kwargs.pop('ylabel', 'Spatial Lag of X')
+    title = kwargs.pop('title', 'Bivariate Moran Scatterplot' +
+                       ' (' + str(round(moran_bv.I, 2)) + ')')
+    alpha = kwargs.pop('alpha', 0.6)
+
+    # get fig and ax
+    fig, ax = _create_moran_fig_ax(ax, figsize)
+    
+    # set labels
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.set_title(title)
+
+    # plot and set standards
+    lag = lp.lag_spatial(moran_bv.w, moran_bv.zx)
+    fit = ps.spreg.OLS(moran_bv.zx[:, None], lag[:, None])
+    # plot
+    ax.scatter(moran_bv.zy, lag, s=40, color=splot_colors['base_grey'],
+               alpha=alpha)
+    ax.plot(lag, fit.predy, color=splot_colors['moran_fit'], alpha=.9)
+    # v- and hlines
+    ax.axvline(0, alpha=0.5, color='k', linestyle='--')
+    ax.axhline(0, alpha=0.5, color='k', linestyle='--')
+    return fig, ax
+
+
+def plot_moran_bv_simulation(moran_bv, ax=None, **kwargs):
+    """
+    Bivariate Moran's I simulated reference distribution.
+
+    Parameters
+    ----------
+    moran_bv : esda.moran.Moran_BV instance
+        Values of Bivariate Moran's I Autocorrelation Statistics
+    ax : Matplotlib Axes instance, optional
+        If given, the Moran plot will be created inside this axis.
+        Default =None.
+    **kwargs : keyword arguments, optional
+        Keywords used for creating and designing the figure,
+        passed to seaborne.kdeplot.
+
+    Returns
+    -------
+    fig : Matplotlib Figure instance
+        Moran scatterplot figure
+    ax : matplotlib Axes instance
+        Axes in which the figure is plotted
+
+    Examples
+    --------
+    Imports
+    >>> import matplotlib.pyplot as plt
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> import geopandas as gpd
+    >>> from esda.moran import Moran_BV
+    >>> from splot.esda import plot_moran_bv_simulation
+    Load data and calculate weights
+    >>> link_to_data = examples.get_path('Guerry.shp')
+    >>> gdf = gpd.read_file(link_to_data)
+    >>> x = gdf['Suicids'].values
+    >>> y = gdf['Donatns'].values
+    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w.transform = 'r'
+    Calculate Bivariate Moran
+    >>> moran_bv = Moran_BV(x, y, w)
+    plot
+    >>> plot_moran_bv_simulation(moran_bv)
+    >>> plt.show()
+    customize plot
+    >>> plot_moran_bv_simulation(moran_bv, figsize=(4,4))
+    >>> plt.show()
+    """
+    figsize = kwargs.pop('figsize', (7, 7))
+
+    # get fig and ax
+    fig, ax = _create_moran_fig_ax(ax, figsize)
+
+    # plot distribution
+    shade = kwargs.pop('shade', True)
+    color = kwargs.pop('color', splot_colors['base_grey'])
+    sbn.kdeplot(moran_bv.sim, shade=shade, color=color, ax=ax, **kwargs)
+
+    # customize plot
+    ax.vlines(moran_bv.I, 0, 1, color=splot_colors['moran_fit'])
+    ax.vlines(moran_bv.EI_sim, 0, 1)
+    ax.set_title('Reference Distribution')
+    ax.set_xlabel('Bivariate Moran I: ' + str(round(moran_bv.I, 2)))
+    return fig, ax
+
+
+def plot_moran_bv(moran_bv, **kwargs):  # TODO pass in kwargs dicts
+    """
+    Bivariate Moran's I simulated reference distribution and scatterplot.
+
+    Parameters
+    ----------
+    moran_bv : esda.moran.Moran_BV instance
+        Values of Bivariate Moran's I Autocorrelation Statistics
+
+    Returns
+    -------
+    fig : Matplotlib Figure instance
+        Moran scatterplot figure
+    ax : matplotlib Axes instance
+        Axes in which the figure is plotted
+
+    Examples
+    --------
+    Imports
+    >>> import matplotlib.pyplot as plt
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> import geopandas as gpd
+    >>> from esda.moran import Moran_BV
+    >>> from splot.esda import plot_moran_bv
+    Load data and calculate weights
+    >>> link_to_data = examples.get_path('Guerry.shp')
+    >>> gdf = gpd.read_file(link_to_data)
+    >>> x = gdf['Suicids'].values
+    >>> y = gdf['Donatns'].values
+    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w.transform = 'r'
+    Calculate Bivariate Moran
+    >>> moran_bv = Moran_BV(x, y, w)
+    plot
+    >>> plot_moran_bv(moran_bv)
+    >>> plt.show()
+    customize plot
+    >>> plot_moran_bv(moran_bv, figsize=(4,4))
+    >>> plt.show()
+    """
+    figsize = kwargs.pop('figsize', (10, 4))
+    fig, axs = plt.subplots(1, 2, figsize=figsize,
+                            subplot_kw={'aspect': 'equal'})
+    plot_moran_bv_simulation(moran_bv, ax=axs[0])
+    moran_bv_scatterplot(moran_bv, ax=axs[1])
     axs[0].set(aspect="auto")
     axs[1].set(aspect="auto")
     return fig, axs
@@ -317,28 +507,17 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
         hmap = colors.ListedColormap(['lightgrey', '#d7191c', '#abd9e9',
                                       '#2c7bb6', '#fdae61'])
 
-    # Customize plot
-    if ax is None:
-        figsize = kwargs.pop('figsize', (7, 7))
-        fig = plt.figure(figsize=figsize)
-        ax = fig.add_subplot(111)
-    else:
-        fig = ax.get_figure()
-
-    # customize figure
+    # define customization
+    figsize = kwargs.pop('figsize', (7, 7))
     xlabel = kwargs.pop('xlabel', 'Attribute')
     ylabel = kwargs.pop('ylabel', 'Spatial Lag')
     title = kwargs.pop('title', 'Moran Scatterplot')
     alpha = kwargs.pop('alpha', 0.8)
 
-    ax.spines['left'].set_position(('axes', -0.05))
-    ax.spines['right'].set_color('none')
-    ax.spines['bottom'].set_position(('axes', -0.05))
-    ax.spines['top'].set_color('none')
-    ax.spines['left'].set_smart_bounds(True)
-    ax.spines['bottom'].set_smart_bounds(True)
-    ax.xaxis.set_ticks_position('bottom')
-    ax.yaxis.set_ticks_position('left')
+    # get fig and ax
+    fig, ax = _create_moran_fig_ax(ax, figsize)
+    
+    # set labels
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     ax.set_title(title)
@@ -355,9 +534,9 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
             ax.scatter(moran_loc.z, fit.predy, c=spots,
                        cmap=hmap, s=40, alpha=alpha)
         else:
-            ax.plot(lag, fit.predy, color='#d6604d', alpha=.9)
+            ax.plot(lag, fit.predy, color=splot_colors['moran_fit'], alpha=.9)
             ax.scatter(moran_loc.z, fit.predy, s=40,
-                       color='#bababa', alpha=alpha)
+                       color=splot_colors['base_grey'], alpha=alpha)
     else:
         lag = lp.lag_spatial(moran_loc.w, moran_loc.y)
         b, a = np.polyfit(moran_loc.y, lag, 1)
@@ -368,14 +547,14 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
         ax.hlines(lag.mean(), moran_loc.y.min(), moran_loc.y.max(), alpha=0.5,
                   linestyle='--')
         # red line of best fit using global Moran I as slope
-        ax.plot(moran_loc.y, a + b*moran_loc.y, '#d6604d')
+        ax.plot(moran_loc.y, a + b*moran_loc.y, splot_colors['moran_fit'])
         if p is not None:
             ax.plot(moran_loc.y, a + b*moran_loc.y, 'k')
             ax.scatter(moran_loc.y, lag, c=spots, cmap=hmap, s=40, alpha=alpha)
         else:
-            ax.plot(moran_loc.y, a + b*moran_loc.y, '#d6604d')
-            ax.scatter(moran_loc.y, lag, s=40, color='#bababa', alpha=alpha)
-
+            ax.plot(moran_loc.y, a + b*moran_loc.y, splot_colors['moran_fit'])
+            ax.scatter(moran_loc.y, lag, s=40, color=splot_colors['base_grey'],
+                       alpha=alpha)
     return fig, ax
 
 
