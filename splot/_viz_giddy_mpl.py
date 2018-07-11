@@ -59,13 +59,13 @@ def _moran_loc_from_rose_calc(rose):
 def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
     """
     Heatmap indicating significant transition of LISA values
-    over time in Moran Scatterplot
+    over time inbetween Moran Scatterplot quadrants
 
     Parameters
     ----------
     rose : giddy.directional.Rose instance
         A ``Rose`` object, which contains (among other attributes) LISA
-        values at two time points, and a method to perform inference on those.
+        values at two points in time, and a method to perform inference on those.
     p : float, optional
         The p-value threshold for significance. Default =0.05
     ax : Matplotlib Axes instance, optional
@@ -75,7 +75,7 @@ def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
         Keywords used for creating and designing the heatmap. These are passed
         on to `seaborn.heatmap()`. See `seaborn` documentation for valid keywords.
         Note: "Start time" refers to `y1` in `Y = np.array([y1, y2]).T`
-        with `giddy.Rose(Y,w, k=5)`, "End time" referst to `y2`.
+        with `giddy.Rose(Y, w, k=5)`, "End time" referst to `y2`.
 
     Returns
     -------
@@ -128,7 +128,7 @@ def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
     
     customize plot
     
-    >>> dynamic_lisa_heatmap(rose, cbar='GnBu', ylabel='1969', xlabel='2009')
+    >>> dynamic_lisa_heatmap(rose, cbar='GnBu')
     >>> plt.show()
     
     """
@@ -164,27 +164,27 @@ def _dynamic_lisa_heatmap(moran_locy, moran_locx, p, ax, **kwargs):
 
 def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
     """
-    Plot the dynamic LISA values in a rose diagram.
+    Plot dynamic LISA values in a rose diagram.
 
     Parameters
     ----------
     rose : giddy.directional.Rose instance
         A ``Rose`` object, which contains (among other attributes) LISA
-        values at two time points, and a method to perform inference on those.
+        values at two points in time, and a method to perform inference on those.
     attribute : (n,) ndarray, optional
-        Points will be colored by attribute values.
-        Variable to specify colors of the colorbars. Default =None
+        Points will be colored by chosen attribute values.
+        Variable to specify colors of the colorbars. Default =None.
     ax : Matplotlib Axes instance, optional
         If given, the figure will be created inside this axis.
-        Default =None. Note, this axis should have a polar projection.
+        Default =None. Note: This axis should have a polar projection.
     **kwargs : keyword arguments, optional
-        Keywords used for creating and designing the plot.
-        Note: 'c' and 'color' cannot be passed when attribute is not None
+        Keywords used for creating and designing the `matplotlib.pyplot.scatter()`.
+        Note: 'c' and 'color' cannot be passed when attribute is not None.
 
     Returns
     -------
     fig : Matplotlib Figure instance
-        Moran scatterplot figure
+        LISA rose plot figure
     ax : matplotlib Axes instance
         Axes in which the figure is plotted
     
@@ -295,9 +295,9 @@ def _add_arrow(line, position=None, direction='right', size=15, color=None):
                        arrowprops=dict(arrowstyle="->", color=color),
                        size=size)
 
-def dynamic_lisa_vectors(rose, attribute=None, ax=None,
+
+def dynamic_lisa_vectors(rose, ax=None,
                          arrows=True, **kwargs):
-    #TODO: fix coloring by attribute
     """
     Plot vectors of positional transition of LISA values
     in Moran scatterplot
@@ -306,23 +306,20 @@ def dynamic_lisa_vectors(rose, attribute=None, ax=None,
     ----------
     rose : giddy.directional.Rose instance
         A ``Rose`` object, which contains (among other attributes) LISA
-        values at two time points, and a method to perform inference on those.
-    attribute : (n,) ndarray, optional
-        Points will be colored by attribute values.
-        Variable to specify colors of the colorbars. Default =None
+        values at two points in time, and a method to perform inference on those.
     ax : Matplotlib Axes instance, optional
         If given, the figure will be created inside this axis.
         Default =None.
     arrows : boolean, optional
         If True show arrowheads of vectors. Default =True
     **kwargs : keyword arguments, optional
-        Keywords used for creating and designing the plot.
-        Note: 'c' and 'color' cannot be passed when attribute is not None
+        Keywords used for creating and designing the `matplotlib.pyplot.plot()`.
+        Note: 'c' and 'color' cannot be passed when attribute is not None.
 
     Returns
     -------
     fig : Matplotlib Figure instance
-        Moran scatterplot figure
+        Figure of dynamic LISA vectors
     ax : matplotlib Axes instance
         Axes in which the figure is plotted
     
@@ -386,16 +383,8 @@ def dynamic_lisa_vectors(rose, attribute=None, ax=None,
     xlim = [rose.Y.min(), rose.Y.max()]
     ylim = [rose.wY.min(), rose.wY.max()]
  
-    if attribute is None:
-        if 'c' in kwargs.keys():
-            attribute = kwargs.pop('c', 'b')
-        else:
-            attribute = kwargs.pop('color', 'b')
-        can_insert_colorbar = False
-    else:
-        if 'c' in kwargs.keys() or 'color' in kwargs.keys():
-            raise ValueError('c and color are not valid keywords here; '
-                             'attribute is used for coloring')
+    color = kwargs.pop('color', 'b')
+    can_insert_colorbar = False
         
     xs = []
     ys = []
@@ -406,7 +395,7 @@ def dynamic_lisa_vectors(rose, attribute=None, ax=None,
         
     xs = np.asarray(xs).T
     ys = np.asarray(ys).T
-    lines = ax.plot(xs, ys, c=attribute, **kwargs)
+    lines = ax.plot(xs, ys, color=color, **kwargs)
     if can_insert_colorbar:
         fig.colorbar(lines)
         
@@ -423,28 +412,28 @@ def dynamic_lisa_vectors(rose, attribute=None, ax=None,
 def dynamic_lisa_composite(rose, gdf,
                            p=0.05, figsize=(13,10)):
     """
-    Composite visualization for dynamic LISA values over two points in time.
-    Includes dynamic lisa heatmap, dynamic lisa rose plot, and LISA cluster plot
-    for both compared points in time.
+    Composite visualisation for dynamic LISA values over two points in time.
+    Includes dynamic lisa heatmap, dynamic lisa rose plot, and LISA cluster plots
+    for both, compared points in time.
     
     Parameters
     ----------
     rose : giddy.directional.Rose instance
         A ``Rose`` object, which contains (among other attributes) LISA
-        values at two time points, and a method to perform inference on those.
+        values at two points in time, and a method to perform inference on those.
     gdf : geopandas dataframe instance
-        The Dataframe containing information and polygons to plot.
+        The GeoDataFrame containing information and polygons to plot.
     p : float, optional
-        The p-value threshold for significance. Default =0.05
+        The p-value threshold for significance. Default =0.05.
     figsize: tuple, optional
         W, h of figure. Default =(13,10)
 
     Returns
     -------
     fig : Matplotlib Figure instance
-        Dynamic lisa composite figure
+        Dynamic lisa composite figure.
     axs : matplotlib Axes instance
-        Axes in which the figure is plotted
+        Axes in which the figure is plotted.
     
     Examples
     --------
@@ -544,10 +533,11 @@ def dynamic_lisa_composite(rose, gdf,
     dynamic_lisa_rose(rose, ax=axs[2])
     return fig, axs
 
+
 def _dynamic_lisa_widget_update(rose, gdf, start_time, end_time,
                                 p=0.05, figsize=(13,10)):
     """
-    Update rose values if wigets are used
+    Update rose values if widgets are used
     """
     # determine rose object for (timex, timey), which comes from interact widgets
     y1 = gdf[start_time].values
@@ -561,7 +551,7 @@ def _dynamic_lisa_widget_update(rose, gdf, start_time, end_time,
 def dynamic_lisa_composite_explore(rose, gdf, pattern='',
                                    p=0.05, figsize=(13,10)):
     """
-    Interactive exploration of dynamic lisa values
+    Interactive exploration of dynamic LISA values
     for different dates in a dataframe.
     Note: only possible in jupyter notebooks
     
