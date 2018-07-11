@@ -544,14 +544,14 @@ def dynamic_lisa_composite(rose, gdf,
     dynamic_lisa_rose(rose, ax=axs[2])
     return fig, axs
 
-def _dynamic_lisa_widget_update(rose, gdf, timex, timey,
+def _dynamic_lisa_widget_update(rose, gdf, start_time, end_time,
                                 p=0.05, figsize=(13,10)):
     """
     Update rose values if wigets are used
     """
     # determine rose object for (timex, timey), which comes from interact widgets
-    y1 = gdf[timex].values
-    y2 = gdf[timey].values
+    y1 = gdf[start_time].values
+    y2 = gdf[end_time].values
     Y = np.array([y1, y2]).T
     rose_update = Rose(Y, rose.w, k=5)
     
@@ -639,5 +639,5 @@ def dynamic_lisa_composite_explore(rose, gdf, pattern='',
     coldict = {col: col for col in gdf.columns if
                col.endswith(pattern)}
     interact(_dynamic_lisa_widget_update,
-             timex=coldict, timey=coldict, rose=fixed(rose),
+             start_time=coldict, end_time=coldict, rose=fixed(rose),
              gdf=fixed(gdf), p=fixed(p), figsize=fixed(figsize))
