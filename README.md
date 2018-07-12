@@ -1,6 +1,7 @@
 # splot
 =======
 
+The goal of this project is to design and implement a visualization module in PySAL, the splot package. This will meet the growing demand for a simple to use, lightweight interface that connects PySAL to different popular visualization toolkits. The splot package will ultimately provide the users with both static plots ready for publication and interactive visualizations that allow for quick iteration and data exploration. In a first phase we will therefore create different visualizations in both a static version with Matplotlib and an interactive version with Bokeh. We will then create a common API for easy access to both versions. After adding documentation we will be able to provide a complete and user friendly package. Finally, we will explore how alternative visualization packages, like Vega, could be integrated into the splot package in future.
 
 TODO: intro
 
