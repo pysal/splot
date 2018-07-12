@@ -24,8 +24,8 @@ install:
   # We need geopandas master, the legend_kwds is not in 0.3.0
   - pip install https://github.com/geopandas/geopandas/archive/master.zip
   - pip install https://github.com/pysal/libpysal/archive/master.zip
-  # Pysal still needed for code not yet moved to libpysal
-  - pip install pysal
+  # Pysal dependencies removed, therefore need spreg master import
+  - pip install https://github.com/pysal/spreg/archive/master.zip
   - pip install esda giddy mapclassify palettable
   - pip install nose coverage coveralls
   # Now install splot (don't use 'pip install .', we'll run out of space)

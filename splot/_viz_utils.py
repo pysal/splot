@@ -17,6 +17,7 @@ def moran_hot_cold_spots(moran_loc, p=0.05):
     cluster = HH + LL + LH + HL
     return cluster
 
+
 def mask_local_auto(moran_loc, p=0.5):
     '''
     Create Mask for coloration and labeling of local spatial autocorrelation
@@ -199,7 +200,7 @@ def calc_data_aspect(plot_height, plot_width, bounds):
 
 # Utility functions for colormaps
 # Color design
-splot_colors = dict(base_grey='#bababa',
+splot_colors = dict(moran_base='#bababa',
                     moran_fit='#d6604d')
 
 # Utility function #1 - forces continuous diverging colormap to be centered at zero

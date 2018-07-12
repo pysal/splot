@@ -3,7 +3,7 @@ import libpysal.api as lp
 from libpysal import examples
 import geopandas as gpd
 
-from esda.moran import Moran_Local, Moran, Moran_BV
+from esda.moran import Moran_Local, Moran, Moran_BV, Moran_Local_BV
 from splot.esda import (moran_scatterplot,
                         plot_moran_simulation,
                         plot_moran,
@@ -12,7 +12,8 @@ from splot.esda import (moran_scatterplot,
                         plot_moran_bv,
                         moran_loc_scatterplot,
                         plot_local_autocorrelation,
-                        lisa_cluster)
+                        lisa_cluster,
+                        moran_loc_bv_scatterplot)
 
 
 def test_moran_scatterplot():
@@ -29,7 +30,8 @@ def test_moran_scatterplot():
     fig, _ = moran_scatterplot(moran)
     plt.close(fig)
     # customize
-    fig, _ = moran_scatterplot(moran, zstandard=False, figsize=(4, 4))
+    fig, _ = moran_scatterplot(moran, zstandard=False,
+                               fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
 
@@ -47,7 +49,8 @@ def test_plot_moran_simulation():
     fig, _ = plot_moran_simulation(moran)
     plt.close(fig)
     # customize
-    fig, _ = plot_moran_simulation(moran, figsize=(4, 4))
+    fig, _ = plot_moran_simulation(moran,
+                                   fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
 
@@ -65,7 +68,8 @@ def test_plot_moran():
     fig, _ = plot_moran(moran)
     plt.close(fig)
     # customize
-    fig, _ = plot_moran(moran, zstandard=False, figsize=(4, 4))
+    fig, _ = plot_moran(moran, zstandard=False,
+                        fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
 def test_moran_bv_scatterplot():
@@ -81,7 +85,8 @@ def test_moran_bv_scatterplot():
     fig, _ = moran_bv_scatterplot(moran_bv)
     plt.close(fig)
     # customize plot
-    fig, _ = moran_bv_scatterplot(moran_bv, zstandard=False, figsize=(4,4))
+    fig, _ = moran_bv_scatterplot(moran_bv,
+                                  fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
 
@@ -99,7 +104,8 @@ def test_plot_moran_bv_simulation():
     fig, _ = plot_moran_bv_simulation(moran_bv)
     plt.close(fig)
     # customize plot
-    fig, _ = plot_moran_bv_simulation(moran_bv, figsize=(4,4))
+    fig, _ = plot_moran_bv_simulation(moran_bv,
+                                      fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
 def test_plot_moran_bv():
@@ -116,7 +122,7 @@ def test_plot_moran_bv():
     fig, _ = plot_moran_bv(moran_bv)
     plt.close(fig)
     # customize plot
-    fig, _ = plot_moran_bv(moran_bv, figsize=(4,4))
+    fig, _ = plot_moran_bv(moran_bv, fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
 
@@ -135,7 +141,8 @@ def test_moran_loc_scatterplot():
     plt.close(fig)
 
     # try with p value and different figure size
-    fig, _ = moran_loc_scatterplot(moran_loc, p=0.05, figsize=(10, 5))
+    fig, _ = moran_loc_scatterplot(moran_loc, p=0.05,
+                                   fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
 
@@ -170,4 +177,22 @@ def test_plot_local_autocorrelation():
     fig, _ = plot_local_autocorrelation(moran_loc, df, 'HOVAL', p=0.05,
                                         region_column='POLYID',
                                         mask=['1', '2', '3'], quadrant=1)
+    plt.close(fig)
+
+
+def test_moran_loc_bv_scatterplot():
+    link_to_data = examples.get_path('Guerry.shp')
+    gdf = gpd.read_file(link_to_data)
+    x = gdf['Suicids'].values
+    y = gdf['Donatns'].values
+    w = lp.Queen.from_dataframe(gdf)
+    w.transform = 'r'
+    # Calculate Bivariate Moran
+    moran_loc_bv = Moran_Local_BV(x, y, w)
+    # try with p value so points are colored
+    fig, _ = moran_loc_bv_scatterplot(moran_loc_bv)
+    plt.close(fig)
+
+    # try with p value and different figure size
+    fig, _ = moran_loc_bv_scatterplot(moran_loc_bv, p=0.05)
     plt.close(fig)
