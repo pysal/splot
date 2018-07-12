@@ -612,9 +612,9 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
     
     Load data and calculate Moran Local statistics
     
-    >>> link = examples.get_path('columbus.shp')
+    >>> link = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link)
-    >>> y = gdf['HOVAL'].values
+    >>> y = gdf['Donatns'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     >>> m = Moran_Local(y, w)
@@ -752,7 +752,7 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
 
     Data preparation and statistical analysis
     
-    >>> link = examples.get_path('columbus.shp')
+    >>> link = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link)
     >>> y = gdf['HOVAL'].values
     >>> w = lp.Queen.from_dataframe(gdf)
@@ -852,9 +852,9 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
 
     Data preparation and analysis
     
-    >>> link = examples.get_path('columbus.shp')
+    >>> link = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link)
-    >>> y = gdf['HOVAL'].values
+    >>> y = gdf['Donatns'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     >>> moran_loc = Moran_Local(y, w)
@@ -992,10 +992,10 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
     
     Load data and calculate Moran Local statistics
     
-    >>> link = examples.get_path('columbus.shp')
+    >>> link = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link)
     >>> x = gdf['Suicids'].values
-    >>> y = gdf['HOVAL'].values
+    >>> y = gdf['Donatns'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     >>> m = Moran_Local_BV(x, y, w)
