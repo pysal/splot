@@ -36,8 +36,7 @@ def test_dynamic_lisa_heatmap():
     fig, _ = dynamic_lisa_heatmap(rose)
     plt.close(fig)
     
-    fig2, _ = dynamic_lisa_heatmap(rose, cmap='GnBu',
-                                   xlabel='2009', ylabel='1969')
+    fig2, _ = dynamic_lisa_heatmap(rose, cmap='GnBu')
     plt.close(fig2)
 
 def test_dynamic_lisa_rose():
