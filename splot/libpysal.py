@@ -1,9 +1,8 @@
 """
 ``splot.libpysal``
-===============
-TODO
-Provides visualisations for the Geospatial Distribution Dynamics - `giddy` module.
-`giddy` provides a tool for space–time analytics that consider the role of space in the evolution of distributions over time.
+==================
+
+Provides visualisations for all core components of Python Spatial Analysis Library in `libpysal`.
 
 libpysal weights
 ----------------

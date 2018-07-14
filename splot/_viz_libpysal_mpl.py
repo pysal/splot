@@ -48,16 +48,30 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
     Examples
     --------
     Imports
+    
     >>> import libpysal.api as lp
     >>> import geopandas as gpd
+    >>> import libpysal
+    >>> from libpysal import examples
+    >>> import matplotlib.pyplot as plt
+    >>> from splot.libpysal import plot_spatial_weights
+    
     Data preparation and statistical analysis
+    
     >>> gdf = gpd.read_file(examples.get_path('43MUE250GC_SIR.shp'))
     >>> weights = lp.Queen.from_dataframe(gdf)
     >>> wnp = libpysal.weights.util.nonplanar_neighbors(weights, gdf)
+    
     Plot weights
+    
     >>> plot_spatial_weights(weights, gdf)
+    >>> plt.show()
+    
+    Plot corrected weights
+    
     >>> plot_spatial_weights(wnp, gdf)
     >>> plt.show()
+    
     """
     if ax is None:
         fig = plt.figure(figsize=figsize)
