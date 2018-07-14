@@ -107,7 +107,7 @@ def moran_scatterplot(moran, zstandard=True, ax=None,
     customize plot
     
     >>> fig, ax = moran_scatterplot(moran, zstandard=False,
-    ...                             fitline_kws=dict(color='#4393c3'))
+    ...                             fitline_kwds=dict(color='#4393c3'))
     >>> ax.set_xlabel('Donations')
     >>> plt.show()
     
@@ -373,7 +373,7 @@ def moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=None
     
     customize plot
     
-    >>> moran_bv_scatterplot(moran_bv, zstandard=False,
+    >>> moran_bv_scatterplot(moran_bv,
     ...                      fitline_kwds=dict(color='#4393c3'))
     >>> plt.show()
     
@@ -553,7 +553,7 @@ def plot_moran_bv(moran_bv, scatter_kwds=None, fitline_kwds=None, **kwargs):
     
     customize plot
     
-    >>> plot_moran_bv(moran_bv, fitline_kwds=dict(color='#4393c3')))
+    >>> plot_moran_bv(moran_bv, fitline_kwds=dict(color='#4393c3'))
     >>> plt.show()
     
     """
@@ -626,7 +626,7 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
     customize plot
     
     >>> moran_loc_scatterplot(m, p=0.05,
-    ...                       fitline_kwds=dict(color='#4393c3')))
+    ...                       fitline_kwds=dict(color='#4393c3'))
     >>> plt.show()
     
     """
@@ -862,8 +862,8 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     Plotting with quadrant mask and region mask
     
     >>> fig = plot_local_autocorrelation(moran_loc, gdf, 'Donatns', p=0.05,
-    ...                                  region_column='POLYID',
-    ...                                  mask=['1', '2', '3'], quadrant=1)
+    ...                                  region_column='Dprtmnt',
+    ...                                  mask=['Ain'], quadrant=1)
     >>> plt.show()
     
     '''
