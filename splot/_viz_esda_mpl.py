@@ -754,7 +754,7 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
     
     >>> link = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link)
-    >>> y = gdf['HOVAL'].values
+    >>> y = gdf['Donatns'].values
     >>> w = lp.Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     >>> moran_loc = Moran_Local(y, w)
@@ -861,7 +861,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
 
     Plotting with quadrant mask and region mask
     
-    >>> fig = plot_local_autocorrelation(moran_loc, gdf, 'HOVAL', p=0.05,
+    >>> fig = plot_local_autocorrelation(moran_loc, gdf, 'Donatns', p=0.05,
     ...                                  region_column='POLYID',
     ...                                  mask=['1', '2', '3'], quadrant=1)
     >>> plt.show()
