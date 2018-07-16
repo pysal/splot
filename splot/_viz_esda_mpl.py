@@ -622,6 +622,7 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
     plot
     
     >>> moran_loc_scatterplot(m)
+    >>> plt.show()
     
     customize plot
     
@@ -1003,6 +1004,7 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
     Plot
     
     >>> moran_loc_bv_scatterplot(m)
+    >>> plt.show()
     
     Customize plot
     
