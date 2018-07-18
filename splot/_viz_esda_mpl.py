@@ -1089,21 +1089,27 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
     return fig, ax
 
 
-def moran_facette(moran_matrix, figsize=(15,15)):
+def moran_facette(moran_matrix, figsize=(15,15),
+                  scatter_bv_kwds=None, fitline_bv_kwds=None,
+                  scatter_glob_kwds=None, fitline_glob_kwds=None):
     nrows = int(np.sqrt(len(moran_matrix))) + 1
     ncols = nrows
     
     fig, axarr = plt.subplots(nrows, ncols, figsize=figsize,
-                               subplot_kw={'aspect': 'equal'})
+                              sharey=True, sharex=True,
+                              subplot_kw={'aspect': 'equal'})
     
     for row in range(nrows):
         for col in range(ncols):
             if row == col: 
                 global_m = Moran(moran_matrix[row, (row+1) % 4].zy,
                                  moran_matrix[row, (row+1) % 4].w)
-                moran_scatterplot(global_m, ax= axarr[row,col])
+                moran_scatterplot(global_m, ax= axarr[row,col],
+                                  scatter_glob_kwds=None,
+                                  fitline_glob_kwds=None)
             else:
                 moran_scatterplot(moran_matrix[row,col],
-                              ax= axarr[row,col])
-    
+                                  ax= axarr[row,col], 
+                                  scatter_bv_kwds=None,
+                                  fitline_bv_kwds=None)
     return fig, axarr
