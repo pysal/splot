@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import geopandas as gpd
 import numpy as np
 import libpysal.api as lp
@@ -1089,27 +1090,41 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
     return fig, ax
 
 
-def moran_facette(moran_matrix, figsize=(15,15),
+def moran_facette(moran_matrix, figsize=(16,12),
                   scatter_bv_kwds=None, fitline_bv_kwds=None,
-                  scatter_glob_kwds=None, fitline_glob_kwds=None):
+                  scatter_glob_kwds=dict(color='#737373'), fitline_glob_kwds=None):
     nrows = int(np.sqrt(len(moran_matrix))) + 1
     ncols = nrows
     
     fig, axarr = plt.subplots(nrows, ncols, figsize=figsize,
-                              sharey=True, sharex=True,
-                              subplot_kw={'aspect': 'equal'})
+                              sharey='row', sharex='col')
+    fig.suptitle('Moran Facette')
     
     for row in range(nrows):
         for col in range(ncols):
-            if row == col: 
+            if row == col:
                 global_m = Moran(moran_matrix[row, (row+1) % 4].zy,
                                  moran_matrix[row, (row+1) % 4].w)
                 moran_scatterplot(global_m, ax= axarr[row,col],
-                                  scatter_glob_kwds=None,
-                                  fitline_glob_kwds=None)
+                                  scatter_kwds=scatter_glob_kwds,
+                                  fitline_kwds=fitline_glob_kwds)
+                axarr[row, col].set_facecolor('#d9d9d9')
             else:
                 moran_scatterplot(moran_matrix[row,col],
                                   ax= axarr[row,col], 
-                                  scatter_bv_kwds=None,
-                                  fitline_bv_kwds=None)
+                                  scatter_kwds=scatter_bv_kwds,
+                                  fitline_kwds=fitline_bv_kwds)
+    
+    plt.setp(axarr, xlabel='', ylabel='', title='')
+    
+    cols = ['Column {}'.format(col) for col in range(1, 4)]
+    rows = ['Row {}'.format(row) for row in ['A', 'B', 'C', 'D']]
+
+    for ax, col in zip(axarr[0], cols):
+        ax.set_title(col)
+
+    for ax, row in zip(axarr[:,0], rows):
+        ax.set_ylabel(row, rotation=0, size='large')
+    
+    plt.tight_layout()
     return fig, axarr
