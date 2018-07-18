@@ -3,7 +3,8 @@ import geopandas as gpd
 import numpy as np
 import libpysal.api as lp
 import seaborn as sbn
-from esda.moran import Moran_Local, Moran_Local_BV
+from esda.moran import (Moran_Local, Moran_Local_BV,
+                        Moran, Moran_BV)
 import warnings
 from spreg import OLS
 
@@ -46,9 +47,31 @@ def _create_moran_fig_ax(ax, figsize):
     ax.yaxis.set_ticks_position('left')
     return fig, ax
 
+# TODO
 
 def moran_scatterplot(moran, zstandard=True, ax=None,
                       scatter_kwds=None, fitline_kwds=None):
+    if isinstance(moran, Moran):
+        fig, ax = moran_global_scatterplot(moran=moran, zstandard=zstandard,
+                                           ax=ax, scatter_kwds=scatter_kwds,
+                                           fitline_kwds=fitline_kwds)
+    elif isinstance(moran, Moran_BV):
+        fig, ax = moran_bv_scatterplot(moran_bv=moran, ax=ax,
+                                       scatter_kwds=scatter_kwds,
+                                       fitline_kwds=fitline_kwds)
+    elif isinstance(moran, Moran_Local):
+        fig, ax = moran_loc_scatterplot(moran_loc=moran, zstandard=zstandard,
+                                        ax=ax, scatter_kwds=scatter_kwds,
+                                        fitline_kwds=fitline_kwds)
+    elif isinstance(moran, Moran_Local_BV):
+        fig, ax = moran_loc_bv_scatterplot(moran_loc_bv=moran, ax=ax,
+                                           scatter_kwds=scatter_kwds,
+                                           fitline_kwds=fitline_kwds)
+    return fig, ax
+
+
+def moran_global_scatterplot(moran, zstandard=True, ax=None,
+                             scatter_kwds=None, fitline_kwds=None):
     """
     Global Moran's I Scatterplot.
 
@@ -1064,3 +1087,23 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
         ax.plot(lag, fit.predy, **fitline_kwds)
         ax.scatter(moran_loc_bv.zy, fit.predy, **scatter_kwds)
     return fig, ax
+
+
+def moran_facette(moran_matrix, figsize=(15,15)):
+    nrows = int(np.sqrt(len(moran_matrix))) + 1
+    ncols = nrows
+    
+    fig, axarr = plt.subplots(nrows, ncols, figsize=figsize,
+                               subplot_kw={'aspect': 'equal'})
+    
+    for row in range(nrows):
+        for col in range(ncols):
+            if row == col: 
+                global_m = Moran(moran_matrix[row, (row+1) % 4].zy,
+                                 moran_matrix[row, (row+1) % 4].w)
+                moran_scatterplot(global_m, ax= axarr[row,col])
+            else:
+                moran_scatterplot(moran_matrix[row,col],
+                              ax= axarr[row,col])
+    
+    return fig, axarr
