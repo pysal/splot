@@ -1,6 +1,7 @@
 import geopandas as gpd
 from shapely.geometry import Polygon
-import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib import colors
 import collections
 import matplotlib.cm as cm
 
@@ -34,14 +35,14 @@ def value_by_alpha_cmap(x, y, cmap='GnBu'):
     """
     # option for cmap or colorlist input
     if isinstance(cmap, collections.Sequence):
-        cmap = colors.LinearSegmentedColormap.from_list('cmap', cmap)
-    cmap = cm.get_cmap(cmap)
-    rgba = cmap(x)
+        cmap = colors.LinearSegmentedColormap.from_list('newmap', cmap)
+    ncmap = cm.get_cmap(cmap)
+    rgba = ncmap(x)
     rgba[:, 3] = y/y.max()
     return rgba
 
 
-def value_by_alpha_choropleth(x, y, gdf, cmap='GnBu', ax=ax)
+def vba_choropleth(x, y, gdf, cmap='GnBu', ax=None):
     """
     Value by Alpha Choropleth 
     
@@ -66,10 +67,13 @@ def value_by_alpha_choropleth(x, y, gdf, cmap='GnBu', ax=ax)
         Figure of LISA cluster map
     ax : matplotlib Axes instance
         Axes in which the figure is plotted
+    
+    Examples
+    --------
+    
     """
     if ax is None:
-        figsize = kwargs.pop('figsize', None)
-        fig, ax = plt.subplots(1, figsize=figsize)
+        fig, ax = plt.subplots(1)
     else:
         fig = ax.get_figure()
     
