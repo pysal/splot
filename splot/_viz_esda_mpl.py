@@ -90,7 +90,7 @@ def moran_scatterplot(moran, zstandard=True, p=None, ax=None,
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> from esda.moran import Moran_BV
-    >>> from splot.esda import moran_bv_scatterplot
+    >>> from splot.esda import moran_scatterplot
     
     Load data and calculate weights
     
@@ -108,15 +108,14 @@ def moran_scatterplot(moran, zstandard=True, p=None, ax=None,
     >>> moran_loc = Moran_Local(y, w)
     >>> moran_loc_bv = Moran_Local_BV(y, x, w)
     
-    plot
+    Plot
     
-    >>> moran_scatterplot(moran_bv)
-    >>> plt.show()
-    
-    customize plot
-    
-    >>> moran_bv_scatterplot(moran_bv, zstandard=False,
-    ...                      fitline_kwds=dict(color='#4393c3'))
+    >>> fig, axs = plt.subplots(2, 2, figsize=(10,10),
+    ...                         subplot_kw={'aspect': 'equal'})
+    >>> moran_scatterplot(moran, p=0.05, ax=axs[0,0])
+    >>> moran_scatterplot(moran_loc, p=0.05, ax=axs[1,0])
+    >>> moran_scatterplot(moran_bv, p=0.05, ax=axs[0,1])
+    >>> moran_scatterplot(moran_loc, p=0.05, ax=axs[1,1])
     >>> plt.show()
     
     """
@@ -1165,6 +1164,70 @@ def _moran_loc_bv_scatterplot(moran_loc_bv, p=None,
 def moran_facette(moran_matrix, figsize=(16,12),
                   scatter_bv_kwds=None, fitline_bv_kwds=None,
                   scatter_glob_kwds=dict(color='#737373'), fitline_glob_kwds=None):
+    """
+    Moran Facette visualization.
+    Includes BV Morans and Global Morans on the diagonal.
+    
+    Parameters
+    ----------
+    moran_matrix : esda.moran.Moran_BV_matrix instance
+        Dictionary of Moran_BV objects
+    figsize : tuple, optional
+        W, h of figure. Default =(16,12)
+    scatter_bv_kwds : keyword arguments, optional
+        Keywords used for creating and designing the scatter points of
+        off-diagonal Moran_BV plots.
+        Default =None.
+    fitline_bv_kwds : keyword arguments, optional
+        Keywords used for creating and designing the moran fitline of
+        off-diagonal Moran_BV plots.
+        Default =None.
+    scatter_glob_kwds : keyword arguments, optional
+        Keywords used for creating and designing the scatter points of
+        diagonal Moran plots.
+        Default =None.
+    fitline_glob_kwds : keyword arguments, optional
+        Keywords used for creating and designing the moran fitline of
+        diagonal Moran plots.
+        Default =None.
+
+    Returns
+    -------
+    fig : Matplotlib Figure instance
+        Bivariate Moran Local scatterplot figure
+    axarr : matplotlib Axes instance
+        Axes in which the figure is plotted
+
+    Examples
+    --------
+    Imports
+    
+    >>> import matplotlib.pyplot as plt
+    >>> import libpysal.api as lp
+    >>> import numpy as np
+    >>> from esda.moran import Moran_BV_matrix
+    >>> from splot.esda import moran_facette
+    
+    Load data and calculate Moran Local statistics
+    
+    >>> f = lp.open(lp.get_path("sids2.dbf"))
+    >>> varnames = ['SIDR74',  'SIDR79',  'NWR74',  'NWR79']
+    >>> vars = [np.array(f.by_col[var]) for var in varnames]
+    >>> w = lp.open(lp.get_path("sids2.gal")).read()
+    >>> moran_matrix = Moran_BV_matrix(vars,  w,  varnames = varnames)
+    
+    Plot
+    
+    >>> fig, axarr = moran_facette(moran_matrix)
+    >>> plt.show()
+    
+    Customize plot
+    
+    >>> fig, axarr = moran_facette(moran_matrix,
+    ...                            fitline_bv_kwds=dict(color='#4393c3'))
+    >>> plt.show()
+    
+    """
     nrows = int(np.sqrt(len(moran_matrix))) + 1
     ncols = nrows
     
