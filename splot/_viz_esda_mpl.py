@@ -55,7 +55,8 @@ def moran_scatterplot(moran, zstandard=True, p=None, ax=None,
     Parameters
     ----------
     moran : esda.moran instance
-        Values of Moran's I Global, Bivariate and Local Autocorrelation Statistics
+        Values of Moran's I Global, Bivariate and Local
+        Autocorrelation Statistics
     zstandard : bool, optional
         If True, Moran Scatterplot will show z-standardized attribute and
         spatial lag values. Default =True.
