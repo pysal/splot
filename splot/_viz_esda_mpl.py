@@ -46,25 +46,101 @@ def _create_moran_fig_ax(ax, figsize):
     ax.spines['bottom'].set_smart_bounds(True)
     return fig, ax
 
-# TODO
 
-def moran_scatterplot(moran, zstandard=True, ax=None,
+def moran_scatterplot(moran, zstandard=True, p=None, ax=None,
                       scatter_kwds=None, fitline_kwds=None):
+    """
+    Moran Scatterplot
+    
+    Parameters
+    ----------
+    moran : esda.moran instance
+        Values of Moran's I Global, Bivariate and Local Autocorrelation Statistics
+    zstandard : bool, optional
+        If True, Moran Scatterplot will show z-standardized attribute and
+        spatial lag values. Default =True.
+    p : float, optional
+        If given, the p-value threshold for significance
+        for Local Autocorrelation analysis. Points will be colored by
+        significance. By default it will not be colored.
+        Default =None.
+    ax : Matplotlib Axes instance, optional
+        If given, the Moran plot will be created inside this axis.
+        Default =None.
+    scatter_kwds : keyword arguments, optional
+        Keywords used for creating and designing the scatter points.
+        Default =None.
+    fitline_kwds : keyword arguments, optional
+        Keywords used for creating and designing the moran fitline.
+        Default =None.
+
+    Returns
+    -------
+    fig : Matplotlib Figure instance
+        Moran scatterplot figure
+    ax : matplotlib Axes instance
+        Axes in which the figure is plotted
+    
+    Examples
+    --------
+    Imports
+    
+    >>> import matplotlib.pyplot as plt
+    >>> import libpysal.api as lp
+    >>> from libpysal import examples
+    >>> import geopandas as gpd
+    >>> from esda.moran import Moran_BV
+    >>> from splot.esda import moran_bv_scatterplot
+    
+    Load data and calculate weights
+    
+    >>> link_to_data = examples.get_path('Guerry.shp')
+    >>> gdf = gpd.read_file(link_to_data)
+    >>> x = gdf['Suicids'].values
+    >>> y = gdf['Donatns'].values
+    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w.transform = 'r'
+    
+    Calculate esda.moran Objects
+    
+    >>> moran = Moran(y, w)
+    >>> moran_bv = Moran_BV(y, x, w)
+    >>> moran_loc = Moran_Local(y, w)
+    >>> moran_loc_bv = Moran_Local_BV(y, x, w)
+    
+    plot
+    
+    >>> moran_bv_scatterplot(moran_bv)
+    >>> plt.show()
+    
+    customize plot
+    
+    >>> moran_bv_scatterplot(moran_bv, zstandard=False,
+    ...                      fitline_kwds=dict(color='#4393c3'))
+    >>> plt.show()
+    
+    """
     if isinstance(moran, Moran):
+        if p is not None:
+            warnings.warn('`p` is only used for plotting `esda.moran.Moran_Local`\n'
+                          'or `Moran_Local_BV` objects')
         fig, ax = _moran_global_scatterplot(moran=moran, zstandard=zstandard,
                                            ax=ax, scatter_kwds=scatter_kwds,
                                            fitline_kwds=fitline_kwds)
     elif isinstance(moran, Moran_BV):
+        if p is not None:
+            warnings.warn('`p` is only used for plotting `esda.moran.Moran_Local`\n'
+                          + 'or `Moran_Local_BV` objects')
         fig, ax = _moran_bv_scatterplot(moran_bv=moran, ax=ax,
                                        scatter_kwds=scatter_kwds,
                                        fitline_kwds=fitline_kwds)
     elif isinstance(moran, Moran_Local):
         fig, ax = _moran_loc_scatterplot(moran_loc=moran, zstandard=zstandard,
-                                        ax=ax, scatter_kwds=scatter_kwds,
+                                        ax=ax, p=p, scatter_kwds=scatter_kwds,
                                         fitline_kwds=fitline_kwds)
     elif isinstance(moran, Moran_Local_BV):
         fig, ax = _moran_loc_bv_scatterplot(moran_loc_bv=moran, ax=ax,
-                                           scatter_kwds=scatter_kwds,
+                                           p=p, scatter_kwds=scatter_kwds,
                                            fitline_kwds=fitline_kwds)
     ax.xaxis.set_ticks_position('bottom')
     ax.yaxis.set_ticks_position('left')
@@ -72,7 +148,7 @@ def moran_scatterplot(moran, zstandard=True, ax=None,
 
 
 def _moran_global_scatterplot(moran, zstandard=True, ax=None,
-                             scatter_kwds=None, fitline_kwds=None):
+                              scatter_kwds=None, fitline_kwds=None):
     """
     Global Moran's I Scatterplot.
 
@@ -895,12 +971,8 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     fig, axs = plt.subplots(1, 3, figsize=figsize,
                             subplot_kw={'aspect': 'equal'})
     # Moran Scatterplot
-    if isinstance (moran_loc, Moran_Local):
-        moran_loc_scatterplot(moran_loc, p=p, ax=axs[0],
-                              scatter_kwds=scatter_kwds, fitline_kwds=fitline_kwds)
-    else:
-        moran_loc_bv_scatterplot(moran_loc, p=p, ax=axs[0],
-                                 scatter_kwds=scatter_kwds, fitline_kwds=fitline_kwds)
+    moran_scatterplot(moran_loc, p=p, ax=axs[0],
+                      scatter_kwds=scatter_kwds, fitline_kwds=fitline_kwds)
     axs[0].set_aspect('auto')
 
     # Lisa cluster map
