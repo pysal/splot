@@ -1118,13 +1118,15 @@ def moran_facette(moran_matrix, figsize=(16,12),
             axarr[row, col].spines['bottom'].set_visible(False)
             axarr[row, col].spines['left'].set_visible(False)
             if row == nrows - 1:
-                axarr[row, col].set_xlabel('Column {0}'.format(col))
+                axarr[row, col].set_xlabel(str(
+                    moran_matrix[(col+1)%4, col].varnames['x']).format(col))
                 axarr[row, col].spines['bottom'].set_visible(True)
             else:
                 axarr[row, col].set_xlabel('')
                 
             if col == 0:
-                axarr[row, col].set_ylabel('Row {0}'.format(row))
+                axarr[row, col].set_ylabel(('Spatial Lag of '+str(
+                    moran_matrix[row, (row+1)%4].varnames['y'])).format(row))
                 axarr[row, col].spines['left'].set_visible(True)
             else:
                 axarr[row, col].set_ylabel('')
