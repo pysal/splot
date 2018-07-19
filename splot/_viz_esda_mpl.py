@@ -110,7 +110,7 @@ def moran_scatterplot(moran, zstandard=True, p=None, ax=None,
     
     plot
     
-    >>> moran_bv_scatterplot(moran_bv)
+    >>> moran_scatterplot(moran_bv)
     >>> plt.show()
     
     customize plot
@@ -130,7 +130,7 @@ def moran_scatterplot(moran, zstandard=True, p=None, ax=None,
     elif isinstance(moran, Moran_BV):
         if p is not None:
             warnings.warn('`p` is only used for plotting `esda.moran.Moran_Local`\n'
-                          + 'or `Moran_Local_BV` objects')
+                          'or `Moran_Local_BV` objects')
         fig, ax = _moran_bv_scatterplot(moran_bv=moran, ax=ax,
                                        scatter_kwds=scatter_kwds,
                                        fitline_kwds=fitline_kwds)

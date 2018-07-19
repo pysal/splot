@@ -2,15 +2,18 @@ import matplotlib.pyplot as plt
 import libpysal.api as lp
 from libpysal import examples
 import geopandas as gpd
+import numpy as np
 
-from esda.moran import Moran_Local, Moran, Moran_BV, Moran_Local_BV
+from esda.moran import (Moran_Local, Moran, Moran_BV,
+                        Moran_Local_BV, Moran_BV_matrix)
 from splot.esda import (moran_scatterplot,
                         plot_moran_simulation,
                         plot_moran,
                         plot_moran_bv_simulation,
                         plot_moran_bv,
                         plot_local_autocorrelation,
-                        lisa_cluster)
+                        lisa_cluster,
+                        moran_facette)
 
 from splot._viz_esda_mpl import (_moran_global_scatterplot,
                                  _moran_loc_scatterplot,
@@ -220,4 +223,20 @@ def test_moran_loc_bv_scatterplot():
 
     # try with p value and different figure size
     fig, _ = _moran_loc_bv_scatterplot(moran_loc_bv, p=0.05)
+    plt.close(fig)
+
+
+def test_moran_facette():
+    f = lp.open(lp.get_path("sids2.dbf"))
+    varnames = ['SIDR74',  'SIDR79',  'NWR74',  'NWR79']
+    vars = [np.array(f.by_col[var]) for var in varnames]
+    w = lp.open(lp.get_path("sids2.gal")).read()
+    # calculate moran matrix
+    moran_matrix = Moran_BV_matrix(vars,  w,  varnames = varnames)
+    # plot
+    fig, axarr = moran_facette(moran_matrix)
+    plt.close(fig)
+    # customize
+    fig, axarr = moran_facette(moran_matrix, scatter_glob_kwds=dict(color='r'),
+                               fitline_bv_kwds=dict(color='y'))
     plt.close(fig)
