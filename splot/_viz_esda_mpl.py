@@ -44,8 +44,6 @@ def _create_moran_fig_ax(ax, figsize):
     ax.spines['top'].set_color('none')
     ax.spines['left'].set_smart_bounds(True)
     ax.spines['bottom'].set_smart_bounds(True)
-    ax.xaxis.set_ticks_position('bottom')
-    ax.yaxis.set_ticks_position('left')
     return fig, ax
 
 # TODO
@@ -53,25 +51,27 @@ def _create_moran_fig_ax(ax, figsize):
 def moran_scatterplot(moran, zstandard=True, ax=None,
                       scatter_kwds=None, fitline_kwds=None):
     if isinstance(moran, Moran):
-        fig, ax = moran_global_scatterplot(moran=moran, zstandard=zstandard,
+        fig, ax = _moran_global_scatterplot(moran=moran, zstandard=zstandard,
                                            ax=ax, scatter_kwds=scatter_kwds,
                                            fitline_kwds=fitline_kwds)
     elif isinstance(moran, Moran_BV):
-        fig, ax = moran_bv_scatterplot(moran_bv=moran, ax=ax,
+        fig, ax = _moran_bv_scatterplot(moran_bv=moran, ax=ax,
                                        scatter_kwds=scatter_kwds,
                                        fitline_kwds=fitline_kwds)
     elif isinstance(moran, Moran_Local):
-        fig, ax = moran_loc_scatterplot(moran_loc=moran, zstandard=zstandard,
+        fig, ax = _moran_loc_scatterplot(moran_loc=moran, zstandard=zstandard,
                                         ax=ax, scatter_kwds=scatter_kwds,
                                         fitline_kwds=fitline_kwds)
     elif isinstance(moran, Moran_Local_BV):
-        fig, ax = moran_loc_bv_scatterplot(moran_loc_bv=moran, ax=ax,
+        fig, ax = _moran_loc_bv_scatterplot(moran_loc_bv=moran, ax=ax,
                                            scatter_kwds=scatter_kwds,
                                            fitline_kwds=fitline_kwds)
+    ax.xaxis.set_ticks_position('bottom')
+    ax.yaxis.set_ticks_position('left')
     return fig, ax
 
 
-def moran_global_scatterplot(moran, zstandard=True, ax=None,
+def _moran_global_scatterplot(moran, zstandard=True, ax=None,
                              scatter_kwds=None, fitline_kwds=None):
     """
     Global Moran's I Scatterplot.
@@ -341,7 +341,7 @@ def plot_moran(moran, zstandard=True, scatter_kwds=None,
     return fig, axs
 
 
-def moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=None):
+def _moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=None):
     """
     Bivariate Moran Scatterplot.
 
@@ -593,7 +593,7 @@ def plot_moran_bv(moran_bv, scatter_kwds=None, fitline_kwds=None, **kwargs):
     return fig, axs
 
 
-def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
+def _moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
                           ax=None, scatter_kwds=None, fitline_kwds=None):
     """
     Moran Scatterplot with option of coloring of Local Moran Statistics
@@ -974,7 +974,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     return fig, axs
 
 
-def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
+def _moran_loc_bv_scatterplot(moran_loc_bv, p=None,
                              ax=None, scatter_kwds=None, fitline_kwds=None):
     """
     Moran Bivariate Scatterplot with option of coloring of Local Moran Statistics
@@ -1097,7 +1097,7 @@ def moran_facette(moran_matrix, figsize=(16,12),
     ncols = nrows
     
     fig, axarr = plt.subplots(nrows, ncols, figsize=figsize,
-                              sharey='row', sharex='col')
+                              sharey=True, sharex=True)
     fig.suptitle('Moran Facette')
     
     for row in range(nrows):
@@ -1105,26 +1105,30 @@ def moran_facette(moran_matrix, figsize=(16,12),
             if row == col:
                 global_m = Moran(moran_matrix[row, (row+1) % 4].zy,
                                  moran_matrix[row, (row+1) % 4].w)
-                moran_scatterplot(global_m, ax= axarr[row,col],
+                _moran_global_scatterplot(global_m, ax= axarr[row,col],
                                   scatter_kwds=scatter_glob_kwds,
                                   fitline_kwds=fitline_glob_kwds)
                 axarr[row, col].set_facecolor('#d9d9d9')
             else:
-                moran_scatterplot(moran_matrix[row,col],
-                                  ax= axarr[row,col], 
+                _moran_bv_scatterplot(moran_matrix[row,col],
+                                  ax=axarr[row,col], 
                                   scatter_kwds=scatter_bv_kwds,
                                   fitline_kwds=fitline_bv_kwds)
     
-    plt.setp(axarr, xlabel='', ylabel='', title='')
-    
-    cols = ['Column {}'.format(col) for col in range(1, 4)]
-    rows = ['Row {}'.format(row) for row in ['A', 'B', 'C', 'D']]
-
-    for ax, col in zip(axarr[0], cols):
-        ax.set_title(col)
-
-    for ax, row in zip(axarr[:,0], rows):
-        ax.set_ylabel(row, rotation=0, size='large')
-    
+            axarr[row, col].spines['bottom'].set_visible(False)
+            axarr[row, col].spines['left'].set_visible(False)
+            if row == nrows - 1:
+                axarr[row, col].set_xlabel('Column {0}'.format(col))
+                axarr[row, col].spines['bottom'].set_visible(True)
+            else:
+                axarr[row, col].set_xlabel('')
+                
+            if col == 0:
+                axarr[row, col].set_ylabel('Row {0}'.format(row))
+                axarr[row, col].spines['left'].set_visible(True)
+            else:
+                axarr[row, col].set_ylabel('')
+                
+            axarr[row, col].set_title('') 
     plt.tight_layout()
     return fig, axarr
