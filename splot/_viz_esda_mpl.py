@@ -662,7 +662,7 @@ def plot_moran_bv(moran_bv, scatter_kwds=None, fitline_kwds=None, **kwargs):
                             subplot_kw={'aspect': 'equal'})
     plot_moran_bv_simulation(moran_bv, ax=axs[0], fitline_kwds=fitline_kwds,
                              **kwargs)
-    moran_bv_scatterplot(moran_bv, ax=axs[1],scatter_kwds=scatter_kwds,
+    moran_scatterplot(moran_bv, ax=axs[1],scatter_kwds=scatter_kwds,
                          fitline_kwds=fitline_kwds)
     axs[0].set(aspect="auto")
     axs[1].set(aspect="auto")
