@@ -89,7 +89,8 @@ def moran_scatterplot(moran, zstandard=True, p=None, ax=None,
     >>> import libpysal.api as lp
     >>> from libpysal import examples
     >>> import geopandas as gpd
-    >>> from esda.moran import Moran_BV
+    >>> from esda.moran import (Moran, Moran_BV,
+    ...                         Moran_Local, Moran_Local_BV)
     >>> from splot.esda import moran_scatterplot
     
     Load data and calculate weights
@@ -115,7 +116,7 @@ def moran_scatterplot(moran, zstandard=True, p=None, ax=None,
     >>> moran_scatterplot(moran, p=0.05, ax=axs[0,0])
     >>> moran_scatterplot(moran_loc, p=0.05, ax=axs[1,0])
     >>> moran_scatterplot(moran_bv, p=0.05, ax=axs[0,1])
-    >>> moran_scatterplot(moran_loc, p=0.05, ax=axs[1,1])
+    >>> moran_scatterplot(moran_loc_bv, p=0.05, ax=axs[1,1])
     >>> plt.show()
     
     """
@@ -450,7 +451,7 @@ def _moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=Non
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> from esda.moran import Moran_BV
-    >>> from splot.esda import moran_bv_scatterplot
+    >>> from splot._viz_esda_mpl import _moran_bv_scatterplot
     
     Load data and calculate weights
     
@@ -467,12 +468,12 @@ def _moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=Non
     
     plot
     
-    >>> moran_bv_scatterplot(moran_bv)
+    >>> _moran_bv_scatterplot(moran_bv)
     >>> plt.show()
     
     customize plot
     
-    >>> moran_bv_scatterplot(moran_bv,
+    >>> _moran_bv_scatterplot(moran_bv,
     ...                      fitline_kwds=dict(color='#4393c3'))
     >>> plt.show()
     
@@ -707,7 +708,7 @@ def _moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
     >>> import libpysal.api as lp
     >>> from libpysal import examples
     >>> from esda.moran import Moran_Local
-    >>> from splot.esda import moran_loc_scatterplot
+    >>> from splot._viz_esda_mpl import _moran_loc_scatterplot
     
     Load data and calculate Moran Local statistics
     
@@ -720,12 +721,12 @@ def _moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
     
     plot
     
-    >>> moran_loc_scatterplot(m)
+    >>> _moran_loc_scatterplot(m)
     >>> plt.show()
     
     customize plot
     
-    >>> moran_loc_scatterplot(m, p=0.05,
+    >>> _moran_loc_scatterplot(m, p=0.05,
     ...                       fitline_kwds=dict(color='#4393c3'))
     >>> plt.show()
     
