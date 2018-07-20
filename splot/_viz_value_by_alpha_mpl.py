@@ -34,10 +34,11 @@ def value_by_alpha_cmap(x, y, cmap='GnBu'):
         attribute (x) and the rgb color the other attribute (y)
     """
     # option for cmap or colorlist input
-    if isinstance(cmap, collections.Sequence):
+    if isinstance(cmap, str):
+        cmap = cm.get_cmap(cmap)
+    elif isinstance(cmap, collections.Sequence):
         cmap = colors.LinearSegmentedColormap.from_list('newmap', cmap)
-    ncmap = cm.get_cmap(cmap)
-    rgba = ncmap(x)
+    rgba = cmap(x)
     rgba[:, 3] = y/y.max()
     return rgba
 
@@ -73,12 +74,13 @@ def vba_choropleth(x, y, gdf, cmap='GnBu', ax=None):
     
     """
     if ax is None:
-        fig, ax = plt.subplots(1)
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
     else:
         fig = ax.get_figure()
     
     rgba = value_by_alpha_cmap(x=x, y=y, cmap=cmap)
     
-    gdf.plot(color=rgba)
+    gdf.plot(color=rgba, ax=ax)
     return fig, ax
 
