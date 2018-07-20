@@ -18,7 +18,7 @@ Moran analytics
    plot_moran_bv
    lisa_cluster
    plot_local_autocorrelation
-   moran_facette
+   moran_facet
 
 """
 
@@ -29,4 +29,4 @@ from ._viz_esda_mpl import (moran_scatterplot,
                             plot_moran_bv,
                             lisa_cluster,
                             plot_local_autocorrelation,
-                            moran_facette)
+                            moran_facet)

@@ -18,10 +18,9 @@ from ._viz_utils import (mask_local_auto, moran_hot_cold_spots,
 Lightweight visualizations for pysal using Matplotlib and Geopandas
 
 TODO
-geopandas plotting, change round shapes in legends to boxes
-change function input naming to be in line with bokeh functionality
-check if geopandas can read **kwargs
-check if attribute in gdf.plot works without attribute str
+* geopandas plotting, change round shapes in legends to boxes
+* add `zstandard` as option to al moran scatteprlots
+* prototype moran_facet using `seaborn.FacetGrid`
 """
 
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
@@ -1115,7 +1114,7 @@ def _moran_loc_bv_scatterplot(moran_loc_bv, p=None,
         scatter_kwds = dict()
     if fitline_kwds is None:
         fitline_kwds = dict()
-        
+
     if p is not None:
         if not isinstance(moran_loc_bv, Moran_Local_BV):
             raise ValueError("`moran_loc_bv` is not a\n" +
@@ -1163,9 +1162,9 @@ def _moran_loc_bv_scatterplot(moran_loc_bv, p=None,
     return fig, ax
 
 
-def moran_facette(moran_matrix, figsize=(16,12),
-                  scatter_bv_kwds=None, fitline_bv_kwds=None,
-                  scatter_glob_kwds=dict(color='#737373'), fitline_glob_kwds=None):
+def moran_facet(moran_matrix, figsize=(16,12),
+                scatter_bv_kwds=None, fitline_bv_kwds=None,
+                scatter_glob_kwds=dict(color='#737373'), fitline_glob_kwds=None):
     """
     Moran Facette visualization.
     Includes BV Morans and Global Morans on the diagonal.
