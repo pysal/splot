@@ -1,5 +1,3 @@
-import geopandas as gpd
-from shapely.geometry import Polygon
 import matplotlib.pyplot as plt
 from matplotlib import colors
 import collections
@@ -65,6 +63,9 @@ def vba_choropleth(x, y, gdf, cmap='GnBu', divergent=False, ax=None):
     cmap : str or list of str
         Matplotlib Colormap or list of colors used
         to create vba_layer
+    divergent : bool, optional
+        Creates a divergent alpha array with high values at the extremes and
+        low, transparent values in the middle of the input values.
     ax : matplotlib Axes instance, optional
         Axes in which to plot the figure in multiple Axes layout.
         Default = None
