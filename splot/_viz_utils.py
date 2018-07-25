@@ -1,5 +1,7 @@
 import numpy as np
 import mapclassify.api as classify
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 
 """
 Utility functions for lightweight visualizations in splot
