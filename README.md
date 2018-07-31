@@ -2,6 +2,8 @@
 
 **Lightweight plotting and mapping to facilitate spatial analysis with PySAL.**
 
+![Local Spatial Autocorrelation](figs/viz_local_autocorrelation.png)
+
 ## What is splot?
 
 `splot` connects spatial analysis done in [`PySAL`](https://github.com/pysal) to different popular visualization toolkits like [`matplotlib`](https://matplotlib.org).
@@ -13,11 +15,11 @@ If you are new to splot and PySAL you will best get started with our documentati
 
 ### splot requires: TODO
 
-splot is compatible with Python 3.5 or later and depends on `geopandas` 0.4.0 or later and `matplotlib` 2.2.2 or later.
+splot is compatible with `Pytho`n 3.5 or later and depends on `geopandas` 0.4.0 or later and `matplotlib` 2.2.2 or later.
 
 splot aslo uses
 * `numpy`
-* `seaborne`
+* `seaborn`
 * `mapclassify`
 * `Ipywidgets`
 
@@ -69,4 +71,6 @@ Beyond working on documentation and prototyping new visualizations you can alway
 
 ## Community support
 
+* [PySAL 2.0](http://pysal.org)
+* [Gitter chat]
 TODO link to gitter,...
