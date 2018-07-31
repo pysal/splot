@@ -1,48 +1,73 @@
 # splot
 =======
 
-The goal of this project is to design and implement a visualization module in PySAL, the splot package. This will meet the growing demand for a simple to use, lightweight interface that connects PySAL to different popular visualization toolkits. The splot package will ultimately provide the users with both static plots ready for publication and interactive visualizations that allow for quick iteration and data exploration. In a first phase we will therefore create different visualizations in both a static version with Matplotlib and an interactive version with Bokeh. We will then create a common API for easy access to both versions. After adding documentation we will be able to provide a complete and user friendly package. Finally, we will explore how alternative visualization packages, like Vega, could be integrated into the splot package in future.
+**Leightweight plotting and mapping to facilitate spatial analysis with PySAL.**
 
-TODO: intro
+## What is splot?
 
-## Installation
+splot connects spatial analysis done in PySAL to different popular visualization toolkits like `matplotlib`.
+The splot package allows you to create both static plots ready for publication and interactive visualizations for quick iteration and spatial data exploration. The primary goal of splot is therefore to enable you to visualize popular PySAL objects and gives you different views on your spatial analysis workflow.
 
-### Dependencies
+If you are new to splot and PySAL you will best get started with our documentation!
 
-scikit-learn requires:
+## Installing splot
 
-Python (>= 2.7 or >= 3.4)
-NumPy (>= 1.8.2)
-SciPy (>= 0.13.3)
-For running the examples Matplotlib >= 1.3.1 is required. A few examples require scikit-image >= 0.9.3 and a few examples require pandas >= 0.13.1.
+### splot requires: TODO
 
-scikit-learn also uses CBLAS, the C interface to the Basic Linear Algebra Subprograms library. scikit-learn comes with a reference implementation, but the system CBLAS will be detected by the build system and used if present. CBLAS exists in many implementations; see Linear algebra libraries for known issues.
-splot requires:
+splot is compatible with Python 3.5 or later and depends on `geopandas` 0.4.0 or later and `matplotlib` 2.2.2 or later.
 
-* Python (>= 3.5)
-* numpy 
-* geopandas (>= 0.4.0)
-* seaborn
-* mapclassify
+splot aslo uses
+* `numpy`
+* `seaborne`
+* `mapclassify`
+* `Ipywidgets`
+
+Depending on your spatial analysis workflow and the PySAL objects you would like to visualize, splot relies on:
+* PySAL 2.0
+or separate packages:
 * esda
 * libpysal
-
-**Optional dependencies depending on analysis to visualize:**
 * spreg
 * giddy
-* Ipywidgets
+
+### Quick install:
+
+There are two main ways of accessing splot. First, the overall library install of PySAL 2.0 includes splot.
+PySAL 2.0 is available from PyPI or Anaconda:
+
+    $ pip install pysal
+    
+    or 
+    
+    $ conda install -c conda-forge pysal
 
 
+Second, splot can be installed separately. If you are using Anaconda, install splot via the conda utility:
+
+    $ conda install -c conda-forge pysal
 
 
-### User installation
+Otherwise you can install splot from PyPI with pip:
+
+    $ pip install splot
 
 
-## Development
+## Developing splot
 
-## Help and Support
+Splot is an open source project within the Python Spatial Analysis Library that is supported by a community of Geographers, visualization lovers, map fans, users and data scientists. As a community we work together to create splot as our own spatial visualization toolkit and will gratefully and humbly accept any contributions and ideas you might bring into this project. 
 
-### Documentation
+Feel free to check out our dicussion spaces and add ideas and contributions:
+* Idea collection which PySAL objects to support and how new visualizations could look like: 
+* Discussion about the splot API:
+* Ideas how to integrate other popular visualization toolkits like `Bokeh` or `Altair`
+
+If you have never contributed before or you are just discovering what PySAl and splot have to offer, reading through """Doc-strings""" and correcting our Documentation can be a great way to start. Check for spelling and grammar mistakes or use pep8 and pyflakes to clean our `.py` files. This will allow you to get used to working with git and generally allows you to familiarize yourself with the `splot` and `PySAL` code base.
+
+If you have already used PySAl and splot and you are missing object-specific views for your analysis feel free to add or discuss your ideas to our code-base. Please make sure you include Uni-test, Documentation and Examples or (create an issue so someone else can work together with you). The common `splot` API design discussed here can help you to decide how to best integrate your visualization prototype into `splot`.
+
+Beyond working on documentation and prototyping new visualizations you can always write a bug report or feature request on Github issues. Whether large or small, any contribution makes a big difference and we hope you enjoy beeing part of our community as much as we do!
 
 
-### Communication
+## Community support
+
+TODO link to gitter,...
