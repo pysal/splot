@@ -1,12 +1,11 @@
 # splot
-=======
 
-**Leightweight plotting and mapping to facilitate spatial analysis with PySAL.**
+**Lightweight plotting and mapping to facilitate spatial analysis with PySAL.**
 
 ## What is splot?
 
-splot connects spatial analysis done in PySAL to different popular visualization toolkits like `matplotlib`.
-The splot package allows you to create both static plots ready for publication and interactive visualizations for quick iteration and spatial data exploration. The primary goal of splot is therefore to enable you to visualize popular PySAL objects and gives you different views on your spatial analysis workflow.
+`splot` connects spatial analysis done in [`PySAL`](https://github.com/pysal) to different popular visualization toolkits like [`matplotlib`](https://matplotlib.org).
+The `splot` package allows you to create both static plots ready for publication and interactive visualizations for quick iteration and spatial data exploration. The primary goal of `splot` is to enable you to visualize popular PySAL objects and gives you different views on your spatial analysis workflow.
 
 If you are new to splot and PySAL you will best get started with our documentation!
 
@@ -52,20 +51,20 @@ Otherwise you can install splot from PyPI with pip:
     $ pip install splot
 
 
-## Developing splot
+## Contributing to splot
 
-Splot is an open source project within the Python Spatial Analysis Library that is supported by a community of Geographers, visualization lovers, map fans, users and data scientists. As a community we work together to create splot as our own spatial visualization toolkit and will gratefully and humbly accept any contributions and ideas you might bring into this project. 
+`splot` is an open source project within the Python Spatial Analysis Library that is supported by a community of Geographers, visualization lovers, map fans, users and data scientists. As a community we work together to create splot as our own spatial visualization toolkit and will gratefully and humbly accept any contributions and ideas you might bring into this project. 
 
-Feel free to check out our dicussion spaces and add ideas and contributions:
-* Idea collection which PySAL objects to support and how new visualizations could look like: 
-* Discussion about the splot API:
-* Ideas how to integrate other popular visualization toolkits like `Bokeh` or `Altair`
+Feel free to check out our dicussion spaces, add ideas and contributions:
+* [Idea collection](https://github.com/pysal/splot/issues/10) which PySAL objects to support and how new visualizations could look like
+* [Discussion](https://github.com/pysal/splot/issues/9) about the splot API
+* Ideas how to integrate [other popular visualization toolkits](https://github.com/pysal/splot/issues/22) like `Bokeh` or `Altair`
 
-If you have never contributed before or you are just discovering what PySAl and splot have to offer, reading through """Doc-strings""" and correcting our Documentation can be a great way to start. Check for spelling and grammar mistakes or use pep8 and pyflakes to clean our `.py` files. This will allow you to get used to working with git and generally allows you to familiarize yourself with the `splot` and `PySAL` code base.
+If you have never contributed before or you are just discovering what PySAL and splot have to offer, reading through """Doc-strings""" and correcting our Documentation can be a great way to start. Check for spelling and grammar mistakes or use [pep8](https://pypi.org/project/pep8/) and [pyflakes](https://pypi.org/project/pyflakes/) to clean our `.py` files. This will allow you to get used to working with [git](https://try.github.io) and generally allows you to familiarize yourself with the `splot` and `PySAL` code base.
 
-If you have already used PySAl and splot and you are missing object-specific views for your analysis feel free to add or discuss your ideas to our code-base. Please make sure you include Uni-test, Documentation and Examples or (create an issue so someone else can work together with you). The common `splot` API design discussed here can help you to decide how to best integrate your visualization prototype into `splot`.
+If you have already used PySAL and splot and you are missing object-specific views for your analysis feel free to add or discuss your ideas to our code-base. Please make sure you include unit test, documentation and examples or (create an issue so someone else can work together with you). The common `splot` API design discussed [here](https://github.com/pysal/splot/issues/9) can help you to decide how to best integrate your visualization prototype into `splot`.
 
-Beyond working on documentation and prototyping new visualizations you can always write a bug report or feature request on Github issues. Whether large or small, any contribution makes a big difference and we hope you enjoy beeing part of our community as much as we do!
+Beyond working on documentation and prototyping new visualizations you can always write a bug report or feature request on [Github issues](https://github.com/pysal/splot/issues). Whether large or small, any contribution makes a big difference and we hope you enjoy beeing part of our community as much as we do!
 
 
 ## Community support
