@@ -2,6 +2,7 @@ import numpy as np
 import mapclassify.api as classify
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 
 """
 Utility functions for lightweight visualizations in splot
@@ -238,7 +239,9 @@ def shift_colormap(cmap, start=0, midpoint=0.5, stop=1.0, name='shiftedcmap'):
     -------
     new_cmap : A new colormap that has been shifted. 
     '''
-    
+    if isinstance(cmap, str):
+        cmap = cm.get_cmap(cmap) 
+
     cdict = {
         'red': [],
         'green': [],
