@@ -53,7 +53,10 @@ def value_by_alpha_cmap(x, y, cmap='GnBu', divergent=False):
     return rgba
 
 
-def vba_choropleth(x, y, gdf, cmap='GnBu', divergent=False, ax=None):
+def vba_choropleth(x, y, gdf, cmap='GnBu', divergent=False,
+                   alpha_mapclassify=None,
+                   rgb_mapclassify=None,
+                   ax=None):
     """
     Value by Alpha Choropleth 
     
@@ -71,6 +74,14 @@ def vba_choropleth(x, y, gdf, cmap='GnBu', divergent=False, ax=None):
     divergent : bool, optional
         Creates a divergent alpha array with high values at the extremes and
         low, transparent values in the middle of the input values.
+    alpha_mapclassify : dict
+        Keywords used for binning input values and
+        classifying alpha values with `mapclassify`.
+        Note: valid keywords are eg.g dict(classifier='quantiles', k=5, hinge=1.5).
+    rgb_mapclassify : dict
+        Keywords used for binning input values and
+        classifying rgb values with `mapclassify`.
+        Note: valid keywords are eg.g dict(classifier='quantiles', k=5, hinge=1.5).
     ax : matplotlib Axes instance, optional
         Axes in which to plot the figure in multiple Axes layout.
         Default = None
@@ -92,6 +103,25 @@ def vba_choropleth(x, y, gdf, cmap='GnBu', divergent=False, ax=None):
     else:
         fig = ax.get_figure()
     
+    if rgb_mapclassify is not None:
+        rgb_mapclassify.setdefault('k', 5)
+        rgb_mapclassify.setdefault('hinge', 1.5)
+        classifier = rgb_mapclassify['classifier']
+        k = rgb_mapclassify['k']
+        hinge = rgb_mapclassify['hinge']
+        rgb_bins = mapclassify_bin(x, classifier, k, hinge)
+        x = rgb_bins.yb
+
+    if alpha_mapclassify is not None:
+        alpha_mapclassify.setdefault('k', 5)
+        alpha_mapclassify.setdefault('hinge', 1.5)
+        classifier = alpha_mapclassify['classifier']
+        k = alpha_mapclassify['k']
+        hinge = alpha_mapclassify['hinge']
+        alpha_bins = mapclassify_bin(y, classifier,
+                                     k, hinge)
+        y = alpha_bins.yb
+
     rgba = value_by_alpha_cmap(x=x, y=y, cmap=cmap,
                                divergent=divergent)
     
