@@ -5,7 +5,7 @@ import collections
 import matplotlib.cm as cm
 import mapclassify.api as classify
 import numpy as np
-from ._viz_utils import _classifiers
+from ._viz_utils import _classifiers, format_legend
 
 """
 Creating Value by Alpha maps
@@ -154,7 +154,7 @@ def vba_choropleth(x, y, gdf, cmap='GnBu', divergent=False,
     ax.set_aspect('equal')
     
     if legend:
-        left, bottom, width, height = [0, 0.6, 0.2, 0.2]
+        left, bottom, width, height = [0, 0.5, 0.2, 0.2]
         ax2 = fig.add_axes([left, bottom, width, height])
         _vba_legend(alpha_bins, rgb_bins, ax=ax2)
     return fig, ax
@@ -253,16 +253,23 @@ def _vba_legend(alpha_bins, rgb_bins, ax=None):
                                      alpha=alpha_val)
             ax.add_patch(rect)
 
+    values_alpha, x_in_thousand = format_legend(alpha_bins.bins)
+    values_rgb, y_in_thousand = format_legend(rgb_bins.bins)
     ax.plot([], [])
     ax.set_xlim([0, irow+1])
     ax.set_ylim([0, icol+1])
     ax.set_xticks(np.arange(irow+1) + 0.5)
     ax.set_yticks(np.arange(icol+1) + 0.5)
-    ax.set_xticklabels(['< %1.2g' % val for val in alpha_bins.bins],
-                       rotation=45, horizontalalignment='right')
-    ax.set_yticklabels(['< %1.2g' % val for val in rgb_bins.bins])
-    ax.set_xlabel('alpha variable')
-    ax.set_ylabel('rgb variable')
+    ax.set_xticklabels(['< %1.1f' % val for val in values_alpha],
+                       rotation=30, horizontalalignment='right')
+    ax.set_yticklabels(['$<$%1.1f' % val for val in values_rgb])
+    if x_in_thousand:
+        ax.set_xlabel('alpha variable ($10^3$)')
+    if y_in_thousand:
+        ax.set_ylabel('rgb variable ($10^3$)')
+    else:
+        ax.set_xlabel('alpha variable')
+        ax.set_ylabel('rgb variable')
     ax.spines['left'].set_visible(False)
     ax.spines['right'].set_visible(False)
     ax.spines['bottom'].set_visible(False)

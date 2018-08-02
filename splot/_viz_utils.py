@@ -185,6 +185,22 @@ def add_legend(fig, labels, colors):
     return legend
 
 
+def format_legend(values):
+    """
+    Helper to return sensible legend values
+    
+    Parameters
+    ----------
+    values: array
+        Values plotted in legend.
+    """
+    in_thousand = False
+    if np.any(values > 1000):
+        in_thousand = True
+        values = values / 1000
+    return values, in_thousand
+
+
 def calc_data_aspect(plot_height, plot_width, bounds):
     # Deal with data ranges in Bokeh:
     # make a meter in x and a meter in y the same in pixel lengths
