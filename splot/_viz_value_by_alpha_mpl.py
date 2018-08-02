@@ -1,17 +1,17 @@
 import matplotlib.pyplot as plt
 from matplotlib import colors
+from matplotlib import patches
 import collections
 import matplotlib.cm as cm
-from pysal.esda.mapclassify import (Box_Plot, Equal_Interval,
-                                    Fisher_Jenks, HeadTail_Breaks,
-                                    Jenks_Caspall_Forced, Max_P_Classifier,
-                                    Maximum_Breaks, Natural_Breaks,
-                                    Quantiles, Percentiles, Std_Mean,
-                                    User_Defined)
+import mapclassify.api as classify
+import numpy as np
+from ._viz_utils import _classifiers
 
 """
 Creating Value by Alpha maps
 
+TODO:
+- make legend (e.g. heatmap)
 """
 
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
@@ -53,13 +53,13 @@ def value_by_alpha_cmap(x, y, cmap='GnBu', divergent=False):
         a_under_0p5 = rgba[:, 3] < 0.5
         rgba[a_under_0p5, 3] = 1 - rgba[a_under_0p5, 3]
         rgba[:, 3] = (rgba[:, 3] - 0.5) * 2
-    return rgba
+    return rgba, cmap
 
 
 def vba_choropleth(x, y, gdf, cmap='GnBu', divergent=False,
-               alpha_mapclassify=None,
-               rgb_mapclassify=None,
-               ax=None):
+                   alpha_mapclassify=None,
+                   rgb_mapclassify=None,
+                   ax=None, legend=False):
     """
     Value by Alpha Choropleth 
     
@@ -103,6 +103,7 @@ def vba_choropleth(x, y, gdf, cmap='GnBu', divergent=False,
     --------
     
     """
+
     if ax is None:
         fig = plt.figure()
         ax = fig.add_subplot(111)
@@ -146,10 +147,16 @@ def vba_choropleth(x, y, gdf, cmap='GnBu', divergent=False,
                                      initial, bins)
         y = alpha_bins.yb
 
-    rgba = value_by_alpha_cmap(x=x, y=y, cmap=cmap,
-                               divergent=divergent)
-    
+    rgba, cmap = value_by_alpha_cmap(x=x, y=y, cmap=cmap,
+                                     divergent=divergent)
     gdf.plot(color=rgba, ax=ax)
+    ax.set_axis_off()
+    ax.set_aspect('equal')
+    
+    if legend:
+        left, bottom, width, height = [0, 0.6, 0.2, 0.2]
+        ax2 = fig.add_axes([left, bottom, width, height])
+        _vba_legend(alpha_bins, rgb_bins, ax=ax2)
     return fig, ax
 
 
@@ -193,44 +200,71 @@ def mapclassify_bin(y, classifier, k=5, pct=[1,10,50,90,99,100],
     
     Returns
     -------
-    bins : pysal.mapclassify object
-        A mapclassify object with attributes:
-        yb (bin id for eachobservation),
-        bins (array of upper bounds of each class),
-        k (number of classes)
-        counts (number of observations in each class)
+    bins : pysal.mapclassify instance
+        Object containing bin ids for each observation (.yb),
+        upper bounds of each class (.bins), number of classes (.k)
+        and number of onservations falling in each class (.counts)
     """
-    schemes = {}
-    schemes['box_plot'] = Box_Plot
-    schemes['equal_interval'] = Equal_Interval
-    schemes['fisher_jenks'] = Fisher_Jenks
-    schemes['headtail_breaks'] = HeadTail_Breaks
-    schemes['jenks_caspall'] = Jenks_Caspall_Forced
-    schemes['max_p_classifier'] = Max_P_Classifier
-    schemes['maximum_breaks'] = Maximum_Breaks
-    schemes['natural_breaks'] = Natural_Breaks
-    schemes['quantiles'] = Quantiles
-    schemes['percentiles'] = Percentiles
-    schemes['std_mean'] = Std_Mean
-    schemes['user_defined'] = User_Defined
     classifier = classifier.lower()
-    if classifier not in schemes:
+    if classifier not in _classifiers:
         raise ValueError("Invalid scheme. Scheme must be in the"
-                         " set: %r" % schemes.keys())
+                         " set: %r" % _classifiers.keys())
     if classifier == 'box_plot':
-        bins = schemes[classifier](y, hinge)
+        bins = _classifiers[classifier](y, hinge)
     if classifier == 'headtail_breaks':
-        bins = schemes[classifier](y)
+        bins = _classifiers[classifier](y)
     if classifier == 'percentiles':
-        bins = schemes[classifier](y, pct)
+        bins = _classifiers[classifier](y, pct)
     if classifier == 'std_mean':
-        bins = schemes[classifier](y, multiples)
+        bins = _classifiers[classifier](y, multiples)
     if classifier == 'maximum_breaks':
-        bins = schemes[classifier](y, k, mindiff)
+        bins = _classifiers[classifier](y, k, mindiff)
     if classifier in ['natural_breaks', 'max_p_classifier']:
-        bins = schemes[classifier](y, k, initial)
+        bins = _classifiers[classifier](y, k, initial)
     if classifier == 'user_defined':
-        bins = schemes[classifier](y, bins)
+        bins = _classifiers[classifier](y, bins)
     else:
-        bins = schemes[classifier](y, k)
+        bins = _classifiers[classifier](y, k)
     return bins
+
+
+def _vba_legend(alpha_bins, rgb_bins, ax=None):
+    # VALUES
+    rgba, cmap = value_by_alpha_cmap(rgb_bins.yb, alpha_bins.yb)
+    # separate rgb and alpha values
+    alpha = rgba[:, 3]
+    # extract unique values for alpha and rgb
+    alpha_vals = np.unique(alpha)
+    rgb_vals = cmap((rgb_bins.bins - rgb_bins.bins.min()) / (
+        rgb_bins.bins.max() - rgb_bins.bins.min()))[:, 0:3]
+    
+    # PLOTTING
+    if ax is None:
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+    else:
+        fig = ax.get_figure()
+
+    for irow, alpha_val in enumerate(alpha_vals):
+        for icol, rgb_val in enumerate(rgb_vals):
+            rect = patches.Rectangle((irow, icol), 1, 1, linewidth=3,
+                                     edgecolor='none',
+                                     facecolor=rgb_val,
+                                     alpha=alpha_val)
+            ax.add_patch(rect)
+
+    ax.plot([], [])
+    ax.set_xlim([0, irow+1])
+    ax.set_ylim([0, icol+1])
+    ax.set_xticks(np.arange(irow+1) + 0.5)
+    ax.set_yticks(np.arange(icol+1) + 0.5)
+    ax.set_xticklabels(['< %1.2g' % val for val in alpha_bins.bins],
+                       rotation=45, horizontalalignment='right')
+    ax.set_yticklabels(['< %1.2g' % val for val in rgb_bins.bins])
+    ax.set_xlabel('alpha variable')
+    ax.set_ylabel('rgb variable')
+    ax.spines['left'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    return fig, ax
