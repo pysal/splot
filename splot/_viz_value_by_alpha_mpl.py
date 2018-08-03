@@ -91,11 +91,15 @@ def vba_choropleth(x, y, gdf, cmap='GnBu', divergent=False,
     ax : matplotlib Axes instance, optional
         Axes in which to plot the figure in multiple Axes layout.
         Default = None
+    legend : bool, optional
+        Adds a legend.
+        Note: currently only available if data is classified,
+        hence if `alpha_mapclassify` and `rgb_mapclassify` are used.
     
     Returns
     -------
     fig : matplotlip Figure instance
-        Figure of LISA cluster map
+        Figure of Value by Alpha choropleth
     ax : matplotlib Axes instance
         Axes in which the figure is plotted
     
@@ -156,7 +160,7 @@ def vba_choropleth(x, y, gdf, cmap='GnBu', divergent=False,
     if legend:
         left, bottom, width, height = [0, 0.5, 0.2, 0.2]
         ax2 = fig.add_axes([left, bottom, width, height])
-        _vba_legend(alpha_bins, rgb_bins, ax=ax2)
+        vba_legend(alpha_bins, rgb_bins, ax=ax2)
     return fig, ax
 
 
@@ -164,6 +168,8 @@ def mapclassify_bin(y, classifier, k=5, pct=[1,10,50,90,99,100],
                     hinge=1.5, multiples=[-2,-1,1,2], mindiff=0,
                     initial=100, bins=None):
     """
+    Classify your data with `pysal.mapclassify`
+    Note: Input parameters are dependent on classifier used.
     
     Parameters
     ----------
@@ -197,7 +203,6 @@ def mapclassify_bin(y, classifier, k=5, pct=[1,10,50,90,99,100],
         increasing) if using `user_defined` classifier.
         Default =None, Example =[20, max(y)].
 
-    
     Returns
     -------
     bins : pysal.mapclassify instance
@@ -228,7 +233,35 @@ def mapclassify_bin(y, classifier, k=5, pct=[1,10,50,90,99,100],
     return bins
 
 
-def _vba_legend(alpha_bins, rgb_bins, ax=None):
+def vba_legend(alpha_bins, rgb_bins, ax=None):
+    """
+    Creates Value by Alpha heatmap used as choropleth legend.
+    
+    Parameters
+    ----------
+    alpha_bins : pysal.mapclassify instance
+        Object of classified values used for alpha.
+        Can be created with `mapclassify_bin()`
+        or `pysal.mapclassify`.
+    rgb_bins : pysal.mapclassify instance
+        Object of classified values used for rgb.
+        Can be created with `mapclassify_bin()`
+        or `pysal.mapclassify`.
+    ax : matplotlib Axes instance, optional
+        Axes in which to plot the figure in multiple Axes layout.
+        Default = None
+    
+    Returns
+    -------
+    fig : matplotlip Figure instance
+        Figure of Value by Alpha heatmap
+    ax : matplotlib Axes instance
+        Axes in which the figure is plotted
+    
+    Examples
+    --------
+    
+    """
     # VALUES
     rgba, cmap = value_by_alpha_cmap(rgb_bins.yb, alpha_bins.yb)
     # separate rgb and alpha values
