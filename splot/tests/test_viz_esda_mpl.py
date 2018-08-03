@@ -13,7 +13,7 @@ from splot.esda import (moran_scatterplot,
                         plot_moran_bv,
                         plot_local_autocorrelation,
                         lisa_cluster,
-                        moran_facette)
+                        moran_facet)
 
 from splot._viz_esda_mpl import (_moran_global_scatterplot,
                                  _moran_loc_scatterplot,
@@ -226,7 +226,7 @@ def test_moran_loc_bv_scatterplot():
     plt.close(fig)
 
 
-def test_moran_facette():
+def test_moran_facet():
     f = lp.open(lp.get_path("sids2.dbf"))
     varnames = ['SIDR74',  'SIDR79',  'NWR74',  'NWR79']
     vars = [np.array(f.by_col[var]) for var in varnames]
@@ -234,9 +234,9 @@ def test_moran_facette():
     # calculate moran matrix
     moran_matrix = Moran_BV_matrix(vars,  w,  varnames = varnames)
     # plot
-    fig, axarr = moran_facette(moran_matrix)
+    fig, axarr = moran_facet(moran_matrix)
     plt.close(fig)
     # customize
-    fig, axarr = moran_facette(moran_matrix, scatter_glob_kwds=dict(color='r'),
+    fig, axarr = moran_facet(moran_matrix, scatter_glob_kwds=dict(color='r'),
                                fitline_bv_kwds=dict(color='y'))
     plt.close(fig)
