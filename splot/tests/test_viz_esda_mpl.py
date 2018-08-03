@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-import libpysal.api as lp
+import libpysal as lp
 from libpysal import examples
 import geopandas as gpd
 import numpy as np

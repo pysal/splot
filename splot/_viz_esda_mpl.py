@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import geopandas as gpd
 import numpy as np
-import libpysal.api as lp
+import libpysal as lp
 import seaborn as sbn
 from esda.moran import (Moran_Local, Moran_Local_BV,
                         Moran, Moran_BV)

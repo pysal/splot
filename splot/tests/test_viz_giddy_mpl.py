@@ -1,6 +1,6 @@
 import geopandas as gpd
 import pandas as pd
-import libpysal.api as lp
+import libpysal as lp
 from libpysal import examples
 import numpy as np
 import matplotlib.pyplot as plt

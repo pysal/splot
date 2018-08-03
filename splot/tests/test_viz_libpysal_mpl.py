@@ -1,4 +1,4 @@
-import libpysal.api as lp
+import libpysal as lp
 import libpysal
 from libpysal import examples
 import matplotlib.pyplot as plt
