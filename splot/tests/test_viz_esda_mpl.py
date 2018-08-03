@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from libpysal.weights.Contiguity import Queen
 import libpysal as lp
 from libpysal import examples
 import geopandas as gpd
@@ -26,7 +27,7 @@ def test_moran_scatterplot():
     gdf = gpd.read_file(link_to_data)
     x = gdf['Suicids'].values
     y = gdf['Donatns'].values
-    w = lp.Queen.from_dataframe(gdf)
+    w = Queen.from_dataframe(gdf)
     w.transform = 'r'
     # Calculate `esda.moran` Objects
     moran = Moran(y,w)
@@ -49,10 +50,10 @@ def test_moran_global_scatterplot():
     link_to_data = examples.get_path('Guerry.shp')
     gdf = gpd.read_file(link_to_data)
     y = gdf['Donatns'].values
-    w = lp.Queen.from_dataframe(gdf)
+    w = Queen.from_dataframe(gdf)
     w.transform = 'r'
     # Calc Global Moran
-    w = lp.Queen.from_dataframe(gdf)
+    w = Queen.from_dataframe(gdf)
     moran = Moran(y, w)
     # plot
     fig, _ = _moran_global_scatterplot(moran)
@@ -68,10 +69,10 @@ def test_plot_moran_simulation():
     link_to_data = examples.get_path('Guerry.shp')
     gdf = gpd.read_file(link_to_data)
     y = gdf['Donatns'].values
-    w = lp.Queen.from_dataframe(gdf)
+    w = Queen.from_dataframe(gdf)
     w.transform = 'r'
     # Calc Global Moran
-    w = lp.Queen.from_dataframe(gdf)
+    w = Queen.from_dataframe(gdf)
     moran = Moran(y, w)
     # plot
     fig, _ = plot_moran_simulation(moran)
@@ -87,10 +88,10 @@ def test_plot_moran():
     link_to_data = examples.get_path('Guerry.shp')
     gdf = gpd.read_file(link_to_data)
     y = gdf['Donatns'].values
-    w = lp.Queen.from_dataframe(gdf)
+    w = Queen.from_dataframe(gdf)
     w.transform = 'r'
     # Calc Global Moran
-    w = lp.Queen.from_dataframe(gdf)
+    w = Queen.from_dataframe(gdf)
     moran = Moran(y, w)
     # plot
     fig, _ = plot_moran(moran)
@@ -105,7 +106,7 @@ def test_moran_bv_scatterplot():
     gdf = gpd.read_file(link_to_data)
     x = gdf['Suicids'].values
     y = gdf['Donatns'].values
-    w = lp.Queen.from_dataframe(gdf)
+    w = Queen.from_dataframe(gdf)
     w.transform = 'r'
     # Calculate Bivariate Moran
     moran_bv = Moran_BV(x, y, w)
@@ -124,7 +125,7 @@ def test_plot_moran_bv_simulation():
     gdf = gpd.read_file(link_to_data)
     x = gdf['Suicids'].values
     y = gdf['Donatns'].values
-    w = lp.Queen.from_dataframe(gdf)
+    w = Queen.from_dataframe(gdf)
     w.transform = 'r'
     # Calculate Bivariate Moran
     moran_bv = Moran_BV(x, y, w)
@@ -142,7 +143,7 @@ def test_plot_moran_bv():
     gdf = gpd.read_file(link_to_data)
     x = gdf['Suicids'].values
     y = gdf['Donatns'].values
-    w = lp.Queen.from_dataframe(gdf)
+    w = Queen.from_dataframe(gdf)
     w.transform = 'r'
     # Calculate Bivariate Moran
     moran_bv = Moran_BV(x, y, w)
@@ -159,7 +160,7 @@ def test_moran_loc_scatterplot():
     df = gpd.read_file(link)
 
     y = df['HOVAL'].values
-    w = lp.Queen.from_dataframe(df)
+    w = Queen.from_dataframe(df)
     w.transform = 'r'
 
     moran_loc = Moran_Local(y, w)
@@ -179,7 +180,7 @@ def test_lisa_cluster():
     df = gpd.read_file(link)
 
     y = df['HOVAL'].values
-    w = lp.Queen.from_dataframe(df)
+    w = Queen.from_dataframe(df)
     w.transform = 'r'
 
     moran_loc = Moran_Local(y, w)
@@ -193,7 +194,7 @@ def test_plot_local_autocorrelation():
     df = gpd.read_file(link)
 
     y = df['HOVAL'].values
-    w = lp.Queen.from_dataframe(df)
+    w = Queen.from_dataframe(df)
     w.transform = 'r'
 
     moran_loc = Moran_Local(y, w)
@@ -213,7 +214,7 @@ def test_moran_loc_bv_scatterplot():
     gdf = gpd.read_file(link_to_data)
     x = gdf['Suicids'].values
     y = gdf['Donatns'].values
-    w = lp.Queen.from_dataframe(gdf)
+    w = Queen.from_dataframe(gdf)
     w.transform = 'r'
     # Calculate Bivariate Moran
     moran_loc_bv = Moran_Local_BV(x, y, w)
@@ -227,10 +228,10 @@ def test_moran_loc_bv_scatterplot():
 
 
 def test_moran_facet():
-    f = lp.open(lp.get_path("sids2.dbf"))
+    f = lp.open(examples.get_path("sids2.dbf"))
     varnames = ['SIDR74',  'SIDR79',  'NWR74',  'NWR79']
     vars = [np.array(f.by_col[var]) for var in varnames]
-    w = lp.open(lp.get_path("sids2.gal")).read()
+    w = lp.open(examples.get_path("sids2.gal")).read()
     # calculate moran matrix
     moran_matrix = Moran_BV_matrix(vars,  w,  varnames = varnames)
     # plot
