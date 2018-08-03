@@ -11,7 +11,7 @@ from ._viz_utils import _classifiers, format_legend
 Creating Value by Alpha maps
 
 TODO:
-- make legend (e.g. heatmap)
+
 """
 
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
@@ -46,7 +46,7 @@ def value_by_alpha_cmap(x, y, cmap='GnBu', divergent=False):
         cmap = cm.get_cmap(cmap)
     elif isinstance(cmap, collections.Sequence):
         cmap = colors.LinearSegmentedColormap.from_list('newmap', cmap)
-    
+
     rgba = cmap((x - x.min()) / (x.max() - x.min()))
     rgba[:, 3] = (y - y.min()) / (y.max() - y.min())
     if divergent is not False:
@@ -151,8 +151,8 @@ def vba_choropleth(x, y, gdf, cmap='GnBu', divergent=False,
                                      initial, bins)
         y = alpha_bins.yb
 
-    rgba, cmap = value_by_alpha_cmap(x=x, y=y, cmap=cmap,
-                                     divergent=divergent)
+    rgba, vba_cmap = value_by_alpha_cmap(x=x, y=y, cmap=cmap,
+                                         divergent=divergent)
     gdf.plot(color=rgba, ax=ax)
     ax.set_axis_off()
     ax.set_aspect('equal')
@@ -160,7 +160,7 @@ def vba_choropleth(x, y, gdf, cmap='GnBu', divergent=False,
     if legend:
         left, bottom, width, height = [0, 0.5, 0.2, 0.2]
         ax2 = fig.add_axes([left, bottom, width, height])
-        vba_legend(alpha_bins, rgb_bins, ax=ax2)
+        vba_legend(alpha_bins, rgb_bins, vba_cmap, ax=ax2)
     return fig, ax
 
 
@@ -233,7 +233,7 @@ def mapclassify_bin(y, classifier, k=5, pct=[1,10,50,90,99,100],
     return bins
 
 
-def vba_legend(alpha_bins, rgb_bins, ax=None):
+def vba_legend(alpha_bins, rgb_bins, cmap, ax=None):
     """
     Creates Value by Alpha heatmap used as choropleth legend.
     
@@ -263,13 +263,13 @@ def vba_legend(alpha_bins, rgb_bins, ax=None):
     
     """
     # VALUES
-    rgba, cmap = value_by_alpha_cmap(rgb_bins.yb, alpha_bins.yb)
+    rgba, legend_cmap = value_by_alpha_cmap(rgb_bins.yb, alpha_bins.yb, cmap=cmap)
     # separate rgb and alpha values
     alpha = rgba[:, 3]
     # extract unique values for alpha and rgb
     alpha_vals = np.unique(alpha)
-    rgb_vals = cmap((rgb_bins.bins - rgb_bins.bins.min()) / (
-        rgb_bins.bins.max() - rgb_bins.bins.min()))[:, 0:3]
+    rgb_vals = legend_cmap((rgb_bins.bins - rgb_bins.bins.min()) / (
+            rgb_bins.bins.max() - rgb_bins.bins.min()))[:, 0:3]
     
     # PLOTTING
     if ax is None:
