@@ -19,7 +19,7 @@ to explore their data and quickly iterate through static and dynamic visualisati
 
    giddy
    esda
-
+   libpysal
 
 Indices and tables
 ==================

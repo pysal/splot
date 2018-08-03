@@ -108,6 +108,7 @@ def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
     >>> for year in range(1969, 2010):
     ...     income_table[str(year) + '_rel'] = (
     ...         income_table[str(year)] / income_table[str(year)].mean())
+    
     merge to one gdf
 
     >>> gdf = df.merge(income_table,left_on='STATE_NAME',right_on='Name')
@@ -127,6 +128,7 @@ def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
     plot
 
     >>> dynamic_lisa_heatmap(rose)
+    >>> plt.show()
 
     customize plot
 
@@ -216,7 +218,9 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
     >>> for year in range(1969, 2010):
     ...     income_table[str(year) + '_rel'] = (
     ...         income_table[str(year)] / income_table[str(year)].mean())
+    
     merge to one gdf
+    
     >>> gdf = df.merge(income_table,left_on='STATE_NAME',right_on='Name')
 
     retrieve spatial weights and data for two points in time
@@ -234,6 +238,7 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
     plot
 
     >>> dynamic_lisa_rose(rose, attribute=y1)
+    >>> plt.show()
 
     customize plot
 
@@ -375,6 +380,7 @@ def dynamic_lisa_vectors(rose, ax=None,
     plot
 
     >>> dynamic_lisa_vectors(rose)
+    >>> plt.show()
 
     customize plot
 
@@ -488,6 +494,7 @@ def dynamic_lisa_composite(rose, gdf,
     plot
 
     >>> dynamic_lisa_composite(rose, gdf)
+    >>> plt.show()
 
     customize plot
 
@@ -635,8 +642,8 @@ def dynamic_lisa_composite_explore(rose, gdf, pattern='',
 
     plot
 
-    >>> dynamic_lisa_composite_explore(rose, gdf, pattern='rel')
-    >>> plt.show()
+    >>> fig = dynamic_lisa_composite_explore(rose, gdf, pattern='rel')
+    >>> # plt.show()
 
     """
     coldict = {col: col for col in gdf.columns if
