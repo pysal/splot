@@ -1,5 +1,5 @@
 import numpy as np
-import mapclassify.api as classify
+import mapclassify as classify
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm

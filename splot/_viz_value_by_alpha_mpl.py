@@ -3,7 +3,7 @@ from matplotlib import colors
 from matplotlib import patches
 import collections
 import matplotlib.cm as cm
-import mapclassify.api as classify
+import mapclassify as classify
 import numpy as np
 from ._viz_utils import _classifiers, format_legend
 
@@ -17,7 +17,7 @@ TODO:
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 
 
-def value_by_alpha_cmap(x, y, cmap='GnBu', divergent=False):
+def value_by_alpha_cmap(x, y, cmap='GnBu', revert_alpha=False, divergent=False):
     """
     Calculates Value by Alpha rgba values
     
@@ -48,7 +48,10 @@ def value_by_alpha_cmap(x, y, cmap='GnBu', divergent=False):
         cmap = colors.LinearSegmentedColormap.from_list('newmap', cmap)
 
     rgba = cmap((x - x.min()) / (x.max() - x.min()))
-    rgba[:, 3] = (y - y.min()) / (y.max() - y.min())
+    if revert_alpha:
+        rgba[:, 3] = 1 -((y - y.min()) / (y.max() - y.min()))
+    else:
+        rgba[:, 3] = (y - y.min()) / (y.max() - y.min())
     if divergent is not False:
         a_under_0p5 = rgba[:, 3] < 0.5
         rgba[a_under_0p5, 3] = 1 - rgba[a_under_0p5, 3]
@@ -56,7 +59,8 @@ def value_by_alpha_cmap(x, y, cmap='GnBu', divergent=False):
     return rgba, cmap
 
 
-def vba_choropleth(x, y, gdf, cmap='GnBu', divergent=False,
+def vba_choropleth(x, y, gdf, cmap='GnBu', 
+                   divergent=False, revert_alpha=False,
                    alpha_mapclassify=None,
                    rgb_mapclassify=None,
                    ax=None, legend=False):
@@ -128,8 +132,10 @@ def vba_choropleth(x, y, gdf, cmap='GnBu', divergent=False,
         mindiff = rgb_mapclassify['mindiff']
         initial = rgb_mapclassify['initial']
         bins = rgb_mapclassify['bins']
-        rgb_bins = mapclassify_bin(x, classifier, k, hinge,
-                                   multiples, mindiff, initial, bins)
+        rgb_bins = mapclassify_bin(x, classifier, k=k, hinge=hinge,
+                                   multiples=multiples,
+                                   mindiff=mindiff,
+                                   initial=initial, bins=bins)
         x = rgb_bins.yb
 
     if alpha_mapclassify is not None:
@@ -146,13 +152,17 @@ def vba_choropleth(x, y, gdf, cmap='GnBu', divergent=False,
         mindiff = alpha_mapclassify['mindiff']
         initial = alpha_mapclassify['initial']
         bins = alpha_mapclassify['bins']
+        #TODO: use the pct keyword here
         alpha_bins = mapclassify_bin(y, classifier,
-                                     k, hinge, multiples, mindiff,
-                                     initial, bins)
+                                     k=k, hinge=hinge,
+                                     multiples=multiples,
+                                     mindiff=mindiff,
+                                     initial=initial, bins=bins)
         y = alpha_bins.yb
 
     rgba, vba_cmap = value_by_alpha_cmap(x=x, y=y, cmap=cmap,
-                                         divergent=divergent)
+                                         divergent=divergent,
+                                         revert_alpha=revert_alpha)
     gdf.plot(color=rgba, ax=ax)
     ax.set_axis_off()
     ax.set_aspect('equal')
@@ -214,19 +224,19 @@ def mapclassify_bin(y, classifier, k=5, pct=[1,10,50,90,99,100],
     if classifier not in _classifiers:
         raise ValueError("Invalid scheme. Scheme must be in the"
                          " set: %r" % _classifiers.keys())
-    if classifier == 'box_plot':
+    elif classifier == 'box_plot':
         bins = _classifiers[classifier](y, hinge)
-    if classifier == 'headtail_breaks':
+    elif classifier == 'headtail_breaks':
         bins = _classifiers[classifier](y)
-    if classifier == 'percentiles':
+    elif classifier == 'percentiles':
         bins = _classifiers[classifier](y, pct)
-    if classifier == 'std_mean':
+    elif classifier == 'std_mean':
         bins = _classifiers[classifier](y, multiples)
-    if classifier == 'maximum_breaks':
+    elif classifier == 'maximum_breaks':
         bins = _classifiers[classifier](y, k, mindiff)
-    if classifier in ['natural_breaks', 'max_p_classifier']:
+    elif classifier in ['natural_breaks', 'max_p_classifier']:
         bins = _classifiers[classifier](y, k, initial)
-    if classifier == 'user_defined':
+    elif classifier == 'user_defined':
         bins = _classifiers[classifier](y, bins)
     else:
         bins = _classifiers[classifier](y, k)
