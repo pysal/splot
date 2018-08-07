@@ -50,6 +50,38 @@ def value_by_alpha_cmap(x, y, cmap='GnBu', revert_alpha=False, divergent=False):
     cmap : str or list of str
         Original Matplotlib Colormap or list of colors used
         to create vba_layer
+    
+    Examples
+    --------
+    
+    Imports
+    
+    >>> from libpysal import examples
+    >>> import geopandas as gpd
+    >>> import matplotlib.pyplot as plt
+    >>> import matplotlib
+    >>> import numpy as np
+    >>> from splot.mapping import value_by_alpha_cmap
+    
+    Load Example Data
+    
+    >>> link_to_data = examples.get_path('columbus.shp')
+    >>> gdf = gpd.read_file(link_to_data)
+    >>> x = gdf['HOVAL'].values
+    >>> y = gdf['CRIME'].values
+    
+    Create rgba values
+    
+    >>> rgba, _ = value_by_alpha_cmap(x, y)
+    
+    Create divergent rgba and change Colormap
+    
+    >>> div_rgba, _ = value_by_alpha_cmap(x, y, cmap='seismic', divergent=True)
+    
+    Create rgba values with reverted alpha values
+    
+    >>> rev_rgba, _  = value_by_alpha_cmap(x, y, cmap='RdBu', revert_alpha=True)
+    
     """
     # option for cmap or colorlist input
     if isinstance(cmap, str):
@@ -124,6 +156,68 @@ def vba_choropleth(x, y, gdf, cmap='GnBu',
     Examples
     --------
     
+    Imports
+    
+    >>> from libpysal import examples
+    >>> import geopandas as gpd
+    >>> import matplotlib.pyplot as plt
+    >>> import matplotlib
+    >>> import numpy as np
+    >>> from splot.mapping import vba_choropleth
+    
+    Load Example Data
+    
+    >>> link_to_data = examples.get_path('columbus.shp')
+    >>> gdf = gpd.read_file(link_to_data)
+    >>> x = gdf['HOVAL'].values
+    >>> y = gdf['CRIME'].values
+    
+    Plot a Value-by-Alpha map
+    
+    >>> fig, _ = vba_choropleth(x, y, gdf)
+    >>> plt.show()
+    
+    Plot a Value-by-Alpha map with reverted alpha values
+    
+    >>> fig, _ = vba_choropleth(x, y, gdf, cmap='RdBu',
+    ...                         revert_alpha=True)
+    >>> plt.show()
+    
+    Plot a Value-by-Alpha map with classified alpha and rgb values
+    
+    >>> fig, axs = plt.subplots(2,2, figsize=(20,10))
+    >>> vba_choropleth(y, x, gdf, cmap='viridis', ax = axs[0,0],
+    ...                rgb_mapclassify=dict(classifier='quantiles', k=3), 
+    ...                alpha_mapclassify=dict(classifier='quantiles', k=3))
+    >>> vba_choropleth(y, x, gdf, cmap='viridis', ax = axs[0,1],
+    ...                rgb_mapclassify=dict(classifier='natural_breaks'), 
+    ...                alpha_mapclassify=dict(classifier='natural_breaks'))
+    >>> vba_choropleth(y, x, gdf, cmap='viridis', ax = axs[1,0],
+    ...                rgb_mapclassify=dict(classifier='std_mean'), 
+    ...                alpha_mapclassify=dict(classifier='std_mean'))
+    >>> vba_choropleth(y, x, gdf, cmap='viridis', ax = axs[1,1],
+    ...                rgb_mapclassify=dict(classifier='fisher_jenks', k=3), 
+    ...                alpha_mapclassify=dict(classifier='fisher_jenks', k=3))
+    >>> plt.show()
+    
+    Pass in a list of colors instead of a cmap
+    
+    >>> color_list = ['#a1dab4','#41b6c4','#225ea8']
+    >>> vba_choropleth(y, x, gdf, cmap=color_list,
+    ...                rgb_mapclassify=dict(classifier='quantiles', k=3), 
+    ...                alpha_mapclassify=dict(classifier='quantiles'))
+    >>> plt.show()
+    
+    Add a legend and use divergent alpha values
+    
+    >>> fig = plt.figure(figsize=(15,10))
+    >>> ax = fig.add_subplot(111)
+    >>> vba_choropleth(x, y, gdf, divergent=True,
+    ...                alpha_mapclassify=dict(classifier='quantiles', k=5),
+    ...                rgb_mapclassify=dict(classifier='quantiles', k=5),
+    ...                legend=True, ax=ax)
+    >>> plt.show()
+
     """
 
     if ax is None:
@@ -215,6 +309,33 @@ def vba_legend(rgb_bins, alpha_bins, cmap, ax=None):
     
     Examples
     --------
+    Imports
+    
+    >>> from libpysal import examples
+    >>> import geopandas as gpd
+    >>> import matplotlib.pyplot as plt
+    >>> import matplotlib
+    >>> import numpy as np
+    >>> from splot.mapping import vba_legend, mapclassify_bin
+    
+    Load Example Data
+    
+    >>> link_to_data = examples.get_path('columbus.shp')
+    >>> gdf = gpd.read_file(link_to_data)
+    >>> x = gdf['HOVAL'].values
+    >>> y = gdf['CRIME'].values
+    
+    Classify your data
+    
+    >>> rgb_bins = mapclassify_bin(x, 'quantiles')
+    >>> rgb_bins
+    >>> alpha_bins = mapclassify_bin(y, 'quantiles')
+    >>> alpha_bins
+    
+    Plot your legend
+    
+    >>> fig, _ = vba_legend(rgb_bins, alpha_bins, cmap='RdBu')
+    >>> plt.show()
     
     """
     # VALUES
@@ -310,6 +431,37 @@ def mapclassify_bin(y, classifier, k=5, pct=[1,10,50,90,99,100],
         Object containing bin ids for each observation (.yb),
         upper bounds of each class (.bins), number of classes (.k)
         and number of onservations falling in each class (.counts)
+    
+    Note: Supported classifiers include: quantiles, box_plot, euqal_interval,
+        fisher_jenks, headtail_breaks, jenks_caspall, jenks_caspall_forced,
+        max_p_classifier, maximum_breaks, natural_breaks, percentiles, std_mean,
+        user_defined
+    
+    Examples
+    --------
+
+    Imports
+    
+    >>> from libpysal import examples
+    >>> import geopandas as gpd
+    >>> from splot.mapping import mapclassify_bin
+    
+    Load Example Data
+    
+    >>> link_to_data = examples.get_path('columbus.shp')
+    >>> gdf = gpd.read_file(link_to_data)
+    >>> x = gdf['HOVAL'].values
+    
+    Classify values by quantiles
+    
+    >>> quantiles = mapclassify_bin(x, 'quantiles')
+    >>> quantiles 
+    
+    Classify values by box_plot and set hinge to 2
+    
+    >>> box_plot = mapclassify_bin(x, 'box_plot', hinge=2)
+    >>> box_plot
+    
     """
     classifier = classifier.lower()
     if classifier not in _classifiers:

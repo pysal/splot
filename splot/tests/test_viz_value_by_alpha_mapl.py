@@ -23,7 +23,7 @@ def test_value_by_alpha_cmap():
     # create divergent rgba
     div_rgba, _ = value_by_alpha_cmap(x, y, cmap='seismic', divergent=True)
     # create reverted rgba
-    rev_rgba = value_by_alpha_cmap(x, y, cmap='RdBu', revert_alpha=True)
+    rev_rgba, _ = value_by_alpha_cmap(x, y, cmap='RdBu', revert_alpha=True)
 
 
 def test_vba_choropleth():
@@ -42,8 +42,8 @@ def test_vba_choropleth():
     plt.close(fig)
     # plot with classified alpha and rgb
     fig, _ = vba_choropleth(x, y, gdf, cmap='RdBu',
-                          alpha_mapclassify=dict(classifier='quantiles'),
-                          rgb_mapclassify=dict(classifier='quantiles'))
+                            alpha_mapclassify=dict(classifier='quantiles'),
+                            rgb_mapclassify=dict(classifier='quantiles'))
     plt.close(fig)
     # plot classified with legend
     fig, _ = vba_choropleth(x, y, gdf,
