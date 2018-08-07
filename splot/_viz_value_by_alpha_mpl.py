@@ -8,7 +8,10 @@ import numpy as np
 from ._viz_utils import _classifiers, format_legend
 
 """
-Creating Value by Alpha maps
+Creating Maps with splot
+* Value-by-Alpha maps
+* Mapclassify wrapper
+* Color utilities
 
 TODO:
 
@@ -30,6 +33,10 @@ def value_by_alpha_cmap(x, y, cmap='GnBu', revert_alpha=False, divergent=False):
     cmap : str or list of str
         Matplotlib Colormap or list of colors used
         to create vba_layer
+    revert_alpha : bool, optional
+        If True, high y values will have a
+        low alpha and low values will be transparent.
+        Default =False.
     divergent : bool, optional
         Creates a divergent alpha array with high values
         at the extremes and low, transparent values
@@ -40,6 +47,9 @@ def value_by_alpha_cmap(x, y, cmap='GnBu', revert_alpha=False, divergent=False):
     rgba : ndarray (n,4)
         RGBA colormap, where the alpha channel represents one
         attribute (x) and the rgb color the other attribute (y)
+    cmap : str or list of str
+        Original Matplotlib Colormap or list of colors used
+        to create vba_layer
     """
     # option for cmap or colorlist input
     if isinstance(cmap, str):
@@ -82,6 +92,10 @@ def vba_choropleth(x, y, gdf, cmap='GnBu',
         Creates a divergent alpha array with high values at
         the extremes and low, transparent values in the
         middle of the input values.
+    revert_alpha : bool, optional
+        If True, high y values will have a
+        low alpha and low values will be transparent.
+        Default =False.
     alpha_mapclassify : dict
         Keywords used for binning input values and
         classifying alpha values with `mapclassify`.
@@ -170,7 +184,84 @@ def vba_choropleth(x, y, gdf, cmap='GnBu',
     if legend:
         left, bottom, width, height = [0, 0.5, 0.2, 0.2]
         ax2 = fig.add_axes([left, bottom, width, height])
-        vba_legend(alpha_bins, rgb_bins, vba_cmap, ax=ax2)
+        vba_legend(rgb_bins, alpha_bins, vba_cmap, ax=ax2)
+    return fig, ax
+
+
+def vba_legend(rgb_bins, alpha_bins, cmap, ax=None):
+    """
+    Creates Value by Alpha heatmap used as choropleth legend.
+    
+    Parameters
+    ----------
+    rgb_bins : pysal.mapclassify instance
+        Object of classified values used for rgb.
+        Can be created with `mapclassify_bin()`
+        or `pysal.mapclassify`.
+    alpha_bins : pysal.mapclassify instance
+        Object of classified values used for alpha.
+        Can be created with `mapclassify_bin()`
+        or `pysal.mapclassify`.
+    ax : matplotlib Axes instance, optional
+        Axes in which to plot the figure in multiple Axes layout.
+        Default = None
+    
+    Returns
+    -------
+    fig : matplotlip Figure instance
+        Figure of Value by Alpha heatmap
+    ax : matplotlib Axes instance
+        Axes in which the figure is plotted
+    
+    Examples
+    --------
+    
+    """
+    # VALUES
+    rgba, legend_cmap = value_by_alpha_cmap(rgb_bins.yb, alpha_bins.yb, cmap=cmap)
+    # separate rgb and alpha values
+    alpha = rgba[:, 3]
+    # extract unique values for alpha and rgb
+    alpha_vals = np.unique(alpha)
+    rgb_vals = legend_cmap((rgb_bins.bins - rgb_bins.bins.min()) / (
+            rgb_bins.bins.max() - rgb_bins.bins.min()))[:, 0:3]
+    
+    # PLOTTING
+    if ax is None:
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+    else:
+        fig = ax.get_figure()
+
+    for irow, alpha_val in enumerate(alpha_vals):
+        for icol, rgb_val in enumerate(rgb_vals):
+            rect = patches.Rectangle((irow, icol), 1, 1, linewidth=3,
+                                     edgecolor='none',
+                                     facecolor=rgb_val,
+                                     alpha=alpha_val)
+            ax.add_patch(rect)
+
+    values_alpha, x_in_thousand = format_legend(alpha_bins.bins)
+    values_rgb, y_in_thousand = format_legend(rgb_bins.bins)
+    ax.plot([], [])
+    ax.set_xlim([0, irow+1])
+    ax.set_ylim([0, icol+1])
+    ax.set_xticks(np.arange(irow+1) + 0.5)
+    ax.set_yticks(np.arange(icol+1) + 0.5)
+    ax.set_xticklabels(['< %1.1f' % val for val in values_alpha],
+                       rotation=30, horizontalalignment='right')
+    ax.set_yticklabels(['$<$%1.1f' % val for val in values_rgb])
+    if x_in_thousand:
+        ax.set_xlabel('alpha variable ($10^3$)')
+    if y_in_thousand:
+        ax.set_ylabel('rgb variable ($10^3$)')
+    else:
+        ax.set_xlabel('alpha variable')
+        ax.set_ylabel('rgb variable')
+    ax.spines['left'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
+    ax.spines['top'].set_visible(False)
     return fig, ax
 
 
@@ -241,80 +332,3 @@ def mapclassify_bin(y, classifier, k=5, pct=[1,10,50,90,99,100],
     else:
         bins = _classifiers[classifier](y, k)
     return bins
-
-
-def vba_legend(alpha_bins, rgb_bins, cmap, ax=None):
-    """
-    Creates Value by Alpha heatmap used as choropleth legend.
-    
-    Parameters
-    ----------
-    alpha_bins : pysal.mapclassify instance
-        Object of classified values used for alpha.
-        Can be created with `mapclassify_bin()`
-        or `pysal.mapclassify`.
-    rgb_bins : pysal.mapclassify instance
-        Object of classified values used for rgb.
-        Can be created with `mapclassify_bin()`
-        or `pysal.mapclassify`.
-    ax : matplotlib Axes instance, optional
-        Axes in which to plot the figure in multiple Axes layout.
-        Default = None
-    
-    Returns
-    -------
-    fig : matplotlip Figure instance
-        Figure of Value by Alpha heatmap
-    ax : matplotlib Axes instance
-        Axes in which the figure is plotted
-    
-    Examples
-    --------
-    
-    """
-    # VALUES
-    rgba, legend_cmap = value_by_alpha_cmap(rgb_bins.yb, alpha_bins.yb, cmap=cmap)
-    # separate rgb and alpha values
-    alpha = rgba[:, 3]
-    # extract unique values for alpha and rgb
-    alpha_vals = np.unique(alpha)
-    rgb_vals = legend_cmap((rgb_bins.bins - rgb_bins.bins.min()) / (
-            rgb_bins.bins.max() - rgb_bins.bins.min()))[:, 0:3]
-    
-    # PLOTTING
-    if ax is None:
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-    else:
-        fig = ax.get_figure()
-
-    for irow, alpha_val in enumerate(alpha_vals):
-        for icol, rgb_val in enumerate(rgb_vals):
-            rect = patches.Rectangle((irow, icol), 1, 1, linewidth=3,
-                                     edgecolor='none',
-                                     facecolor=rgb_val,
-                                     alpha=alpha_val)
-            ax.add_patch(rect)
-
-    values_alpha, x_in_thousand = format_legend(alpha_bins.bins)
-    values_rgb, y_in_thousand = format_legend(rgb_bins.bins)
-    ax.plot([], [])
-    ax.set_xlim([0, irow+1])
-    ax.set_ylim([0, icol+1])
-    ax.set_xticks(np.arange(irow+1) + 0.5)
-    ax.set_yticks(np.arange(icol+1) + 0.5)
-    ax.set_xticklabels(['< %1.1f' % val for val in values_alpha],
-                       rotation=30, horizontalalignment='right')
-    ax.set_yticklabels(['$<$%1.1f' % val for val in values_rgb])
-    if x_in_thousand:
-        ax.set_xlabel('alpha variable ($10^3$)')
-    if y_in_thousand:
-        ax.set_ylabel('rgb variable ($10^3$)')
-    else:
-        ax.set_xlabel('alpha variable')
-        ax.set_ylabel('rgb variable')
-    ax.spines['left'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    ax.spines['bottom'].set_visible(False)
-    ax.spines['top'].set_visible(False)
-    return fig, ax
