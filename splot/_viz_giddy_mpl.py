@@ -90,7 +90,7 @@ def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
     --------
     >>> import geopandas as gpd
     >>> import pandas as pd
-    >>> import libpysal.api as lp
+    >>> from libpysal.weights.Contiguity import Queen
     >>> from libpysal import examples
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
@@ -115,7 +115,7 @@ def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
 
     retrieve spatial weights and data for two points in time
 
-    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w = Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     >>> y1 = gdf['1969_rel'].values
     >>> y2 = gdf['2000_rel'].values
@@ -200,7 +200,7 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
     --------
     >>> import geopandas as gpd
     >>> import pandas as pd
-    >>> import libpysal.api as lp
+    >>> from libpysal.weights.Contiguity import Queen
     >>> from libpysal import examples
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
@@ -225,7 +225,7 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
 
     retrieve spatial weights and data for two points in time
 
-    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w = Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     >>> y1 = gdf['1969_rel'].values
     >>> y2 = gdf['2000_rel'].values
@@ -341,7 +341,7 @@ def dynamic_lisa_vectors(rose, ax=None,
     --------
     >>> import geopandas as gpd
     >>> import pandas as pd
-    >>> import libpysal.api as lp
+    >>> from libpysal.weights.Contiguity import Queen
     >>> from libpysal import examples
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
@@ -367,7 +367,7 @@ def dynamic_lisa_vectors(rose, ax=None,
 
     retrieve spatial weights and data for two points in time
 
-    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w = Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     >>> y1 = gdf['1969_rel'].values
     >>> y2 = gdf['2000_rel'].values
@@ -456,7 +456,7 @@ def dynamic_lisa_composite(rose, gdf,
     --------
     >>> import geopandas as gpd
     >>> import pandas as pd
-    >>> import libpysal.api as lp
+    >>> from libpysal.weights.Contiguity import Queen
     >>> from libpysal import examples
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
@@ -481,7 +481,7 @@ def dynamic_lisa_composite(rose, gdf,
 
     retrieve spatial weights and data for two points in time
 
-    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w = Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     >>> y1 = gdf['1969_rel'].values
     >>> y2 = gdf['2000_rel'].values
@@ -601,7 +601,7 @@ def dynamic_lisa_composite_explore(rose, gdf, pattern='',
 
     >>> import geopandas as gpd
     >>> import pandas as pd
-    >>> import libpysal.api as lp
+    >>> from libpysal.weights.Contiguity import Queen
     >>> from libpysal import examples
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
@@ -630,7 +630,7 @@ def dynamic_lisa_composite_explore(rose, gdf, pattern='',
 
     retrieve spatial weights and data for two points in time
 
-    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w = Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     >>> y1 = gdf['1969_rel'].values
     >>> y2 = gdf['2000_rel'].values
