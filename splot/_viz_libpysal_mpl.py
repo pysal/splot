@@ -1,6 +1,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+"""
+Lightweight visualizations for libpysal using Matplotlib and Geopandas
+
+TODO
+* make gdf argument in plot_spatial_weights optional
+"""
+
+__author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
+
+
+
 def plot_spatial_weights(w, gdf, indexed_on=None, ax=None, 
                          figsize=(10,10), node_kws=None, edge_kws=None,
                          nonplanar_edge_kws=None):

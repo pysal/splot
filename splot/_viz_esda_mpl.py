@@ -900,7 +900,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
 
     Parameters
     ----------
-    moran_loc : esda.moran.Moran_Local instance
+    moran_loc : esda.moran.Moran_Local or Moran_Local_BV instance
         Values of Moran's Local Autocorrelation Statistic
     gdf : geopandas dataframe
         The Dataframe containing information to plot the two maps.
