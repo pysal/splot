@@ -1018,12 +1018,16 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
         union2 = df_quadrant.unary_union.boundary
 
         # LISA Cluster mask and cluster boundary
-        mask_quadrant.plot(column=attribute, scheme=scheme, color='white',
-                           ax=axs[1], alpha=0.7, zorder=1)
+        with warnings.catch_warnings():  # temorarily surpress geopandas warning
+            warnings.filterwarnings('ignore', category=UserWarning)
+            mask_quadrant.plot(column=attribute, scheme=scheme, color='white',
+                               ax=axs[1], alpha=0.7, zorder=1)
         gpd.GeoSeries([union2]).plot(linewidth=1, ax=axs[1], color='#E5E5E5')
 
         # CHOROPLETH MASK
-        mask_quadrant.plot(column=attribute, scheme=scheme, color='white',
+        with warnings.catch_warnings():  # temorarily surpress geopandas warning
+            warnings.filterwarnings('ignore', category=UserWarning)
+            mask_quadrant.plot(column=attribute, scheme=scheme, color='white',
                            ax=axs[2], alpha=0.7, zorder=1)
         gpd.GeoSeries([union2]).plot(linewidth=1, ax=axs[2], color='#E5E5E5')
 
