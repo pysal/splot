@@ -328,9 +328,7 @@ def vba_legend(rgb_bins, alpha_bins, cmap, ax=None):
     Classify your data
     
     >>> rgb_bins = mapclassify_bin(x, 'quantiles')
-    >>> rgb_bins
     >>> alpha_bins = mapclassify_bin(y, 'quantiles')
-    >>> alpha_bins
     
     Plot your legend
     
@@ -455,12 +453,10 @@ def mapclassify_bin(y, classifier, k=5, pct=[1,10,50,90,99,100],
     Classify values by quantiles
     
     >>> quantiles = mapclassify_bin(x, 'quantiles')
-    >>> quantiles 
     
     Classify values by box_plot and set hinge to 2
     
     >>> box_plot = mapclassify_bin(x, 'box_plot', hinge=2)
-    >>> box_plot
     
     """
     classifier = classifier.lower()

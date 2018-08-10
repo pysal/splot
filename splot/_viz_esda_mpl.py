@@ -451,7 +451,7 @@ def _moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=Non
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> from esda.moran import Moran_BV
-    >>> from splot._viz_esda_mpl import _moran_bv_scatterplot
+    >>> from splot.esda import moran_scatterplot
     
     Load data and calculate weights
     
@@ -468,12 +468,12 @@ def _moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=Non
     
     plot
     
-    >>> _moran_bv_scatterplot(moran_bv)
+    >>> moran_scatterplot(moran_bv)
     >>> plt.show()
     
     customize plot
     
-    >>> _moran_bv_scatterplot(moran_bv,
+    >>> moran_scatterplot(moran_bv,
     ...                      fitline_kwds=dict(color='#4393c3'))
     >>> plt.show()
     
@@ -708,7 +708,7 @@ def _moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
     >>> from libpysal.weights.Contiguity import Queen
     >>> from libpysal import examples
     >>> from esda.moran import Moran_Local
-    >>> from splot._viz_esda_mpl import _moran_loc_scatterplot
+    >>> from splot.esda import moran_scatterplot
     
     Load data and calculate Moran Local statistics
     
@@ -721,13 +721,13 @@ def _moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
     
     plot
     
-    >>> _moran_loc_scatterplot(m)
+    >>> moran_scatterplot(m)
     >>> plt.show()
     
     customize plot
     
-    >>> _moran_loc_scatterplot(m, p=0.05,
-    ...                       fitline_kwds=dict(color='#4393c3'))
+    >>> moran_scatterplot(m, p=0.05,
+    ...                   fitline_kwds=dict(color='#4393c3'))
     >>> plt.show()
     
     """
@@ -1089,7 +1089,7 @@ def _moran_loc_bv_scatterplot(moran_loc_bv, p=None,
     >>> from libpysal.weights.Contiguity import Queen
     >>> from libpysal import examples
     >>> from esda.moran import Moran_Local_BV
-    >>> from splot.esda import moran_loc_bv_scatterplot
+    >>> from splot.esda import moran_scatterplot
     
     Load data and calculate Moran Local statistics
     
@@ -1103,12 +1103,12 @@ def _moran_loc_bv_scatterplot(moran_loc_bv, p=None,
     
     Plot
     
-    >>> moran_loc_bv_scatterplot(m)
+    >>> moran_scatterplot(m)
     >>> plt.show()
     
     Customize plot
     
-    >>> moran_loc_bv_scatterplot(m, p=0.05,
+    >>> moran_scatterplot(m, p=0.05,
     ...                          fitline_kwds=dict(color='#4393c3')))
     >>> plt.show()
     
@@ -1170,7 +1170,7 @@ def moran_facet(moran_matrix, figsize=(16,12),
                 scatter_bv_kwds=None, fitline_bv_kwds=None,
                 scatter_glob_kwds=dict(color='#737373'), fitline_glob_kwds=None):
     """
-    Moran Facette visualization.
+    Moran Facet visualization.
     Includes BV Morans and Global Morans on the diagonal.
     
     Parameters
@@ -1211,7 +1211,7 @@ def moran_facet(moran_matrix, figsize=(16,12),
     >>> import libpysal as lp
     >>> import numpy as np
     >>> from esda.moran import Moran_BV_matrix
-    >>> from splot.esda import moran_facette
+    >>> from splot.esda import moran_facet
     
     Load data and calculate Moran Local statistics
     
@@ -1223,13 +1223,13 @@ def moran_facet(moran_matrix, figsize=(16,12),
     
     Plot
     
-    >>> fig, axarr = moran_facette(moran_matrix)
+    >>> fig, axarr = moran_facet(moran_matrix)
     >>> plt.show()
     
     Customize plot
     
-    >>> fig, axarr = moran_facette(moran_matrix,
-    ...                            fitline_bv_kwds=dict(color='#4393c3'))
+    >>> fig, axarr = moran_facet(moran_matrix,
+    ...                          fitline_bv_kwds=dict(color='#4393c3'))
     >>> plt.show()
     
     """
@@ -1238,7 +1238,7 @@ def moran_facet(moran_matrix, figsize=(16,12),
     
     fig, axarr = plt.subplots(nrows, ncols, figsize=figsize,
                               sharey=True, sharex=True)
-    fig.suptitle('Moran Facette')
+    fig.suptitle('Moran Facet')
     
     for row in range(nrows):
         for col in range(ncols):
