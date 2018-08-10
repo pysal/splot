@@ -72,5 +72,5 @@ Beyond working on documentation and prototyping new visualizations you can alway
 ## Community support
 
 * [PySAL 2.0](http://pysal.org)
-* [Gitter chat]
-TODO link to gitter,...
+* [Gitter chat splot](https://gitter.im/pysal/splot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+* [Gitter chat pysal](https://gitter.im/pysal/pysal?)
