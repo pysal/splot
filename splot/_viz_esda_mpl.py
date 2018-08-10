@@ -16,11 +16,10 @@ from ._viz_utils import (mask_local_auto, moran_hot_cold_spots,
                          splot_colors)
 
 """
-Lightweight visualizations for pysal using Matplotlib and Geopandas
+Lightweight visualizations for esda using Matplotlib and Geopandas
 
 TODO
 * geopandas plotting, change round shapes in legends to boxes
-* add `zstandard` as option to al moran scatteprlots
 * prototype moran_facet using `seaborn.FacetGrid`
 """
 
@@ -926,7 +925,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
         Name of PySAL classifier to be used. Default = 'Quantiles'
     cmap: str, optional
         Name of matplotlib colormap used for plotting the Choropleth.
-        Default = 'YlGnBU'
+        Default = 'YlGnBu'
     scatter_kwds : keyword arguments, optional
         Keywords used for creating and designing the scatter points.
         Default =None.
@@ -1011,7 +1010,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
         axs[0].add_patch(patches.Rectangle((0, 0), width=mask_width[quadrant],
                                            height=mask_height[quadrant],
                                            angle=mask_angles[quadrant],
-                                           color='grey', zorder=-1, alpha=0.8))
+                                           color='#E5E5E5', zorder=-1, alpha=0.8))
         # quadrant selection in maps
         non_quadrant = ~(moran_loc.q == quadrant)
         mask_quadrant = gdf[non_quadrant]
@@ -1021,12 +1020,12 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
         # LISA Cluster mask and cluster boundary
         mask_quadrant.plot(column=attribute, scheme=scheme, color='white',
                            ax=axs[1], alpha=0.7, zorder=1)
-        gpd.GeoSeries([union2]).plot(linewidth=2, ax=axs[1], color='darkgrey')
+        gpd.GeoSeries([union2]).plot(linewidth=1, ax=axs[1], color='#E5E5E5')
 
         # CHOROPLETH MASK
         mask_quadrant.plot(column=attribute, scheme=scheme, color='white',
                            ax=axs[2], alpha=0.7, zorder=1)
-        gpd.GeoSeries([union2]).plot(linewidth=2, ax=axs[2], color='darkgrey')
+        gpd.GeoSeries([union2]).plot(linewidth=1, ax=axs[2], color='#E5E5E5')
 
     # REGION MASKING
     if region_column is not None:

@@ -253,7 +253,7 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
     # define plotting style
     mpl.rcParams['grid.color'] = 'w'
     mpl.rcParams['axes.edgecolor'] = 'w'
-    mpl.rcParams['axes.facecolor'] = '#bababa'
+    mpl.rcParams['axes.facecolor'] = '#E5E5E5'
     alpha = kwargs.pop('alpha', 0.9)
     cmap = kwargs.pop('cmap', 'YlGnBu')
 
