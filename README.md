@@ -13,7 +13,7 @@ If you are new to splot and PySAL you will best get started with our documentati
 
 ## Installing splot
 
-### splot requires: TODO
+### splot requires:
 
 splot is compatible with `Pytho`n 3.5 or later and depends on `geopandas` 0.4.0 or later and `matplotlib` 2.2.2 or later.
 
@@ -24,7 +24,7 @@ splot aslo uses
 * `Ipywidgets`
 
 Depending on your spatial analysis workflow and the PySAL objects you would like to visualize, splot relies on:
-* PySAL 2.0
+* PySAL 2.0 2rc
 or separate packages:
 * esda
 * libpysal
@@ -34,7 +34,7 @@ or separate packages:
 ### Quick install:
 
 There are two main ways of accessing splot. First, the overall library install of PySAL 2.0 includes splot.
-PySAL 2.0 is available from PyPI or Anaconda:
+PySAL 2.0 will be available from PyPI or Anaconda by the beginning of September 2018:
 
     $ pip install pysal
     
