@@ -14,6 +14,9 @@ Creating Maps with splot
 * Color utilities
 
 TODO:
+* add Choropleth functionality with one input variable
+* merge all alpha keywords in one keyword dictionary
+for vba_choropleth
 
 """
 

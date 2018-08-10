@@ -14,8 +14,8 @@ from ._viz_esda_mpl import lisa_cluster
 Lightweight visualizations for pysal dynamics using Matplotlib and Geopandas
 
 TODO
-implement LIMA
-allow for different patterns or list of str
+* implement LIMA
+* allow for different patterns or list of str
     in dynamic_lisa_composite_explore()
 """
 
