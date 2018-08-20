@@ -26,7 +26,10 @@ install:
   - pip install https://github.com/pysal/libpysal/archive/master.zip
   # Pysal dependencies removed, therefore need spreg master import
   - pip install https://github.com/pysal/spreg/archive/master.zip
-  - pip install esda giddy mapclassify palettable
+  # `libpysal` api change requires esda and giddy import from masterbranch
+  - pip install https://github.com/pysal/esda/archive/master.zip
+  - pip install https://github.com/pysal/giddy/archive/master.zip
+  - pip install palettable mapclassify
   - pip install nose coverage coveralls
   # Now install splot (don't use 'pip install .', we'll run out of space)
   - python setup.py sdist
