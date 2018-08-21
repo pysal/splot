@@ -29,7 +29,7 @@ install:
   # due to the refactoring of libpysals api we need master installs from giddy, esda and mapclassify
   - pip install https://github.com/pysal/giddy/archive/master.zip
   - pip install https://github.com/pysal/esda/archive/master.zip
-  - pi pinstall https://github.com/pysal/mapclassify/archive/master.zip
+  - pip install https://github.com/pysal/mapclassify/archive/master.zip
   - pip install nose coverage coveralls
   # Now install splot (don't use 'pip install .', we'll run out of space)
   - python setup.py sdist
