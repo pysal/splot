@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from libpysal.weights.Contiguity import Queen
+from libpysal.weights.contiguity import Queen
 import libpysal as lp
 from libpysal import examples
 import geopandas as gpd

@@ -1,4 +1,4 @@
-from libpysal.weights.Contiguity import Queen
+from libpysal.weights.contiguity import Queen
 from libpysal import examples
 import geopandas as gpd
 import esda

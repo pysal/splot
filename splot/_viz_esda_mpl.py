@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import geopandas as gpd
 import numpy as np
-from libpysal.weights.Contiguity import Queen
+from libpysal.weights.contiguity import Queen
 from libpysal.weights.spatial_lag import lag_spatial
 import seaborn as sbn
 from esda.moran import (Moran_Local, Moran_Local_BV,
@@ -86,7 +86,7 @@ def moran_scatterplot(moran, zstandard=True, p=None, ax=None,
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> from libpysal.weights.Contiguity import Queen
+    >>> from libpysal.weights.contiguity import Queen
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> from esda.moran import (Moran, Moran_BV,
@@ -181,7 +181,7 @@ def _moran_global_scatterplot(moran, zstandard=True, ax=None,
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> from libpysal.weights.Contiguity import Queen
+    >>> from libpysal.weights.contiguity import Queen
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> from esda.moran import Moran
@@ -290,7 +290,7 @@ def plot_moran_simulation(moran, ax=None, fitline_kwds=None, **kwargs):
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> from libpysal.weights.Contiguity import Queen
+    >>> from libpysal.weights.contiguity import Queen
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> from esda.moran import Moran
@@ -376,7 +376,7 @@ def plot_moran(moran, zstandard=True, scatter_kwds=None,
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> from libpysal.weights.Contiguity import Queen
+    >>> from libpysal.weights.contiguity import Queen
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> from esda.moran import Moran
@@ -447,7 +447,7 @@ def _moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=Non
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> from libpysal.weights.Contiguity import Queen
+    >>> from libpysal.weights.contiguity import Queen
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> from esda.moran import Moran_BV
@@ -543,7 +543,7 @@ def plot_moran_bv_simulation(moran_bv, ax=None, fitline_kwds=None, **kwargs):
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> from libpysal.weights.Contiguity import Queen
+    >>> from libpysal.weights.contiguity import Queen
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> from esda.moran import Moran_BV
@@ -627,7 +627,7 @@ def plot_moran_bv(moran_bv, scatter_kwds=None, fitline_kwds=None, **kwargs):
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> from libpysal.weights.Contiguity import Queen
+    >>> from libpysal.weights.contiguity import Queen
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> from esda.moran import Moran_BV
@@ -705,7 +705,7 @@ def _moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
     
     >>> import matplotlib.pyplot as plt
     >>> import geopandas as gpd
-    >>> from libpysal.weights.Contiguity import Queen
+    >>> from libpysal.weights.contiguity import Queen
     >>> from libpysal import examples
     >>> from esda.moran import Moran_Local
     >>> from splot.esda import moran_scatterplot
@@ -845,7 +845,7 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> from libpysal.weights.Contiguity import Queen
+    >>> from libpysal.weights.contiguity import Queen
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> from esda.moran import Moran_Local
@@ -945,7 +945,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> from libpysal.weights.Contiguity import Queen
+    >>> from libpysal.weights.contiguity import Queen
     >>> from libpysal import examples
     >>> import geopandas as gpd
     >>> from esda.moran import Moran_Local
@@ -1086,7 +1086,7 @@ def _moran_loc_bv_scatterplot(moran_loc_bv, p=None,
     
     >>> import matplotlib.pyplot as plt
     >>> import geopandas as gpd
-    >>> from libpysal.weights.Contiguity import Queen
+    >>> from libpysal.weights.contiguity import Queen
     >>> from libpysal import examples
     >>> from esda.moran import Moran_Local_BV
     >>> from splot.esda import moran_scatterplot

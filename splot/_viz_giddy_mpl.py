@@ -90,7 +90,7 @@ def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
     --------
     >>> import geopandas as gpd
     >>> import pandas as pd
-    >>> from libpysal.weights.Contiguity import Queen
+    >>> from libpysal.weights.contiguity import Queen
     >>> from libpysal import examples
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
@@ -200,7 +200,7 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
     --------
     >>> import geopandas as gpd
     >>> import pandas as pd
-    >>> from libpysal.weights.Contiguity import Queen
+    >>> from libpysal.weights.contiguity import Queen
     >>> from libpysal import examples
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
@@ -341,7 +341,7 @@ def dynamic_lisa_vectors(rose, ax=None,
     --------
     >>> import geopandas as gpd
     >>> import pandas as pd
-    >>> from libpysal.weights.Contiguity import Queen
+    >>> from libpysal.weights.contiguity import Queen
     >>> from libpysal import examples
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
@@ -456,7 +456,7 @@ def dynamic_lisa_composite(rose, gdf,
     --------
     >>> import geopandas as gpd
     >>> import pandas as pd
-    >>> from libpysal.weights.Contiguity import Queen
+    >>> from libpysal.weights.contiguity import Queen
     >>> from libpysal import examples
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
@@ -601,7 +601,7 @@ def dynamic_lisa_composite_explore(rose, gdf, pattern='',
 
     >>> import geopandas as gpd
     >>> import pandas as pd
-    >>> from libpysal.weights.Contiguity import Queen
+    >>> from libpysal.weights.contiguity import Queen
     >>> from libpysal import examples
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
