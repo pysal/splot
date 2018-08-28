@@ -228,10 +228,10 @@ def test_moran_loc_bv_scatterplot():
 
 
 def test_moran_facet():
-    f = lp.open(examples.get_path("sids2.dbf"))
+    f = lp.io.open(examples.get_path("sids2.dbf"))
     varnames = ['SIDR74',  'SIDR79',  'NWR74',  'NWR79']
     vars = [np.array(f.by_col[var]) for var in varnames]
-    w = lp.open(examples.get_path("sids2.gal")).read()
+    w = lp.io.open(examples.get_path("sids2.gal")).read()
     # calculate moran matrix
     moran_matrix = Moran_BV_matrix(vars,  w,  varnames = varnames)
     # plot
