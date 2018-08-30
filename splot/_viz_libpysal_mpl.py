@@ -60,7 +60,7 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
     --------
     Imports
     
-    >>> from libpysal.weights.Contiguity import Queen
+    >>> from libpysal.weights.contiguity import Queen
     >>> import geopandas as gpd
     >>> import libpysal
     >>> from libpysal import examples
