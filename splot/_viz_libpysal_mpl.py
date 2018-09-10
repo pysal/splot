@@ -69,7 +69,7 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
     
     Data preparation and statistical analysis
     
-    >>> gdf = gpd.read_file(examples.get_path('43MUE250GC_SIR.shp'))
+    >>> gdf = gpd.read_file(examples.get_path('map_RS_BR.shp'))
     >>> weights = Queen.from_dataframe(gdf)
     >>> wnp = libpysal.weights.util.nonplanar_neighbors(weights, gdf)
     

@@ -1210,15 +1210,16 @@ def moran_facet(moran_matrix, figsize=(16,12),
     >>> import matplotlib.pyplot as plt
     >>> import libpysal as lp
     >>> import numpy as np
+    >>> import geopandas as gpd
     >>> from esda.moran import Moran_BV_matrix
     >>> from splot.esda import moran_facet
     
     Load data and calculate Moran Local statistics
     
-    >>> f = lp.open(lp.examples.get_path("sids2.dbf"))
+    >>> f = gpd.read_file(lp.examples.get_path("sids2.dbf"))
     >>> varnames = ['SIDR74',  'SIDR79',  'NWR74',  'NWR79']
     >>> vars = [np.array(f.by_col[var]) for var in varnames]
-    >>> w = lp.open(lp.examples.get_path("sids2.gal")).read()
+    >>> w = lp.io.open(lp.examples.get_path("sids2.gal")).read()
     >>> moran_matrix = Moran_BV_matrix(vars,  w,  varnames = varnames)
     
     Plot
