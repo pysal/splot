@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/pysal/splot.svg?branch=master)](https://travis-ci.org/pysal/splot)
+
 # splot
 
 **Lightweight plotting and mapping to facilitate spatial analysis with PySAL.**
