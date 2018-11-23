@@ -22,11 +22,31 @@ to explore their data and quickly iterate through static and dynamic visualisati
         </div>
         <div class="col-md-3 col-xs-12">
             <a href="http://nbviewer.jupyter.org/github/pysal/splot/blob/master/notebooks/esda_morans_viz.ipynb" class="thumbnail">
-                <img src="_static/images/viz_local_autocorrelation.png" class="img-responsive center-block">
+                <img src="_static/images/lisa_cluster_map.png" class="img-responsive center-block">
                 <div class="caption text-center">
-                <h6>Exploring Local Autocorrelation</h6>
+                <h6>Local Indicators of Spatial Autocorrelation Map</h6>
                 </div>
             </a>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+            <a href="http://nbviewer.jupyter.org/github/pysal/splot/blob/master/notebooks/mapping_vba.ipynb" class="thumbnail">
+                <img src="_static/images/vba_map.png" class="img-responsive center-block">
+                <div class="caption text-center">
+                <h6>Value by Alpha map</h6>
+                </div>
+            </a>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+            <a href="http://nbviewer.jupyter.org/github/pysal/splot/blob/master/notebooks/libpysal_non_planar_joins_viz.ipynb" class="thumbnail">
+                <img src="_static/images/nonplanar.png"
+                class="img-responsive center-block">
+                <div class="caption text-center">
+                <h6>Visualizing Non Planar Neighbours
+                </h6>
+                </div>
+            </a>
+        </div>
+        <div class="col-sm-2 col-xs-hidden">
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 """
 ``splot.mapping``
-===============
+=================
 
 Provides Choropleth visualizations and mapping utilities.
 
