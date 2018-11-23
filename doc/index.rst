@@ -13,14 +13,34 @@ Welcome to splot's documentation!
 `splot` provides `PySAL` users with a lightweight visualization interface
 to explore their data and quickly iterate through static and dynamic visualisations. 
 
+
+.. raw:: html
+
+    <div class="container-fluid">
+      <div class="row equal-height">
+        <div class="col-sm-1 col-xs-hidden">
+        </div>
+        <div class="col-md-3 col-xs-12">
+            <a href="http://nbviewer.jupyter.org/github/pysal/splot/blob/master/notebooks/esda_morans_viz.ipynb" class="thumbnail">
+                <img src="_static/images/viz_local_autocorrelation.png" class="img-responsive center-block">
+                <div class="caption text-center">
+                <h6>Exploring Local Autocorrelation</h6>
+                </div>
+            </a>
+        </div>
+      </div>
+    </div>
+
+
 .. toctree::
-   :maxdepth: 2
+   :hidden:
+   :maxdepth: 3
    :caption: Contents:
 
-   giddy
-   esda
-   libpysal
-   mapping
+   Installation <installation>
+   API <api>
+   References <references>
+
 
 Indices and tables
 ==================
@@ -28,3 +48,6 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
+.. _PySAL: https://github.com/pysal/pysal
