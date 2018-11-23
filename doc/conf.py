@@ -59,7 +59,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = "splot"  # string of your project name, for example, 'giddy'
+project = "splot" 
 copyright = '2018, pysal developers'
 author = 'pysal developers'
 
