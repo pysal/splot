@@ -1218,7 +1218,7 @@ def moran_facet(moran_matrix, figsize=(16,12),
     
     >>> f = gpd.read_file(lp.examples.get_path("sids2.dbf"))
     >>> varnames = ['SIDR74',  'SIDR79',  'NWR74',  'NWR79']
-    >>> vars = [np.array(f.by_col[var]) for var in varnames]
+    >>> vars = [np.array(f[var]) for var in varnames]
     >>> w = lp.io.open(lp.examples.get_path("sids2.gal")).read()
     >>> moran_matrix = Moran_BV_matrix(vars,  w,  varnames = varnames)
     
