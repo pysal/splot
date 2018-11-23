@@ -40,7 +40,7 @@ install:
 
 
 script:
-  - nosetests splot
+  - nosetests splot --with-doctest --with-coverage --cover-package=splot;
 #  - cd notebooks
 #  - make test
 
