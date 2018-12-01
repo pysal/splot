@@ -1,7 +1,9 @@
 numpy
-pandas 
-geopandas
+geopandas>=0.4.0
 matplotlib
 seaborn
-bokeh
-ipywidgets
+libpysal
+mapclassify
+esda
+spreg
+giddy
