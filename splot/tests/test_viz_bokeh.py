@@ -1,10 +1,15 @@
+## Tests are enabled even though Bokeh functionality is private for now,
+## in order to keep code coverage good.
+## Bokeh versions are not intended for release
+## but will be picked up later
+
 from libpysal.weights.contiguity import Queen
 from libpysal import examples
 import geopandas as gpd
 import esda
 
-from splot.bk import (plot_choropleth, lisa_cluster,
-                      moran_scatterplot, plot_local_autocorrelation)
+from splot._bk import (plot_choropleth, lisa_cluster,
+                       moran_scatterplot, plot_local_autocorrelation)
 
 
 def test_plot_choropleth():
