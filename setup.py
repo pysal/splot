@@ -2,7 +2,7 @@ from setuptools import setup
 
 
 setup(name='splot', #name of package
-      version='1.0.0.dev0',
+      version='1.0.0',
       description= 'plotting for PySAL',
       url= 'https://github.com/pysal/splot',
       maintainer= 'Serge Rey, Stefanie Lumnitz',
