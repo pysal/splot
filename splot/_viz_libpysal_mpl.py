@@ -132,7 +132,7 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
                 else:
                     segments.append([origin, dest])
     else:
-        for idx in w.id2i:
+        for idx in w.id_order:
             if idx in w.islands:
                 continue
 
