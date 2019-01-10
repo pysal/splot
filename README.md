@@ -20,7 +20,7 @@ If you are new to splot and PySAL you will best get started with our documentati
 
 ### splot requires:
 
-splot is compatible with `Pytho`n 3.5 or later and depends on `geopandas` 0.4.0 or later and `matplotlib` 2.2.2 or later.
+splot is compatible with `Python` 3.5 or later and depends on `geopandas` 0.4.0 or later and `matplotlib` 2.2.2 or later.
 
 splot aslo uses
 * `numpy`
