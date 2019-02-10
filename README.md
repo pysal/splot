@@ -14,7 +14,7 @@
 `splot` connects spatial analysis done in [`PySAL`](https://github.com/pysal) to different popular visualization toolkits like [`matplotlib`](https://matplotlib.org).
 The `splot` package allows you to create both static plots ready for publication and interactive visualizations for quick iteration and spatial data exploration. The primary goal of `splot` is to enable you to visualize popular PySAL objects and gives you different views on your spatial analysis workflow.
 
-If you are new to splot and PySAL you will best get started with our documentation!
+If you are new to splot and PySAL you will best get started with our [documentation](https://splot.readthedocs.io/en/latest/)!
 
 ## Installing splot
 
@@ -22,7 +22,7 @@ If you are new to splot and PySAL you will best get started with our documentati
 
 splot is compatible with `Python` 3.5 or later and depends on `geopandas` 0.4.0 or later and `matplotlib` 2.2.2 or later.
 
-splot aslo uses
+splot also uses
 * `numpy`
 * `seaborn`
 * `mapclassify`
