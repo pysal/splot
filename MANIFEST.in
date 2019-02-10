@@ -1,1 +1,2 @@
 include splot/tests/*.py
+include *.txt
