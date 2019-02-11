@@ -32,7 +32,7 @@ install:
 
 
 script:
-  - nosetests splot --with-doctest --with-coverage --cover-package=splot;
+  - nosetests --verbose --with-doctest --with-coverage --cover-package=splot;
 #  - cd notebooks
 #  - make test
 
