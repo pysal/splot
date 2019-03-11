@@ -23,7 +23,7 @@ def test_plot_choropleth():
     fig = plot_choropleth(df, 'HOVAL', title='columbus',
                           reverse_colors=True, tools=TOOLS)
 
-
+'''
 def test_lisa_cluster():
     link = examples.get_path('columbus.shp')
     df = gpd.read_file(link)
@@ -62,3 +62,4 @@ def test_plot_local_autocorrelation():
     moran_loc = esda.moran.Moran_Local(y, w)
 
     fig = plot_local_autocorrelation(moran_loc, df, 'HOVAL')
+'''
