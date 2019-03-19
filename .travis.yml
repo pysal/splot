@@ -15,15 +15,14 @@ before_install:
   - conda update --yes conda
   - conda config --add channels conda-forge
   - conda config --set channel_priority strict
-  #- conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION pip
-  - conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION geopandas
+  - conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION
   - source activate test-env
-  #- conda install --yes numpy geopandas matplotlib seaborn ipywidgets bokeh
+
+install:
+  - conda install geopandas --channel conda-forge --yes
   - conda install --yes pip seaborn ipywidgets bokeh
   - conda list
   - conda info -a
-
-install:
   - pip install -r requirements.txt
   - pip install nose coverage coveralls
   # Now install splot (don't use 'pip install .', we'll run out of space)
