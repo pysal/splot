@@ -25,7 +25,7 @@ def test_value_by_alpha_cmap():
     # create reverted rgba
     rev_rgba, _ = value_by_alpha_cmap(x, y, cmap='RdBu', revert_alpha=True)
 
-'''
+
 def test_vba_choropleth():
     # data
     link_to_data = examples.get_path('columbus.shp')
@@ -94,4 +94,3 @@ def test_mapclassify_bin():
     mapclassify_bin(x, 'max_p_classifier', k=3, initial=50)
     # user_defined
     mapclassify_bin(x, 'user_defined', bins=[20, max(x)])
-'''
