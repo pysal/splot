@@ -14,9 +14,12 @@ before_install:
   - export PATH=`pwd`/miniconda/bin:$PATH
   - conda update --yes conda
   - conda config --add channels conda-forge
-  - conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION pip
+  - conda config --set channel_priority strict
+  #- conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION pip
+  - conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION geopandas
   - source activate test-env
-  - conda install --yes numpy geopandas matplotlib seaborn ipywidgets bokeh
+  #- conda install --yes numpy geopandas matplotlib seaborn ipywidgets bokeh
+  - conda install --yes pip seaborn ipywidgets bokeh
   - conda list
   - conda info -a
 
