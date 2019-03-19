@@ -318,7 +318,7 @@ def moran_scatterplot(moran_loc, p=None, region_column='', plot_width=500,
 
 
 def _moran_scatterplot_calc(moran_loc, p):
-    lag = lag_spatial(moran_loc.w, moran_loc.z)
+    lag = spreg.lag_spatial(moran_loc.w, moran_loc.z)
     fit = spreg.OLS(moran_loc.z[:, None], lag[:, None])
     if p is not None:
         if not isinstance(moran_loc, Moran_Local):
