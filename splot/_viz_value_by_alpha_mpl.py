@@ -115,9 +115,9 @@ def vba_choropleth(x_var, y_var, gdf, cmap='GnBu',
     Parameters
     ----------
     x_var : string or array
-            The name of variable in gdf determined by color OR an array of values determined by color
+            The name of variable in gdf determined by color or an array of values determined by color
     y_var : strign or array
-            The name of variable in gdf determining alpha value OR an array of values determined by color
+            The name of variable in gdf determining alpha value or an array of values determined by color
     gdf : geopandas dataframe instance
         The Dataframe containing information to plot.
     cmap : str or list of str
@@ -221,21 +221,15 @@ def vba_choropleth(x_var, y_var, gdf, cmap='GnBu',
 
     """
     
-    if(type(x_var) is not str):
+    if isinstance(x_var, str): 
+        x = np.array(gdf[x_var]) 
+    else: 
         x = x_var
-        
-    if(type(y_var) is not str):
-        y = y_var
-        
-    if(type(x_var) is str):
-        if (x_var not in gdf.columns):    
-            raise ValueError('x_var must be a variable of gdf')
-        x = np.array(gdf[x_var])
     
-    if(type(y_var) is str):
-        if (y_var not in gdf.columns):    
-            raise ValueError('y_var must be a variable of gdf')
-        y = np.array(gdf[y_var])
+    if isinstance(y_var, str): 
+        y = np.array(gdf[y_var]) 
+    else: 
+        y = y_var
 
     if ax is None:
         fig = plt.figure()
