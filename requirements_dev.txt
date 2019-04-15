@@ -5,3 +5,4 @@ sphinx>=1.4.3
 coveralls
 jupyter
 nbconvert
+sphinx_bootstrap_theme
