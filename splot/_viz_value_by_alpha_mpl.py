@@ -116,7 +116,7 @@ def vba_choropleth(x_var, y_var, gdf, cmap='GnBu',
     ----------
     x_var : string or array
             The name of variable in gdf determined by color or an array of values determined by color
-    y_var : strign or array
+    y_var : string or array
             The name of variable in gdf determining alpha value or an array of values determined by color
     gdf : geopandas dataframe instance
         The Dataframe containing information to plot.
