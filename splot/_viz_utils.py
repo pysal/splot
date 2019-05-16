@@ -245,7 +245,7 @@ def shift_colormap(cmap, start=0, midpoint=0.5, stop=1.0, name='shiftedcmap'):
 
     Parameters
     ----------
-    cmap : matplotlib colormap
+    cmap : str or matplotlib.cm instance
         colormap to be altered
     start : float, optional
         Offset from lowest point in the colormap's range.
@@ -309,7 +309,7 @@ def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
 
     Parameters
     ----------
-    cmap : Mmatplotlib colormap
+    cmap : str or matplotlib.cm instance
         Colormap to be altered
     minval : float, optional
         Minimum value of the original colormap to include
@@ -324,6 +324,9 @@ def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
     -------
     new_cmap : A new colormap that has been shifted. 
     '''
+    if isinstance(cmap, str):
+        cmap = cm.get_cmap(cmap) 
+
     new_cmap = mpl.colors.LinearSegmentedColormap.from_list(
         'trunc({n},{a:.2f},{b:.2f})'.format(n=cmap.name, a=minval, b=maxval),
         cmap(np.linspace(minval, maxval, n)))
