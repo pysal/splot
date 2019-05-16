@@ -31,7 +31,7 @@ def test_moran_scatterplot():
     w = Queen.from_dataframe(gdf)
     w.transform = 'r'
     # Calculate `esda.moran` Objects
-    moran = Moran(y,w)
+    moran = Moran(y, w)
     moran_bv = Moran_BV(y, x, w)
     moran_loc = Moran_Local(y, w)
     moran_loc_bv = Moran_Local_BV(y, x, w)
@@ -102,6 +102,7 @@ def test_plot_moran():
                         fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
+
 def test_moran_bv_scatterplot():
     link_to_data = examples.get_path('Guerry.shp')
     gdf = gpd.read_file(link_to_data)
@@ -137,6 +138,7 @@ def test_plot_moran_bv_simulation():
     fig, _ = plot_moran_bv_simulation(moran_bv,
                                       fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
+
 
 def test_plot_moran_bv():
     # Load data and calculate weights
@@ -176,20 +178,20 @@ def test_moran_loc_scatterplot():
     fig, _ = _moran_loc_scatterplot(moran_loc, p=0.05,
                                     fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
-    
+
     # try with p value and zstandard=False
     fig, _ = _moran_loc_scatterplot(moran_loc, p=0.05, zstandard=False,
                                     fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
-    
+
     # try without p value and zstandard=False
     fig, _ = _moran_loc_scatterplot(moran_loc, zstandard=False,
                                     fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
-    
+
     assert_raises(ValueError, _moran_loc_scatterplot, moran_bv, p=0.5)
     assert_warns(UserWarning, _moran_loc_scatterplot, moran_loc, p=0.5,
-                  scatter_kwds=dict(c='#4393c3'))
+                 scatter_kwds=dict(c='#4393c3'))
 
 
 def test_lisa_cluster():
@@ -243,10 +245,10 @@ def test_moran_loc_bv_scatterplot():
     # try with p value and different figure size
     fig, _ = _moran_loc_bv_scatterplot(moran_loc_bv, p=0.05)
     plt.close(fig)
-    
+
     assert_raises(ValueError, _moran_loc_bv_scatterplot, moran_loc, p=0.5)
     assert_warns(UserWarning, _moran_loc_bv_scatterplot, moran_loc_bv, p=0.5,
-                  scatter_kwds=dict(c='r'))
+                 scatter_kwds=dict(c='r'))
 
 
 def test_moran_facet():
@@ -255,11 +257,11 @@ def test_moran_facet():
     vars = [np.array(f.by_col[var]) for var in varnames]
     w = lp.io.open(examples.get_path("sids2.gal")).read()
     # calculate moran matrix
-    moran_matrix = Moran_BV_matrix(vars,  w,  varnames = varnames)
+    moran_matrix = Moran_BV_matrix(vars, w, varnames=varnames)
     # plot
     fig, axarr = moran_facet(moran_matrix)
     plt.close(fig)
     # customize
     fig, axarr = moran_facet(moran_matrix, scatter_glob_kwds=dict(color='r'),
-                               fitline_bv_kwds=dict(color='y'))
+                             fitline_bv_kwds=dict(color='y'))
     plt.close(fig)
