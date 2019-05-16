@@ -4,6 +4,7 @@ import libpysal as lp
 from libpysal import examples
 import geopandas as gpd
 import numpy as np
+from nose.tools import assert_raises
 
 from esda.moran import (Moran_Local, Moran, Moran_BV,
                         Moran_Local_BV, Moran_BV_matrix)
@@ -159,11 +160,13 @@ def test_moran_loc_scatterplot():
     link = examples.get_path('columbus.shp')
     df = gpd.read_file(link)
 
+    x = df['INC'].values
     y = df['HOVAL'].values
     w = Queen.from_dataframe(df)
     w.transform = 'r'
 
     moran_loc = Moran_Local(y, w)
+    moran_bv = Moran_BV(x, y, w)
 
     # try with p value so points are colored
     fig, _ = _moran_loc_scatterplot(moran_loc, p=0.05)
@@ -173,6 +176,8 @@ def test_moran_loc_scatterplot():
     fig, _ = _moran_loc_scatterplot(moran_loc, p=0.05,
                                     fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
+    
+    assert_raises(ValueError, _moran_loc_scatterplot, moran_bv, p=0.5)
 
 
 def test_lisa_cluster():
