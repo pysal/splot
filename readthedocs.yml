@@ -16,11 +16,3 @@ python:
           path: .
           extra_requirements:
               - dev
-
-
-#python:
-#    version: 3.5
-#    setup_py_install: true
-#    pip_install: true
-#    extra_requirements:
-#        - dev
