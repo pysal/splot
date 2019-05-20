@@ -41,7 +41,7 @@ splot is a visual steering tool, facilitating human guidance in interpreting res
 
 * paragraph4: more technical description
 
-Implemented in Python, splot extends both PySAL's analytics and matplotlib visualization functionality in visualising spatial analysis workflows and result presentation. It provides users quick access through a high level API to visualise popular PySAL objects. We hereby aim to implement a multilute of views for different spatial analysis workflows, to provide users the opportunity to view a problem from different angles. The splot package facilitates the creation of both static plots ready for publication and interactive visualisations for quick iteration and spatial data exploration. 
+Implemented in Python, splot extends both PySAL's analytics and matplotlib visualization functionality in visualising spatial analysis workflows and result presentation. It provides users quick access through a high level API to visualise popular PySAL objects. We hereby aim to implement a multitude of views for different spatial analysis workflows, to provide users the opportunity to view a problem from different angles. The splot package facilitates the creation of both static plots ready for publication and interactive visualisations for quick iteration and spatial data exploration. 
 
 * paragraph 5: concluding sentence, what follows
 
@@ -60,7 +60,7 @@ Figures can be included like this: ![Example figure.](figure.png)
 # Acknowledgements
 
 We acknowledge contributions from XYZ
-Thank you, Joris Van den Bossche and teh geopandas team to time releases in accordance to splot delevopments.
+Thank you, Joris Van den Bossche and the geopandas team to time releases in accordance to splot delevopments.
 Thank you, Rebecca Bilbro and Benjamin Bengfort for sharing your insights in how to structure and build API's for visualizations.
 
 # References
