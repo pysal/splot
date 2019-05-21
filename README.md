@@ -5,7 +5,7 @@
 [![Documentation Status](https://readthedocs.org/projects/pip/badge/?version=stable)](http://pip.pypa.io/en/stable/?badge=stable)
 [![PyPI version](https://badge.fury.io/py/splot.svg)](https://badge.fury.io/py/splot)
 
-**Lightweight plotting and mapping to facilitate spatial analysis with PySAL.**
+**Visual analytics for spatial analysis with PySAL.**
 
 ![Local Spatial Autocorrelation](figs/viz_local_autocorrelation.png)
 
