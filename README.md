@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/pysal/splot.svg?branch=master)](https://travis-ci.org/pysal/splot)
-
 # splot
 
 [![Build Status](https://travis-ci.org/pysal/splot.svg?branch=master)](https://travis-ci.org/pysal/splot)
