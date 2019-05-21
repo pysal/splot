@@ -18,9 +18,9 @@ If you are new to splot and PySAL you will best get started with our [documentat
 
 ## Installing splot
 
-### splot requires:
+### Installing dependencies:
 
-splot is compatible with `Python` 3.5 or later and depends on `geopandas` 0.4.0 or later and `matplotlib` 2.2.2 or later.
+splot is compatible with `Python` 3.6 or later and depends on `geopandas` 0.4.0 or later and `matplotlib` 2.2.2 or later.
 
 splot also uses
 * `numpy`
@@ -29,34 +29,37 @@ splot also uses
 * `Ipywidgets`
 
 Depending on your spatial analysis workflow and the PySAL objects you would like to visualize, splot relies on:
-* PySAL 2.0 2rc
-or separate packages:
+* PySAL 2.0
+
+or separate packages found in the PySAL stack:
 * esda
 * libpysal
 * spreg
 * giddy
 
-### Quick install:
+### Installing splot:
 
-There are two main ways of accessing splot. First, the overall library install of PySAL 2.0 includes splot.
-PySAL 2.0 will be available from PyPI or Anaconda by the beginning of September 2018:
+There are two ways of accessing splot. First, splot is installed with the [PySAL 2.0](https://pysal.readthedocs.io/en/latest/installation.html) metapackage through:
 
-    $ pip install pysal
+    $ pip install -U pysal
     
     or 
     
     $ conda install -c conda-forge pysal
 
 
-Second, splot can be installed separately. If you are using Anaconda, install splot via the conda utility:
+Second, splot can be installed as a separate package. If you are using Anaconda, install splot via the conda utility:
 
-    $ conda install -c conda-forge pysal
+    $ conda install -c conda-forge splot
 
 
 Otherwise you can install splot from PyPI with pip:
 
     $ pip install splot
 
+
+## Usage
+tba
 
 ## Contributing to splot
 
@@ -69,13 +72,14 @@ Feel free to check out our dicussion spaces, add ideas and contributions:
 
 If you have never contributed before or you are just discovering what PySAL and splot have to offer, reading through """Doc-strings""" and correcting our Documentation can be a great way to start. Check for spelling and grammar mistakes or use [pep8](https://pypi.org/project/pep8/) and [pyflakes](https://pypi.org/project/pyflakes/) to clean our `.py` files. This will allow you to get used to working with [git](https://try.github.io) and generally allows you to familiarize yourself with the `splot` and `PySAL` code base.
 
-If you have already used PySAL and splot and you are missing object-specific views for your analysis feel free to add or discuss your ideas to our code-base. Please make sure you include unit test, documentation and examples or (create an issue so someone else can work together with you). The common `splot` API design discussed [here](https://github.com/pysal/splot/issues/9) can help you to decide how to best integrate your visualization prototype into `splot`.
+If you have already used PySAL and splot and you are missing object-specific views for your analysis feel free to add  to our code-base or discuss your ideas. Please make sure you include unit test, documentation and examples or (create an issue so someone else can work together with you). The common `splot` API design discussed [here](https://github.com/pysal/splot/issues/9) can help you to decide how to best integrate your visualization prototype into `splot`.
 
-Beyond working on documentation and prototyping new visualizations you can always write a bug report or feature request on [Github issues](https://github.com/pysal/splot/issues). Whether large or small, any contribution makes a big difference and we hope you enjoy beeing part of our community as much as we do!
+Beyond working on documentation and prototyping new visualizations, you can always write a bug report or feature request on [Github issues](https://github.com/pysal/splot/issues). Whether large or small, any contribution makes a big difference and we hope you enjoy beeing part of our community as much as we do! The only thing we ask is that you abide principles of openness, respect, and consideration of others as described in the [PySAL Code of Conduct](https://github.com/pysal/code_of_conduct/blob/master/README.md).
+
+## Road-map
 
 
 ## Community support
 
 * [PySAL 2.0](http://pysal.org)
 * [Gitter chat splot](https://gitter.im/pysal/splot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-* [Gitter chat pysal](https://gitter.im/pysal/pysal?)
