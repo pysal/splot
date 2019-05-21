@@ -78,6 +78,13 @@ Beyond working on documentation and prototyping new visualizations, you can alwa
 
 ## Road-map
 
+We are planning on extending splot's visualization toolkit in future. Functionality we plan to implement includes:
+
+* visualisations for [density methods](https://github.com/pysal/splot/issues/32) (mapping density estimations)
+* [cross-hatching fill styles](https://github.com/pysal/splot/issues/35) for maps (to allow choropleth visualizations wihtout class intervalls)
+* [legendgrams](https://github.com/pysal/splot/issues/34) (map legends that visualize the distribution of observations by color in a given map)
+
+if you are interested in working on one or the other methods, check out the linekd issues or get in tough! 
 
 ## Community support
 
