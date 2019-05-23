@@ -20,7 +20,7 @@ If you are new to splot and PySAL you will best get started with our [documentat
 
 ### Installing dependencies:
 
-splot is compatible with `Python` 3.6 or later and depends on `geopandas` 0.4.0 or later and `matplotlib` 2.2.2 or later.
+splot is compatible with `Python` 3.6 and 3.7 and depends on `geopandas` 0.4.0 or later and `matplotlib` 2.2.2 or later.
 
 splot also uses
 * `numpy`
@@ -59,7 +59,9 @@ Otherwise you can install splot from PyPI with pip:
 
 
 ## Usage
-tba
+
+splot supports many different 
+https://github.com/pysal/splot/blob/master/notebooks/mapping_vba.ipynbß
 
 ## Contributing to splot
 
@@ -72,19 +74,19 @@ Feel free to check out our dicussion spaces, add ideas and contributions:
 
 If you have never contributed before or you are just discovering what PySAL and splot have to offer, reading through """Doc-strings""" and correcting our Documentation can be a great way to start. Check for spelling and grammar mistakes or use [pep8](https://pypi.org/project/pep8/) and [pyflakes](https://pypi.org/project/pyflakes/) to clean our `.py` files. This will allow you to get used to working with [git](https://try.github.io) and generally allows you to familiarize yourself with the `splot` and `PySAL` code base.
 
-If you have already used PySAL and splot and you are missing object-specific views for your analysis feel free to add  to our code-base or discuss your ideas. Please make sure you include unit test, documentation and examples or (create an issue so someone else can work together with you). The common `splot` API design discussed [here](https://github.com/pysal/splot/issues/9) can help you to decide how to best integrate your visualization prototype into `splot`.
+If you have already used PySAL and splot and you are missing object-specific views for your analysis feel free to add to our code-base or discuss your ideas. Please make sure you include unit test, documentation and examples or (create an issue so someone else can work together with you). The common `splot` API design discussed [here](https://github.com/pysal/splot/issues/9) can help you to decide how to best integrate your visualization prototype into `splot`.
 
-Beyond working on documentation and prototyping new visualizations, you can always write a bug report or feature request on [Github issues](https://github.com/pysal/splot/issues). Whether large or small, any contribution makes a big difference and we hope you enjoy beeing part of our community as much as we do! The only thing we ask is that you abide principles of openness, respect, and consideration of others as described in the [PySAL Code of Conduct](https://github.com/pysal/code_of_conduct/blob/master/README.md).
+Beyond working on documentation and prototyping new visualizations, you can always write a bug report or feature request on [Github issues](https://github.com/pysal/splot/issues). Whether large or small, any contribution makes a big difference and we hope you enjoy being part of our community as much as we do! The only thing we ask is that you abide principles of openness, respect, and consideration of others as described in the [PySAL Code of Conduct](https://github.com/pysal/code_of_conduct/blob/master/README.md).
 
 ## Road-map
 
 We are planning on extending splot's visualization toolkit in future. Functionality we plan to implement includes:
 
 * visualisations for [density methods](https://github.com/pysal/splot/issues/32) (mapping density estimations)
-* [cross-hatching fill styles](https://github.com/pysal/splot/issues/35) for maps (to allow choropleth visualizations wihtout class intervalls)
+* [cross-hatching fill styles](https://github.com/pysal/splot/issues/35) for maps (to allow choropleth visualizations wihtout class intervals)
 * [legendgrams](https://github.com/pysal/splot/issues/34) (map legends that visualize the distribution of observations by color in a given map)
 
-if you are interested in working on one or the other methods, check out the linekd issues or get in tough! 
+if you are interested in working on one of these or any other methods, check out the linked issues or get in touch! 
 
 ## Community support
 
