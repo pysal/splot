@@ -27,17 +27,14 @@ bibliography: paper.bib
 * introduction to package
 * maybe quick example
 
-section 1:
-Intro, statement of need
+Geography is an intensely-visual domain. Its longstanding dependence on visualisation and cartography show as much, with John Snow’s cholera map serving as one of the first instances of scientific visualization in pursuit of data analysis [@johnson2007ghost,@Arribas-Bel2017], and the perennial presence of maps as statistical displays in seminal works on visualization [@tufte2001visual]. As such, the existence and continued focus on maps in geographical analysis demands serious, dedicated attention in scientific computing. However, existing methods in Python, specifically for *statistical* visualization of spatial data, are somewhat lacking. General-purpose mapping provided by `geopandas` is not fine-tuned enough for analytical/statistical analysis. The more analytically-oriented views offered by `geoplot`, while useful, are limited in their statistical applications. Thus, the need remains for a strong, analytically-oriented toolbox for geographical analysis.
+
+This need is explicitly heightened by the fact that the collection and generation of geographical data is becoming more pervasive [@goodchild2007citizen,@arribas-bel2014accidental]. With the proliferation of high-accuracy GPS data, many datasets are now *becoming* spatial datasets; their analysis and visualization increasingly requires explicitly spatial methods that account for the various special structures in geographical data [@anselin1988spatial]. Geographical questions about dependence, endogeneity, heterogeneity, and non-stationarity often require special statistical tools to diagnose, and spatial analytic software to visualize [@anselin2014modern]. Further with the increasing importance of code and computation in geographical curricula [@rey2009show,@rey2018code,@ucgis2019geographic], it has become critical for both pedagogical and research reasons to support geographical analysis with robust visualization tools.  
 
 HELP NEEDED: idea collection for statement of need
-* Paragraph1: focus on need for spatial analysis?
-
-* Paragraph2: focus on need to visualize spatial analysis?
-
 * paragraph3: splot as solution, this is what we can do for different audiences
 
-splot is a visual steering tool, facilitating human guidance in interpreting results and choosing between different statistical analysis methods.
+It is this niche that `splot` is designed to fill. As a visual steering tool, `splot` facilitates analysis, interpretation of results, and makes the process of model selection easier and more clear. 
 
 * paragraph4: more technical description
 
@@ -63,4 +60,4 @@ We acknowledge contributions from XYZ
 Thank you, Joris Van den Bossche and the geopandas team to time releases in accordance to splot delevopments.
 Thank you, Rebecca Bilbro and Benjamin Bengfort for sharing your insights in how to structure and build API's for visualizations.
 
-# References
+### References
