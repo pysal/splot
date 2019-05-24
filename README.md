@@ -61,7 +61,7 @@ Otherwise you can install splot from PyPI with pip:
 ## Usage
 
 splot supports many different 
-https://github.com/pysal/splot/blob/master/notebooks/mapping_vba.ipynbß
+https://github.com/pysal/splot/blob/master/notebooks/mapping_vba.ipynb
 
 ## Contributing to splot
 
@@ -83,10 +83,10 @@ Beyond working on documentation and prototyping new visualizations, you can alwa
 We are planning on extending splot's visualization toolkit in future. Functionality we plan to implement includes:
 
 * visualisations for [density methods](https://github.com/pysal/splot/issues/32) (mapping density estimations)
-* [cross-hatching fill styles](https://github.com/pysal/splot/issues/35) for maps (to allow choropleth visualizations wihtout class intervals)
+* [cross-hatching fill styles](https://github.com/pysal/splot/issues/35) for maps (to allow choropleth visualizations without class intervals)
 * [legendgrams](https://github.com/pysal/splot/issues/34) (map legends that visualize the distribution of observations by color in a given map)
 
-if you are interested in working on one of these or any other methods, check out the linked issues or get in touch! 
+If you are interested in working on one of these or any other methods, check out the linked issues or get in touch! 
 
 ## Community support
 
