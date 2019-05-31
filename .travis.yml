@@ -12,7 +12,13 @@ env:
   - PYSAL_PYPI=true #testing on dependencies libpysal, esda, mapcalssify, giddy and spreg on pypi
   - PYSAL_PYPI=false
 
-
+matrix:
+  allow_failures:
+      - python: 3.6
+        env: PYSAL_PYPI=false
+      - python: 3.7
+        env: PYSAL_PYPI=false
+        
 before_install:
   - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
   - chmod +x miniconda.sh
