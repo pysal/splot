@@ -1123,7 +1123,7 @@ def _moran_loc_bv_scatterplot(moran_loc_bv, p=None,
         if not isinstance(moran_loc_bv, Moran_Local_BV):
             raise ValueError("`moran_loc_bv` is not a\n" +
                              "esda.moran.Moran_Local_BV instance")
-        if 'color' in scatter_kwds or 'cmap' in scatter_kwds:
+        if 'color' in scatter_kwds or 'c' in scatter_kwds or 'cmap' in scatter_kwds:
             warnings.warn("To change the color use cmap with a colormap of 5,\n" +
                           "c defines the LISA category, color will interfere with c")
 
