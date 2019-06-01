@@ -26,7 +26,7 @@ TODO
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 
 
-def _create_moran_fig_ax(ax, figsize):
+def _create_moran_fig_ax(ax, figsize, aspect_equal):
     """
     Creates matplotlib figure and axes instances
     for plotting moran visualizations. Adds common viz design.
@@ -41,13 +41,18 @@ def _create_moran_fig_ax(ax, figsize):
     ax.spines['right'].set_color('none')
     ax.spines['bottom'].set_position(('axes', -0.05))
     ax.spines['top'].set_color('none')
-    ax.spines['left'].set_smart_bounds(True)
-    ax.spines['bottom'].set_smart_bounds(True)
+    if aspect_equal is True:
+        ax.set_aspect('equal', 'box')
+    else:
+        print('else')
+        ax.spines['left'].set_smart_bounds(True)
+        ax.spines['bottom'].set_smart_bounds(True)
     return fig, ax
 
 
 def moran_scatterplot(moran, zstandard=True, p=None, ax=None,
-                      scatter_kwds=None, fitline_kwds=None):
+                      scatter_kwds=None, fitline_kwds=None,
+                      aspect_equal=True):
     """
     Moran Scatterplot
     
@@ -125,30 +130,35 @@ def moran_scatterplot(moran, zstandard=True, p=None, ax=None,
             warnings.warn('`p` is only used for plotting `esda.moran.Moran_Local`\n'
                           'or `Moran_Local_BV` objects')
         fig, ax = _moran_global_scatterplot(moran=moran, zstandard=zstandard,
-                                           ax=ax, scatter_kwds=scatter_kwds,
-                                           fitline_kwds=fitline_kwds)
+                                            ax=ax, aspect_equal=aspect_equal,
+                                            scatter_kwds=scatter_kwds,
+                                            fitline_kwds=fitline_kwds)
     elif isinstance(moran, Moran_BV):
         if p is not None:
             warnings.warn('`p` is only used for plotting `esda.moran.Moran_Local`\n'
                           'or `Moran_Local_BV` objects')
         fig, ax = _moran_bv_scatterplot(moran_bv=moran, ax=ax,
-                                       scatter_kwds=scatter_kwds,
-                                       fitline_kwds=fitline_kwds)
+                                        aspect_equal=aspect_equal,
+                                        scatter_kwds=scatter_kwds,
+                                        fitline_kwds=fitline_kwds)
     elif isinstance(moran, Moran_Local):
         fig, ax = _moran_loc_scatterplot(moran_loc=moran, zstandard=zstandard,
-                                        ax=ax, p=p, scatter_kwds=scatter_kwds,
-                                        fitline_kwds=fitline_kwds)
+                                         ax=ax, p=p, aspect_equal=aspect_equal,
+                                         scatter_kwds=scatter_kwds,
+                                         fitline_kwds=fitline_kwds)
     elif isinstance(moran, Moran_Local_BV):
         fig, ax = _moran_loc_bv_scatterplot(moran_loc_bv=moran, ax=ax,
-                                           p=p, scatter_kwds=scatter_kwds,
-                                           fitline_kwds=fitline_kwds)
+                                            p=p, aspect_equal=aspect_equal,
+                                            scatter_kwds=scatter_kwds,
+                                            fitline_kwds=fitline_kwds)
     ax.xaxis.set_ticks_position('bottom')
     ax.yaxis.set_ticks_position('left')
     return fig, ax
 
 
 def _moran_global_scatterplot(moran, zstandard=True, ax=None,
-                              scatter_kwds=None, fitline_kwds=None):
+                              scatter_kwds=None, fitline_kwds=None,
+                              aspect_equal=True):
     """
     Global Moran's I Scatterplot.
 
@@ -227,7 +237,8 @@ def _moran_global_scatterplot(moran, zstandard=True, ax=None,
     fitline_kwds.setdefault('color', splot_colors['moran_fit'])
     
     # get fig and ax
-    fig, ax = _create_moran_fig_ax(ax, figsize=(7, 7))
+    fig, ax = _create_moran_fig_ax(ax, figsize=(7, 7),
+                                   aspect_equal=aspect_equal)
     
     # set labels
     ax.set_xlabel('Attribute')
@@ -260,7 +271,8 @@ def _moran_global_scatterplot(moran, zstandard=True, ax=None,
     return fig, ax
 
 
-def plot_moran_simulation(moran, ax=None, fitline_kwds=None, **kwargs):
+def plot_moran_simulation(moran, ax=None, fitline_kwds=None,
+                          aspect_equal=True, **kwargs):
     """
     Global Moran's I simulated reference distribution.
 
@@ -326,7 +338,8 @@ def plot_moran_simulation(moran, ax=None, fitline_kwds=None, **kwargs):
     figsize = kwargs.pop('figsize', (7, 7))
     
     # get fig and ax
-    fig, ax = _create_moran_fig_ax(ax, figsize)
+    fig, ax = _create_moran_fig_ax(ax, figsize,
+                                   aspect_equal=aspect_equal)
 
     # plot distribution
     shade = kwargs.pop('shade', True)
@@ -417,7 +430,8 @@ def plot_moran(moran, zstandard=True, scatter_kwds=None,
     return fig, axs
 
 
-def _moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=None):
+def _moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=None,
+                          aspect_equal=True):
     """
     Bivariate Moran Scatterplot.
 
@@ -493,7 +507,8 @@ def _moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=Non
     fitline_kwds.setdefault('color', splot_colors['moran_fit'])
 
     # get fig and ax
-    fig, ax = _create_moran_fig_ax(ax, figsize=(7,7))
+    fig, ax = _create_moran_fig_ax(ax, figsize=(7,7),
+                                   aspect_equal=aspect_equal)
     
     # set labels
     ax.set_xlabel('Attribute X')
@@ -513,7 +528,8 @@ def _moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=Non
     return fig, ax
 
 
-def plot_moran_bv_simulation(moran_bv, ax=None, fitline_kwds=None, **kwargs):
+def plot_moran_bv_simulation(moran_bv, ax=None, fitline_kwds=None,
+                             aspect_equal=True, **kwargs):
     """
     Bivariate Moran's I simulated reference distribution.
 
@@ -581,7 +597,8 @@ def plot_moran_bv_simulation(moran_bv, ax=None, fitline_kwds=None, **kwargs):
     figsize = kwargs.pop('figsize', (7, 7))
 
     # get fig and ax
-    fig, ax = _create_moran_fig_ax(ax, figsize)
+    fig, ax = _create_moran_fig_ax(ax, figsize,
+                                   aspect_equal=aspect_equal)
 
     # plot distribution
     shade = kwargs.pop('shade', True)
@@ -670,7 +687,8 @@ def plot_moran_bv(moran_bv, scatter_kwds=None, fitline_kwds=None, **kwargs):
 
 
 def _moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
-                          ax=None, scatter_kwds=None, fitline_kwds=None):
+                           ax=None, scatter_kwds=None, fitline_kwds=None,
+                           aspect_equal=True):
     """
     Moran Scatterplot with option of coloring of Local Moran Statistics
 
@@ -756,7 +774,8 @@ def _moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
     fitline_kwds.setdefault('alpha', 0.9)
 
     # get fig and ax
-    fig, ax = _create_moran_fig_ax(ax, figsize=(7,7))
+    fig, ax = _create_moran_fig_ax(ax, figsize=(7,7),
+                                   aspect_equal=aspect_equal)
     
     # set labels
     ax.set_xlabel('Attribute')
@@ -892,6 +911,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
                                mask_color='#636363', quadrant=None,
                                legend=True, scheme='Quantiles',
                                cmap='YlGnBu', figsize=(15, 4),
+                               aspect_equal=True,
                                scatter_kwds=None, fitline_kwds=None):
     '''
     Produce three-plot visualisation of Moran Scatteprlot, LISA cluster
@@ -969,11 +989,14 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     
     '''
     fig, axs = plt.subplots(1, 3, figsize=figsize,
-                            subplot_kw={'aspect': 'equal'})
+                            subplot_kw={'aspect': 'equal', 'adjustable':'datalim'})
     # Moran Scatterplot
     moran_scatterplot(moran_loc, p=p, ax=axs[0],
                       scatter_kwds=scatter_kwds, fitline_kwds=fitline_kwds)
-    axs[0].set_aspect('auto')
+    if aspect_equal is True:
+        axs[0].set_aspect('equal')
+    else:
+        axs[0].set_aspect('auto')
 
     # Lisa cluster map
     # TODO: Fix legend_kwds: display boxes instead of points
@@ -1050,8 +1073,9 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     return fig, axs
 
 
-def _moran_loc_bv_scatterplot(moran_loc_bv, p=None,
-                             ax=None, scatter_kwds=None, fitline_kwds=None):
+def _moran_loc_bv_scatterplot(moran_loc_bv, p=None, ax=None,
+                              scatter_kwds=None, aspect_equal=True,
+                              fitline_kwds=None):
     """
     Moran Bivariate Scatterplot with option of coloring of Local Moran Statistics
 
@@ -1138,7 +1162,8 @@ def _moran_loc_bv_scatterplot(moran_loc_bv, p=None,
     fitline_kwds.setdefault('alpha', 0.9)
 
     # get fig and ax
-    fig, ax = _create_moran_fig_ax(ax, figsize=(7,7))
+    fig, ax = _create_moran_fig_ax(ax, figsize=(7,7),
+                                   aspect_equal=aspect_equal)
     
     # set labels
     ax.set_xlabel('Attribute')
