@@ -8,6 +8,17 @@ python:
   - 3.6
   - 3.7
 
+env:
+  - PYSAL_PYPI=true #testing on dependencies libpysal, esda, mapcalssify, giddy and spreg on pypi
+  - PYSAL_PYPI=false
+
+matrix:
+  allow_failures:
+      - python: 3.6
+        env: PYSAL_PYPI=false
+      - python: 3.7
+        env: PYSAL_PYPI=false
+
 before_install:
   - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
   - chmod +x miniconda.sh
@@ -25,6 +36,16 @@ install:
   - conda list
   - conda info -a
   - pip install -r requirements.txt
+  - if "$PYSAL_PYPI"; then
+      echo 'testing pypi libpysal esda mapclassify giddy spreg';
+    else
+      echo 'testing git libpysal esda mapclassify giddy spreg';
+      pip install https://github.com/pysal/libpysal/archive/master.zip;
+      pip install https://github.com/pysal/mapclassify/archive/master.zip;
+      pip install https://github.com/pysal/esda/archive/master.zip;
+      pip install https://github.com/pysal/giddy/archive/master.zip;
+      pip install https://github.com/pysal/spreg/archive/master.zip;
+    fi;
   - pip install nose coverage coveralls
   # Now install splot (don't use 'pip install .', we'll run out of space)
   - python setup.py sdist
@@ -35,7 +56,7 @@ install:
 
 
 script:
-  - nosetests splot --with-doctest --with-coverage --cover-package=splot;
+  - nosetests --verbose --with-doctest --with-coverage --cover-package=splot;
 #  - cd notebooks
 #  - make test
 
