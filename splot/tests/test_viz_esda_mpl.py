@@ -36,7 +36,7 @@ def test_moran_scatterplot():
     moran_loc = Moran_Local(y, w)
     moran_loc_bv = Moran_Local_BV(y, x, w)
     # try with p value so points are colored or warnings apply
-    fig, _ = moran_scatterplot(moran, p=0.05)
+    fig, _ = moran_scatterplot(moran, p=0.05, aspect_equal=False)
     plt.close(fig)
     fig, _ = moran_scatterplot(moran_loc, p=0.05)
     plt.close(fig)
@@ -61,6 +61,7 @@ def test_moran_global_scatterplot():
     plt.close(fig)
     # customize
     fig, _ = _moran_global_scatterplot(moran, zstandard=False,
+                                       aspect_equal=False,
                                        fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
@@ -99,6 +100,7 @@ def test_plot_moran():
     plt.close(fig)
     # customize
     fig, _ = plot_moran(moran, zstandard=False,
+                        aspect_equal=False,
                         fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
@@ -116,7 +118,7 @@ def test_moran_bv_scatterplot():
     fig, _ = _moran_bv_scatterplot(moran_bv)
     plt.close(fig)
     # customize plot
-    fig, _ = _moran_bv_scatterplot(moran_bv,
+    fig, _ = _moran_bv_scatterplot(moran_bv, aspect_equal=False,
                                    fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
@@ -135,7 +137,7 @@ def test_plot_moran_bv_simulation():
     fig, _ = plot_moran_bv_simulation(moran_bv)
     plt.close(fig)
     # customize plot
-    fig, _ = plot_moran_bv_simulation(moran_bv,
+    fig, _ = plot_moran_bv_simulation(moran_bv, aspect_equal=False,
                                       fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
@@ -154,7 +156,8 @@ def test_plot_moran_bv():
     fig, _ = plot_moran_bv(moran_bv)
     plt.close(fig)
     # customize plot
-    fig, _ = plot_moran_bv(moran_bv, fitline_kwds=dict(color='#4393c3'))
+    fig, _ = plot_moran_bv(moran_bv,aspect_equal=False,
+                           fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
 
@@ -176,6 +179,7 @@ def test_moran_loc_scatterplot():
 
     # try with p value and different figure size
     fig, _ = _moran_loc_scatterplot(moran_loc, p=0.05,
+                                    aspect_equal=False,
                                     fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
@@ -224,6 +228,7 @@ def test_plot_local_autocorrelation():
     # also test with quadrant and mask
     fig, _ = plot_local_autocorrelation(moran_loc, df, 'HOVAL', p=0.05,
                                         region_column='POLYID',
+                                        aspect_equal=False,
                                         mask=['1', '2', '3'], quadrant=1)
     plt.close(fig)
 
@@ -243,7 +248,8 @@ def test_moran_loc_bv_scatterplot():
     plt.close(fig)
 
     # try with p value and different figure size
-    fig, _ = _moran_loc_bv_scatterplot(moran_loc_bv, p=0.05)
+    fig, _ = _moran_loc_bv_scatterplot(moran_loc_bv, p=0.05,
+                                       aspect_equal=False)
     plt.close(fig)
 
     assert_raises(ValueError, _moran_loc_bv_scatterplot, moran_loc, p=0.5)
