@@ -42,9 +42,8 @@ def _create_moran_fig_ax(ax, figsize, aspect_equal):
     ax.spines['bottom'].set_position(('axes', -0.05))
     ax.spines['top'].set_color('none')
     if aspect_equal is True:
-        ax.set_aspect('equal')#, 'box')
+        ax.set_aspect('equal')
     else:
-        print('else')
         ax.spines['left'].set_smart_bounds(True)
         ax.spines['bottom'].set_smart_bounds(True)
     return fig, ax
