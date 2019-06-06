@@ -42,7 +42,7 @@ def _create_moran_fig_ax(ax, figsize, aspect_equal):
     ax.spines['bottom'].set_position(('axes', -0.05))
     ax.spines['top'].set_color('none')
     if aspect_equal is True:
-        ax.set_aspect('equal', 'box')
+        ax.set_aspect('equal')#, 'box')
     else:
         print('else')
         ax.spines['left'].set_smart_bounds(True)
@@ -70,7 +70,8 @@ def moran_scatterplot(moran, zstandard=True, p=None,
         significance. By default it will not be colored.
         Default =None.
     aspect_equal : bool, optional
-        If True, Axes will show the same aspect or visual proportions.
+        If True, Axes will show the same aspect or visual proportions
+        for Moran Scatterplot.
     ax : Matplotlib Axes instance, optional
         If given, the Moran plot will be created inside this axis.
         Default =None.
@@ -363,8 +364,8 @@ def plot_moran_simulation(moran, aspect_equal=True,
     return fig, ax
 
 
-def plot_moran(moran, zstandard=True, scatter_kwds=None,
-               fitline_kwds=None, **kwargs):
+def plot_moran(moran, zstandard=True, aspect_equal=True,
+               scatter_kwds=None, fitline_kwds=None, **kwargs):
     """
     Global Moran's I simulated reference distribution and scatterplot.
 
@@ -375,6 +376,9 @@ def plot_moran(moran, zstandard=True, scatter_kwds=None,
     zstandard : bool, optional
         If True, Moran Scatterplot will show z-standardized attribute and
         spatial lag values. Default =True.
+    aspect_equal : bool, optional
+        If True, Axes of Moran Scatterplot will show the same
+        aspect or visual proportions.
     scatter_kwds : keyword arguments, optional
         Keywords used for creating and designing the scatter points.
         Default =None.
@@ -434,12 +438,15 @@ def plot_moran(moran, zstandard=True, scatter_kwds=None,
     moran_scatterplot(moran, zstandard=zstandard, ax=axs[1],
                       scatter_kwds=scatter_kwds, fitline_kwds=fitline_kwds)
     axs[0].set(aspect="auto")
-    axs[1].set_aspect("equal", "datalim")
+    if aspect_equal is True:
+        axs[1].set_aspect("equal", "datalim")
+    else: 
+        axs[1].set_aspect("auto")
     return fig, axs
 
 
-def _moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=None,
-                          aspect_equal=True):
+def _moran_bv_scatterplot(moran_bv, ax=None, aspect_equal=True,
+                          scatter_kwds=None, fitline_kwds=None):
     """
     Bivariate Moran Scatterplot.
 
@@ -450,6 +457,9 @@ def _moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=Non
     ax : Matplotlib Axes instance, optional
         If given, the Moran plot will be created inside this axis.
         Default =None.
+    aspect_equal : bool, optional
+        If True, Axes of Moran Scatterplot will show the same
+        aspect or visual proportions.
     scatter_kwds : keyword arguments, optional
         Keywords used for creating and designing the scatter points.
         Default =None.
@@ -536,8 +546,8 @@ def _moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=Non
     return fig, ax
 
 
-def plot_moran_bv_simulation(moran_bv, ax=None, fitline_kwds=None,
-                             aspect_equal=True, **kwargs):
+def plot_moran_bv_simulation(moran_bv, ax=None, aspect_equal=True,
+                             fitline_kwds=None, **kwargs):
     """
     Bivariate Moran's I simulated reference distribution.
 
@@ -548,6 +558,9 @@ def plot_moran_bv_simulation(moran_bv, ax=None, fitline_kwds=None,
     ax : Matplotlib Axes instance, optional
         If given, the Moran plot will be created inside this axis.
         Default =None.
+    aspect_equal : bool, optional
+        If True, Axes of Moran Scatterplot will show the same
+        aspect or visual proportions.
     fitline_kwds : keyword arguments, optional
         Keywords used for creating and designing the
         vertical moran fitline. Default =None.
@@ -622,7 +635,8 @@ def plot_moran_bv_simulation(moran_bv, ax=None, fitline_kwds=None,
     return fig, ax
 
 
-def plot_moran_bv(moran_bv, scatter_kwds=None, fitline_kwds=None, **kwargs):
+def plot_moran_bv(moran_bv, aspect_equal=True,
+                  scatter_kwds=None, fitline_kwds=None, **kwargs):
     """
     Bivariate Moran's I simulated reference distribution and scatterplot.
 
@@ -630,6 +644,9 @@ def plot_moran_bv(moran_bv, scatter_kwds=None, fitline_kwds=None, **kwargs):
     ----------
     moran_bv : esda.moran.Moran_BV instance
         Values of Bivariate Moran's I Autocorrelation Statistics
+    aspect_equal : bool, optional
+        If True, Axes of Moran Scatterplot will show the same
+        aspect or visual proportions.
     scatter_kwds : keyword arguments, optional
         Keywords used for creating and designing the scatter points.
         Default =None.
@@ -687,16 +704,15 @@ def plot_moran_bv(moran_bv, scatter_kwds=None, fitline_kwds=None, **kwargs):
                             subplot_kw={'aspect': 'equal'})
     plot_moran_bv_simulation(moran_bv, ax=axs[0], fitline_kwds=fitline_kwds,
                              **kwargs)
-    moran_scatterplot(moran_bv, ax=axs[1],scatter_kwds=scatter_kwds,
-                         fitline_kwds=fitline_kwds)
+    moran_scatterplot(moran_bv, ax=axs[1], aspect_equal=aspect_equal,
+                      scatter_kwds=scatter_kwds, fitline_kwds=fitline_kwds)
     axs[0].set(aspect="auto")
     axs[1].set(aspect="auto")
     return fig, axs
 
 
-def _moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
-                           ax=None, scatter_kwds=None, fitline_kwds=None,
-                           aspect_equal=True):
+def _moran_loc_scatterplot(moran_loc, zstandard=True, p=None, aspect_equal=True,
+                           ax=None, scatter_kwds=None, fitline_kwds=None):
     """
     Moran Scatterplot with option of coloring of Local Moran Statistics
 
@@ -708,6 +724,9 @@ def _moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
         If given, the p-value threshold for significance. Points will
         be colored by significance. By default it will not be colored.
         Default =None.
+    aspect_equal : bool, optional
+        If True, Axes of Moran Scatterplot will show the same
+        aspect or visual proportions.
     ax : Matplotlib Axes instance, optional
         If given, the Moran plot will be created inside this axis.
         Default =None.
@@ -1005,7 +1024,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     moran_scatterplot(moran_loc, p=p, ax=axs[0],
                       scatter_kwds=scatter_kwds, fitline_kwds=fitline_kwds)
     if aspect_equal is True:
-        axs[0].set_aspect('equal')
+        axs[0].set_aspect('equal', 'datalim')
     else:
         axs[0].set_aspect('auto')
 
