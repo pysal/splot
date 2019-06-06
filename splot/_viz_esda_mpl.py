@@ -707,7 +707,10 @@ def plot_moran_bv(moran_bv, aspect_equal=True,
     moran_scatterplot(moran_bv, ax=axs[1], aspect_equal=aspect_equal,
                       scatter_kwds=scatter_kwds, fitline_kwds=fitline_kwds)
     axs[0].set(aspect="auto")
-    axs[1].set(aspect="auto")
+    if aspect_equal is True:
+        axs[1].set_aspect("equal", "datalim")
+    else:
+        axs[1].set(aspect="auto")
     return fig, axs
 
 
