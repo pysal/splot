@@ -38,7 +38,8 @@ def mask_local_auto(moran_loc, p=0.5):
     cluster_labels : list of str
         List of labels - ['ns', 'HH', 'LH', 'LL', 'HL']
     colors5 : list of str
-        List of colours - ['lightgrey', 'red', 'lightblue','blue', 'pink']
+        List of colours - ['#d7191c', '#fdae61', '#abd9e9',
+        '#2c7bb6', 'lightgrey']
     colors : array of str
         Array containing coloration for each input value/ shape.
     labels : list of str
@@ -56,8 +57,15 @@ def mask_local_auto(moran_loc, p=0.5):
                3: '#2c7bb6',
                4: '#fdae61'}
     colors = [colors5[i] for i in cluster]  # for Bokeh
-    # for MPL:
-    colors5 = (['#d7191c', '#fdae61', '#abd9e9', '#2c7bb6', 'lightgrey'])
+    # for MPL, keeps colors even if clusters are missing:
+    x = np.array(labels)
+    y = np.unique(x)
+    colors5_mpl = {'HH': '#d7191c',
+                   'LH': '#abd9e9',
+                   'LL': '#2c7bb6',
+                   'HL': '#fdae61',
+                   'ns': 'lightgrey'}
+    colors5 = [colors5_mpl[i] for i in y]  # for mpl
 
     # HACK need this, because MPL sorts these labels while Bokeh does not
     cluster_labels.sort()
