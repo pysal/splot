@@ -20,8 +20,8 @@ install_reqs = reqs.pop('base')
 extras_reqs = reqs
     
 setup(name='splot', #name of package
-      version='1.0.0',
-      description= 'plotting for PySAL',
+      version='1.1.0',
+      description= 'Visual analytics for spatial analysis with PySAL.',
       url= 'https://github.com/pysal/splot',
       maintainer= 'Serge Rey, Stefanie Lumnitz',
       maintainer_email= 'sjsrey@gmail.com, stefanie.lumnitz@gmail.com',
@@ -37,7 +37,6 @@ setup(name='splot', #name of package
         'Topic :: Scientific/Engineering :: GIS',
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7'
         ],
