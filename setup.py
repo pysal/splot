@@ -1,4 +1,5 @@
 from setuptools import setup
+from os import path
 
 def _get_requirements_from_files(groups_files):
     groups_reqlist = {}
@@ -18,13 +19,20 @@ _groups_files = {
 reqs = _get_requirements_from_files(_groups_files)
 install_reqs = reqs.pop('base')
 extras_reqs = reqs
+
+# add long_description form README.md
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
     
 setup(name='splot', #name of package
       version='1.1.0',
-      description= 'Visual analytics for spatial analysis with PySAL.',
-      url= 'https://github.com/pysal/splot',
+      description='Visual analytics for spatial analysis with PySAL.',
+      long_description=long_description,
+      long_description_content_type='text/markdown',
+      url='https://github.com/pysal/splot',
       maintainer= 'Serge Rey, Stefanie Lumnitz',
-      maintainer_email= 'sjsrey@gmail.com, stefanie.lumnitz@gmail.com',
+      maintainer_email='sjsrey@gmail.com, stefanie.lumnitz@gmail.com',
       test_suite = 'nose.collector',
       tests_require=['nose'],
       keywords='spatial statistics visualization',
