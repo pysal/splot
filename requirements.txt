@@ -7,3 +7,4 @@ mapclassify
 esda
 spreg
 giddy
+descartes
