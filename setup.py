@@ -26,7 +26,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
     
 setup(name='splot', #name of package
-      version='1.1.0',
+      version='1.1.1',
       description='Visual analytics for spatial analysis with PySAL.',
       long_description=long_description,
       long_description_content_type='text/markdown',
