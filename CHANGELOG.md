@@ -1,5 +1,27 @@
 # Changes
 
+# Version 1.1.1 (2019-07-13)
+
+We closed a total of 8 issues (enhancements and bug fixes) through 4 pull requests, since our last release on 2019-06-27.
+
+## Issues Closed
+  - add ipywidgets to requirements_dev.txt (#78)
+  - add descartes to `requirements.txt` (#77)
+  - [ENH] read long_description from README.md (#76)
+  - Rel1.1.0 (#74)
+
+## Pull Requests
+  - add ipywidgets to requirements_dev.txt (#78)
+  - add descartes to `requirements.txt` (#77)
+  - [ENH] read long_description from README.md (#76)
+  - Rel1.1.0 (#74)
+
+The following individuals contributed to this release:
+
+  - Stefanie Lumnitz
+  - Levi John Wolf
+
+
 # Version 1.1.0 (2019-06-27)
 
 We closed a total of 54 issues (enhancements and bug fixes) through 21 pull requests, since our last release on 2018-11-13.
