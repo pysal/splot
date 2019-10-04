@@ -1,5 +1,5 @@
 numpy
-geopandas>=0.4.0
+geopandas>=0.4.0,<=0.6.0rc1
 matplotlib
 seaborn
 libpysal
