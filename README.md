@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/pysal/splot.svg?branch=master)](https://travis-ci.org/pysal/splot)
 [![Coverage Status](https://coveralls.io/repos/github/pysal/splot/badge.svg?branch=master)](https://coveralls.io/github/pysal/splot?branch=master)
-[![Documentation Status](https://readthedocs.org/projects/pip/badge/?version=stable)](http://pip.pypa.io/en/stable/?badge=stable)
+[![Documentation Status](https://readthedocs.org/projects/splot/badge/?version=latest)](https://splot.readthedocs.io/en/latest/?badge=latest)
 [![PyPI version](https://badge.fury.io/py/splot.svg)](https://badge.fury.io/py/splot)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3258810.svg)](https://doi.org/10.5281/zenodo.3258810)
 
