@@ -10,14 +10,14 @@ authors:
     orcid: 0000-0002-7007-5812
     affiliation: "1, 2" # (Multiple affiliations must be quoted)
   - name: Dani Arribas-Bell
-    orcid: 0000-0000-0000-0000
-    affiliation: 2
+    orcid: 0000-0002-6274-1619
+    affiliation: 3
   - name: Renan X. Cortes
     orcid: 0000-0002-1889-5282
     affiliation: 2
   - name: James D. Gaboardi
     orcid: 0000-0002-4776-6826
-    affiliation: 3
+    affiliation: 4
   - name: Verena Griess
     orcid: 0000-0002-3856-3736
     affiliation: 1
@@ -26,10 +26,10 @@ authors:
     affiliation: 2
   - name: Taylor M. Oshan
     orcid: 0000-0002-0537-2941
-    affiliation: 6
+    affiliation: 7
   - name: Levi Wolf
     orcid: 0000-0003-0274-599X
-    affiliation: "4,5"
+    affiliation: "5,6"
   - name: Sergio Rey
     orcid: 0000-0001-5857-9762
     affiliation: 2
@@ -38,14 +38,16 @@ affiliations:
    index: 1
  - name: Center for Geospatial Sciences, University of California Riverside
    index: 2
- - name: Pennsylvania State University
+ - name: Geographic Data Science Lab, Department of Geography & Planning, University of Liverpool
    index: 3
- - name: School of Geographical Sciences, University of Bristol
+ - name: Pennsylvania State University
    index: 4
- - name: Alan Turing Institute
+ - name: School of Geographical Sciences, University of Bristol
    index: 5
- - name: Department of Geographical Sciences, University of Maryland, College Park
+ - name: Alan Turing Institute
    index: 6
+ - name: Department of Geographical Sciences, University of Maryland, College Park
+   index: 7
 date: 13 October 2019
 bibliography: paper.bib
 ---
