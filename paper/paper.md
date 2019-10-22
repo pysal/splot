@@ -48,7 +48,7 @@ affiliations:
    index: 6
  - name: Department of Geographical Sciences, University of Maryland, College Park
    index: 7
-date: 13 October 2019
+date: 22 October 2019
 bibliography: paper.bib
 ---
 
