@@ -34,13 +34,13 @@ authors:
     orcid: 0000-0001-5857-9762
     affiliation: 2
 affiliations:
- - name: University of British Columbia
+ - name: Department of Forest Resource Management, University of British Columbia
    index: 1
  - name: Center for Geospatial Sciences, University of California Riverside
    index: 2
  - name: Geographic Data Science Lab, Department of Geography & Planning, University of Liverpool
    index: 3
- - name: Pennsylvania State University
+ - name: Department of Geography, Pennsylvania State University
    index: 4
  - name: School of Geographical Sciences, University of Bristol
    index: 5
@@ -48,7 +48,7 @@ affiliations:
    index: 6
  - name: Department of Geographical Sciences, University of Maryland, College Park
    index: 7
-date: 22 October 2019
+date: 25 October 2019
 bibliography: paper.bib
 ---
 
@@ -94,7 +94,7 @@ plt.show()
 
 Ultimately, the `splot` package is designed to facilitate the creation of both static plots ready for publication, and interactive visualizations for quick iteration and spatial data exploration. Although most of `splot` is currently implemented with a `matplotlib` backend, `splot` is framework independent. In that sense, `splot` offers a "grammar" of views that are important and useful in spatial analyses and geographic data science. The `splot` package is not restricted or limited to the current `matplotlib` implementation and can be advanced by integrating emerging or succeeding interactive visualization toolkits, such as `altair` or `bokeh`.
 
-In conclusion, `splot` tightly connects visual analytics with statistical analysis and facilitates the integration of spatial analytics into more general Python workflows through it's compatibility with integrated code-based environments like Jupyter. From spatial autocorrelation analysis to value by alpha choropleths, `splot` is designed as a grammar of views that can be applied to a multitude of spatial analyses workflows. As `splot` developers, we strive to expand `splot`'s grammar of views through new functionality (e.g. in flow mapping methods), as well as provide different backend implementations, including interactive backends, such as `bokeh`, in the future.
+In conclusion, `splot` tightly connects visual analytics with statistical analysis and facilitates the integration of spatial analytics into more general Python workflows through it's compatibility with integrated code-based environments like Jupyter. From spatial autocorrelation analysis to value by alpha choropleths, `splot` is designed as a grammar of views that can be applied to a multitude of spatial analysis workflows. As `splot` developers, we strive to expand `splot`'s grammar of views through new functionality (e.g. in flow mapping methods), as well as provide different backend implementations, including interactive backends, such as `bokeh`, in the future.
 
 # Acknowledgements
 
