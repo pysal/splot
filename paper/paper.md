@@ -1,5 +1,5 @@
 ---
-title: 'splot: Visual Analytics for Spatial Statistical Analysis in PySAL'
+title: '`splot` - visual analytics for spatial statistics'
 tags:
   - Python
   - visualization
