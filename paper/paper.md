@@ -1,5 +1,5 @@
 ---
-title: 'splot - visual analytics for spatial statistical analysis'
+title: '`splot` - visual analytics for spatial statistics'
 tags:
   - Python
   - visualization
