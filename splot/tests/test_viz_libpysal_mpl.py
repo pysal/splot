@@ -8,7 +8,8 @@ from splot.libpysal import plot_spatial_weights
 
 def test_plot_spatial_weights():
     # get data
-    gdf = gpd.read_file(examples.get_path('43MUE250GC_SIR.shp'))
+    rio_grande_do_sul = examples.load_example('Rio Grande do Sul')
+    gdf = gpd.read_file(rio_grande_do_sul.get_path('43MUE250GC_SIR.shp'))
     gdf.head()
     # calculate weights
     weights = Queen.from_dataframe(gdf)

@@ -48,7 +48,8 @@ def test_moran_scatterplot():
 
 def test_moran_global_scatterplot():
     # Load data and apply statistical analysis
-    link_to_data = examples.get_path('Guerry.shp')
+    guerry = examples.load_example('Guerry')
+    link_to_data = guerry.get_path('Guerry.shp')
     gdf = gpd.read_file(link_to_data)
     y = gdf['Donatns'].values
     w = Queen.from_dataframe(gdf)
@@ -68,7 +69,8 @@ def test_moran_global_scatterplot():
 
 def test_plot_moran_simulation():
     # Load data and apply statistical analysis
-    link_to_data = examples.get_path('Guerry.shp')
+    guerry = examples.load_example('Guerry')
+    link_to_data = guerry.get_path('Guerry.shp')
     gdf = gpd.read_file(link_to_data)
     y = gdf['Donatns'].values
     w = Queen.from_dataframe(gdf)
@@ -87,7 +89,8 @@ def test_plot_moran_simulation():
 
 def test_plot_moran():
     # Load data and apply statistical analysis
-    link_to_data = examples.get_path('Guerry.shp')
+    guerry = examples.load_example('Guerry')
+    link_to_data = guerry.get_path('Guerry.shp')
     gdf = gpd.read_file(link_to_data)
     y = gdf['Donatns'].values
     w = Queen.from_dataframe(gdf)
@@ -106,7 +109,8 @@ def test_plot_moran():
 
 
 def test_moran_bv_scatterplot():
-    link_to_data = examples.get_path('Guerry.shp')
+    guerry = examples.load_example('Guerry')
+    link_to_data = guerry.get_path('Guerry.shp')
     gdf = gpd.read_file(link_to_data)
     x = gdf['Suicids'].values
     y = gdf['Donatns'].values
@@ -125,7 +129,8 @@ def test_moran_bv_scatterplot():
 
 def test_plot_moran_bv_simulation():
     # Load data and calculate weights
-    link_to_data = examples.get_path('Guerry.shp')
+    guerry = examples.load_example('Guerry')
+    link_to_data = guerry.get_path('Guerry.shp')
     gdf = gpd.read_file(link_to_data)
     x = gdf['Suicids'].values
     y = gdf['Donatns'].values
@@ -144,7 +149,8 @@ def test_plot_moran_bv_simulation():
 
 def test_plot_moran_bv():
     # Load data and calculate weights
-    link_to_data = examples.get_path('Guerry.shp')
+    guerry = examples.load_example('Guerry')
+    link_to_data = guerry.get_path('Guerry.shp')
     gdf = gpd.read_file(link_to_data)
     x = gdf['Suicids'].values
     y = gdf['Donatns'].values
@@ -162,8 +168,9 @@ def test_plot_moran_bv():
 
 
 def test_moran_loc_scatterplot():
-    link = examples.get_path('columbus.shp')
-    df = gpd.read_file(link)
+    columbus = examples.load_example('Columbus')
+    link_to_data = columbus.get_path('columbus.shp')
+    df = gpd.read_file(link_to_data)
 
     x = df['INC'].values
     y = df['HOVAL'].values
@@ -199,8 +206,9 @@ def test_moran_loc_scatterplot():
 
 
 def test_lisa_cluster():
-    link = examples.get_path('columbus.shp')
-    df = gpd.read_file(link)
+    columbus = examples.load_example('Columbus')
+    link_to_data = columbus.get_path('columbus.shp')
+    df = gpd.read_file(link_to_data)
 
     y = df['HOVAL'].values
     w = Queen.from_dataframe(df)
@@ -213,8 +221,9 @@ def test_lisa_cluster():
 
 
 def test_plot_local_autocorrelation():
-    link = examples.get_path('columbus.shp')
-    df = gpd.read_file(link)
+    columbus = examples.load_example('Columbus')
+    link_to_data = columbus.get_path('columbus.shp')
+    df = gpd.read_file(link_to_data)
 
     y = df['HOVAL'].values
     w = Queen.from_dataframe(df)
@@ -234,7 +243,8 @@ def test_plot_local_autocorrelation():
 
 
 def test_moran_loc_bv_scatterplot():
-    link_to_data = examples.get_path('Guerry.shp')
+    guerry = examples.load_example('Guerry')
+    link_to_data = guerry.get_path('Guerry.shp')
     gdf = gpd.read_file(link_to_data)
     x = gdf['Suicids'].values
     y = gdf['Donatns'].values
@@ -258,7 +268,8 @@ def test_moran_loc_bv_scatterplot():
 
 
 def test_moran_facet():
-    f = lp.io.open(examples.get_path("sids2.dbf"))
+    sids2 = examples.load_example('sids2')
+    f = lp.io.open(sids2.get_path('sids2.dbf'))
     varnames = ['SIDR74',  'SIDR79',  'NWR74',  'NWR79']
     vars = [np.array(f.by_col[var]) for var in varnames]
     w = lp.io.open(examples.get_path("sids2.gal")).read()

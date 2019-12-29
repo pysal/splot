@@ -40,11 +40,16 @@ install:
       echo 'testing pypi libpysal esda mapclassify giddy spreg';
     else
       echo 'testing git libpysal esda mapclassify giddy spreg';
-      pip install https://github.com/pysal/libpysal/archive/master.zip;
-      pip install https://github.com/pysal/mapclassify/archive/master.zip;
-      pip install https://github.com/pysal/esda/archive/master.zip;
-      pip install https://github.com/pysal/giddy/archive/master.zip;
-      pip install https://github.com/pysal/spreg/archive/master.zip;
+      git clone https://github.com/pysal/libpysal.git;
+      cd libpysal; pip install .; cd ../;
+      git clone https://github.com/pysal/esda.git;
+      cd esda; pip install .; cd ../;
+      git clone https://github.com/pysal/mapclassify.git;
+      cd mapclassify; pip install .; cd ../;
+      git clone https://github.com/pysal/giddy.git;
+      cd giddy; pip install .; cd ../;
+      git clone https://github.com/pysal/spreg.git;
+      cd spreg; pip install .; cd ../;
     fi;
   - pip install nose coverage coveralls
   # Now install splot (don't use 'pip install .', we'll run out of space)
@@ -56,6 +61,7 @@ install:
 
 
 script:
+  - python -c 'import libpysal; libpysal.examples.load_example("Guerry"); libpysal.examples.load_example("Rio Grande do Sul")'
   - nosetests --verbose --with-doctest --with-coverage --cover-package=splot;
 #  - cd notebooks
 #  - make test
