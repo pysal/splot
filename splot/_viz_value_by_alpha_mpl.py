@@ -416,7 +416,7 @@ def mapclassify_bin(y, classifier, k=5, pct=[1,10,50,90,99,100],
         Percentiles used for classification with `percentiles`.
         Default=[1,10,50,90,99,100]
     hinge : float, optional
-        Multiplier for IQR when `Box_Plot` classifier used.
+        Multiplier for IQR when `BoxPlot` classifier used.
         Default=1.5.
     multiples : array, optional
         The multiples of the standard deviation to add/subtract from
