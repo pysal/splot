@@ -73,19 +73,19 @@ def mask_local_auto(moran_loc, p=0.5):
 
 
 _classifiers = {
-    'box_plot': classify.Box_Plot,
-    'equal_interval': classify.Equal_Interval,
-    'fisher_jenks': classify.Fisher_Jenks,
-    'headtail_breaks': classify.HeadTail_Breaks,
-    'jenks_caspall': classify.Jenks_Caspall,
-    'jenks_caspall_forced': classify.Jenks_Caspall_Forced,
-    'max_p_classifier': classify.Max_P_Classifier,
-    'maximum_breaks': classify.Maximum_Breaks,
-    'natural_breaks': classify.Natural_Breaks,
+    'box_plot': classify.BoxPlot,
+    'equal_interval': classify.EqualInterval,
+    'fisher_jenks': classify.FisherJenks,
+    'headtail_breaks': classify.HeadTailBreaks,
+    'jenks_caspall': classify.JenksCaspall,
+    'jenks_caspall_forced': classify.JenksCaspallForced,
+    'max_p_classifier': classify.MaxP,
+    'maximum_breaks': classify.MaximumBreaks,
+    'natural_breaks': classify.NaturalBreaks,
     'quantiles': classify.Quantiles,
     'percentiles': classify.Percentiles,
-    'std_mean': classify.Std_Mean,
-    'user_defined': classify.User_Defined,
+    'std_mean': classify.StdMean,
+    'user_defined': classify.UserDefined,
     }
 
 
