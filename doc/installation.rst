@@ -20,9 +20,9 @@ splot also uses
 Depending on your spatial analysis workflow and the PySAL objects
 you would like to visualize, splot relies on:
 
-PySAL 2.0
+PySAL >=2.0
 
-or separate packages found in the PySAL stack:
+or the installation of separate packages found in the PySAL stack:
 
 * esda
 * libpysal
@@ -47,18 +47,18 @@ using Anaconda, install splot via the conda utility:
 
 ```$ conda install -c conda-forge splot```
 
-Otherwise you can install splot from PyPI with pip:
+Otherwise, you can install splot from PyPI with pip:
 
 ```$ pip install splot```
 
 
-Trouble shooting
-----------------
+Troubleshooting
+---------------
 Most common installation errors are due to splot's dependency on GeoPandas.
 
 It often helps to first install GeoPandas separately from conda-forge with:
 
-```$ conda install geopandas```
+```$ conda install --channel conda-forge geopandas```
 
 before installing splot (preferably also from conda, alternatively from pip).
 
@@ -68,8 +68,8 @@ It is also possible to install splot with a later Python version (>3.7)
 through the separate installation of GeoPandas or through installation wiht conda-forge.
 
 
-Installing development version
-------------------------------
+Installing the development version
+----------------------------------
 
 Potentially, you might want to use the newest features in the development
 version of splot on github - `pysal/splot`_ while have not been incorporated
