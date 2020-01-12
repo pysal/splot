@@ -62,10 +62,11 @@ It often helps to first install GeoPandas separately from conda-forge with:
 
 before installing splot (preferably also from conda, alternatively from pip).
 
-For more information on troubleshooting the installation of GeoPandas wiht pip, see the `GeoPandas`_ docuemntation.
+For more information on troubleshooting the installation of GeoPandas with pip, see the `GeoPandas`_ docuemntation.
 
 It is also possible to install splot with a later Python version (>3.7)
 through the separate installation of GeoPandas or through installation wiht conda-forge.
+(Note that splot is currently oonly tested for Python version 3.6 and 3.7)
 
 
 Installing the development version
