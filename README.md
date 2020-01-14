@@ -15,7 +15,7 @@
 `splot` connects spatial analysis done in [`PySAL`](https://github.com/pysal) to different popular visualization toolkits like [`matplotlib`](https://matplotlib.org).
 The `splot` package allows you to create both static plots ready for publication and interactive visualizations for quick iteration and spatial data exploration. The primary goal of `splot` is to enable you to visualize popular PySAL objects and gives you different views on your spatial analysis workflow.
 
-If you are new to splot and PySAL you will best get started with our [documentation](https://splot.readthedocs.io/en/latest/)!
+If you are new to splot and PySAL you will best get started with our [documentation](https://splot.readthedocs.io/en/latest/) and the short introduction [video](https://youtu.be/kriQOJMycIQ?t=2403) of the package at the Scipy 2018 conference!
 
 ## Installing splot
 
@@ -61,8 +61,18 @@ Otherwise you can install splot from PyPI with pip:
 
 ## Usage
 
-splot supports many different 
-https://github.com/pysal/splot/blob/master/notebooks/mapping_vba.ipynb
+Usage examples for different spatial statistical workflows are provided as [notebooks](https://github.com/pysal/splot/tree/master/notebooks):
+* [for creating value-by-alpha maps](https://github.com/pysal/splot/blob/master/notebooks/mapping_vba.ipynb)
+* [for assessing the relationship between neighbouring polygones](https://github.com/pysal/splot/blob/master/notebooks/libpysal_non_planar_joins_viz.ipynb)
+* [for the visualization of space-time autocorrelation](https://github.com/pysal/splot/blob/master/notebooks/giddy_space_time.ipynb), also documented in [giddy](https://github.com/pysal/giddy/blob/master/notebooks/directional.ipynb)
+* for visualizing spatial autocorrelation of [univariate](https://github.com/pysal/splot/blob/master/notebooks/esda_morans_viz.ipynb) or [multivariate](https://github.com/pysal/splot/blob/master/notebooks/esda_moran_matrix_viz.ipynb) variable analysis
+
+You can also check our [documentation](https://splot.readthedocs.io/en/latest/) for examples on how to use each function.
+
+A detailed report about the development, structure and usage of splot can be found [here](https://gist.github.com/slumnitz/a86ef4a5b48b1b5fac41e91cfd05fff2). 
+
+
+
 
 ## Contributing to splot
 
