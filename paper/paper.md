@@ -73,7 +73,7 @@ plt.show()
 ```
 
 
-[![Fig. 1: Local Spatial Autocorrelation](figs/local_autocorrelation.png)](https://github.com/pysal/splot/blob/master/notebooks/esda_morans_viz.ipynb)
+[![Fig. 1: Local Spatial Autocorrelation](figs/local_autocorrelation.png)](https://github.com/pysal/splot/blob/master/notebooks/esda_morans_viz.ipynb)*Fig. 1: Local spatial autocorrelation*
 
 The user can now further visually assess whether there is dependency between high crime rates (fig. 2, rgb variable) and high income in this neighborhood (fig. 2, alpha variable). Darker shades of the colormap correspond to higher crime and income values, displayed through a static Value-by-Alpha Choropleth using `splot.mapping.vba_choropleth`.
 
@@ -90,7 +90,7 @@ plt.show()
 ```
 
 
-[![Fig. 2: Value-by-alpha mapping](figs/vba_choropleth.png)](https://github.com/pysal/splot/blob/master/notebooks/mapping_vba.ipynb)
+[![Fig. 2: Value-by-alpha mapping](figs/vba_choropleth.png)](https://github.com/pysal/splot/blob/master/notebooks/mapping_vba.ipynb)*Fig. 2: Value-by-alpha mapping*
 
 Ultimately, the `splot` package is designed to facilitate the creation of both static plots ready for publication, and interactive visualizations for quick iteration and spatial data exploration. Although most of `splot` is currently implemented with a `matplotlib` backend, `splot` is framework independent. In that sense, `splot` offers a "grammar" of views that are important and useful in spatial analyses and geographic data science. The `splot` package is not restricted or limited to the current `matplotlib` implementation and can be advanced by integrating emerging or succeeding interactive visualization toolkits, such as `altair` or `bokeh`.
 
