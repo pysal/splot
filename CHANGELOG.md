@@ -1,5 +1,57 @@
 # Changes
 
+# Version 1.1.2 (2020-01-18)
+
+We closed a total of 33 issues (enhancements and bug fixes) through 13 pull requests, since our last release on 2019-07-13.
+
+## Issues Closed
+  - Installation instructions; pip install fails on macOS (#88)
+  - Usage in readme is a fragment (#90)
+  - JOSS: missing figure captions (#92)
+  - [DOC] update installation instruction (#96)
+  - [DOC] add example links to README.md & figure captions in joss article (#97)
+  - [BUG] vba_choropleth failure (#83)
+  - BUG: Fix breakage due to mapclassify deprecation (#95)
+  - addressing pysal/pysal#1145 & adapting testing examples (#93)
+  - Fix docstring for plot_spatial_weights (#89)
+  - JOSS paper submission (#59)
+  - Fix format for multiple citations in JOSS paper (#87)
+  - Joss paper, finalise title (#86)
+  - [JOSS] work on `paper.md` (#62)
+  - [ENH] change doc badge to latest doc (#85)
+  - [BUG] require geopandas>=0.4.0,<=0.6.0rc1 for vba_choropleth testing (#84)
+  - `plot_moran_simulation` weird dimensions (#82)
+  - Colors are not fixed is LISA maps (#80)
+  - Release 1.1.1 (#79)
+  - add ipywidgets to requirements_dev.txt (#78)
+  - add descartes to `requirements.txt` (#77)
+
+## Pull Requests
+  - [DOC] update installation instruction (#96)
+  - [DOC] add example links to README.md & figure captions in joss article (#97)
+  - BUG: Fix breakage due to mapclassify deprecation (#95)
+  - addressing pysal/pysal#1145 & adapting testing examples (#93)
+  - Fix docstring for plot_spatial_weights (#89)
+  - Fix format for multiple citations in JOSS paper (#87)
+  - Joss paper, finalise title (#86)
+  - [JOSS] work on `paper.md` (#62)
+  - [ENH] change doc badge to latest doc (#85)
+  - [BUG] require geopandas>=0.4.0,<=0.6.0rc1 for vba_choropleth testing (#84)
+  - Release 1.1.1 (#79)
+  - add ipywidgets to requirements_dev.txt (#78)
+  - add descartes to `requirements.txt` (#77)
+
+The following individuals contributed to this release:
+
+  - Stefanie Lumnitz
+  - Serge Rey
+  - James Gaboardi
+  - Martin Fleischmann
+  - Leonardo Uieda
+  - Levi John Wolf
+  - Wei Kang
+
+
 # Version 1.1.1 (2019-07-13)
 
 We closed a total of 8 issues (enhancements and bug fixes) through 4 pull requests, since our last release on 2019-06-27.
