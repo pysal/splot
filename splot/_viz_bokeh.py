@@ -110,7 +110,7 @@ def _plot_choropleth_fig(geo_source, attribute, bin_labels, bounds,
                          region_column='', title=None,
                          plot_width=500, plot_height=500, method='quantiles',
                          k=5, reverse_colors=False, tools=''):
-    colors = palettes.YlGnBu[k]
+    colors = list(palettes.YlGnBu[k])
     if reverse_colors is True:
         colors.reverse()  # lightest color for lowest values
 
