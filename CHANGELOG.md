@@ -1,5 +1,35 @@
 # Changes
 
+# Version 1.1.3 (2020-03-18)
+
+We closed a total of 15 issues (enhancements and bug fixes) through 6 pull requests, since our last release on 2020-01-18.
+
+## Issues Closed
+  - add permanent links to current version of no's to joss paper (#102)
+  - [BUG] set colors as list in _plot_choropleth_fig() (#101)
+  - Remove the links around figures in the JOSS paper (#99)
+  - Release prep for 1.1.2 (#98)
+  - Installation instructions; pip install fails on macOS (#88)
+  - Usage in readme is a fragment (#90)
+  - JOSS: missing figure captions (#92)
+  - [DOC] update installation instruction (#96)
+  - [DOC] add example links to README.md & figure captions in joss article (#97)
+
+## Pull Requests
+  - add permanent links to current version of no's to joss paper (#102)
+  - [BUG] set colors as list in _plot_choropleth_fig() (#101)
+  - Remove the links around figures in the JOSS paper (#99)
+  - Release prep for 1.1.2 (#98)
+  - [DOC] update installation instruction (#96)
+  - [DOC] add example links to README.md & figure captions in joss article (#97)
+
+The following individuals contributed to this release:
+
+  - Stefanie Lumnitz
+  - Levi John Wolf
+  - Leonardo Uieda
+  - Serge Rey
+
 # Version 1.1.2 (2020-01-18)
 
 We closed a total of 33 issues (enhancements and bug fixes) through 13 pull requests, since our last release on 2019-07-13.
