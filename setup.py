@@ -1,6 +1,12 @@
 from setuptools import setup
 from os import path
 
+package = "splot"
+
+# Get __version__ from package/__init__.py
+with open(package + "/__init__.py", "r") as f:
+    exec(f.readline())
+
 def _get_requirements_from_files(groups_files):
     groups_reqlist = {}
 
@@ -25,8 +31,8 @@ this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
     
-setup(name='splot', #name of package
-      version='1.1.2',
+setup(name=package, #name of package
+      version=__version__,
       description='Visual analytics for spatial analysis with PySAL.',
       long_description=long_description,
       long_description_content_type='text/markdown',
