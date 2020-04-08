@@ -4,6 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/pysal/splot/badge.svg?branch=master)](https://coveralls.io/github/pysal/splot?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/splot/badge/?version=latest)](https://splot.readthedocs.io/en/latest/?badge=latest)
 [![PyPI version](https://badge.fury.io/py/splot.svg)](https://badge.fury.io/py/splot)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.01882/status.svg)](https://doi.org/10.21105/joss.01882)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3258810.svg)](https://doi.org/10.5281/zenodo.3258810)
 
 **Visual analytics for spatial analysis with PySAL.**
