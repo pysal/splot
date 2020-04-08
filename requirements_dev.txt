@@ -10,3 +10,4 @@ sphinxcontrib-bibtex
 numpydoc
 descartes
 ipywidgets
+bokeh
