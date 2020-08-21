@@ -12,9 +12,8 @@ TODO
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
 
 
-
-def plot_spatial_weights(w, gdf, indexed_on=None, ax=None, 
-                         figsize=(10,10), node_kws=None, edge_kws=None,
+def plot_spatial_weights(w, gdf=None, da=None, indexed_on=None, ax=None,
+                         figsize=(10, 10), node_kws=None, edge_kws=None,
                          nonplanar_edge_kws=None):
     """
     Plot spatial weights network.
@@ -25,14 +24,16 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
     ----------
     w : libpysal.W object
         Values of libpysal weights object.
-    gdf : geopandas dataframe 
-        The original shapes whose topological relations are 
+    gdf : geopandas dataframe
+        The original shapes whose topological relations are
         modelled in W.
+    da : xarray.DataArray
+        Input 2D or 3D DataArray with shape=(layer, lat, lon)
     indexed_on : str, optional
         Column of gdf which the weights object uses as an index.
         Default =None, so the geodataframe's index is used.
     ax : matplotlib axis, optional
-        Axis on which to plot the weights. 
+        Axis on which to plot the weights.
         Default =None, so plots on the current figure.
     figsize : tuple, optional
         W, h of figure. Default =(10,10)
@@ -55,35 +56,35 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
     fig : matplotlip Figure instance
         Figure of spatial weight network.
     ax : matplotlib Axes instance
-        Axes in which the figure is plotted. 
+        Axes in which the figure is plotted.
 
     Examples
     --------
     Imports
-    
+
     >>> from libpysal.weights.contiguity import Queen
     >>> import geopandas as gpd
     >>> import libpysal
     >>> from libpysal import examples
     >>> import matplotlib.pyplot as plt
     >>> from splot.libpysal import plot_spatial_weights
-    
+
     Data preparation and statistical analysis
-    
+
     >>> gdf = gpd.read_file(examples.get_path('map_RS_BR.shp'))
     >>> weights = Queen.from_dataframe(gdf)
     >>> wnp = libpysal.weights.util.nonplanar_neighbors(weights, gdf)
-    
+
     Plot weights
-    
+
     >>> plot_spatial_weights(weights, gdf)
     >>> plt.show()
-    
+
     Plot corrected weights
-    
+
     >>> plot_spatial_weights(wnp, gdf)
     >>> plt.show()
-    
+
     """
     if ax is None:
         fig = plt.figure(figsize=figsize)
@@ -93,7 +94,11 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
 
         # default for node_kws
     if node_kws is None:
-        node_kws = dict(markersize=10, facecolor='#4d4d4d', edgecolor='#4d4d4d')
+        node_kws = dict(
+            markersize=10,
+            facecolor='#4d4d4d',
+            edgecolor='#4d4d4d',
+        )
 
         # default for edge_kws
     if edge_kws is None:
@@ -112,40 +117,75 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
         # edges differently by default.
         node_has_nonplanar_join = w.non_planar_joins.keys()
 
-    centroids_shp = gdf.centroid.values
-
     segments = []
     non_planar_segments = []
 
-    if indexed_on is not None:
-        dict_index = dict(zip(gdf[indexed_on].values, range(len(gdf))))
-        for idx in w.id_order:
-            if idx in w.islands:
-                continue
-            # Find the centroid of the polygon we're looking at now
-            origin = np.array(centroids_shp[dict_index[idx]].coords)[0]
-            for jdx in w.neighbors[idx]:
-                dest = np.array(centroids_shp[dict_index[jdx]].coords)[0]
-                if (idx in node_has_nonplanar_join) and (jdx in w.non_planar_joins[idx]):
-                    # This is a non-planar edge
-                    non_planar_segments.append([origin, dest])
-                else:
-                    segments.append([origin, dest])
-    else:
-        for idx in w.id_order:
-            if idx in w.islands:
-                continue
+    if hasattr(w, 'index'):
+        if gdf is None and da is not None:
+            import geopandas as gpd
+            from shapely.geometry import Polygon
 
-            # Find the centroid of the polygon we're looking at now
+            def _buildPoly(df, x, y, res):
+                geometry = Polygon(
+                    [(df[x]-res[0], df[y]-res[1]),
+                     (df[x]+res[0], df[y]-res[1]),
+                     (df[x]+res[0], df[y]+res[1]),
+                     (df[x]-res[0], df[y]+res[1])])
+                return geometry
+
+            index = w.index
+            df = index.to_frame(False)
+            y, x = da.dims[-2:]
+            res = np.empty(2)
+            res[0] = (max(da[x].values)-min(da[x].values))/(da.shape[-1]*2)
+            res[1] = (max(da[y].values)-min(da[y].values))/(da.shape[-2]*2)
+            df["geometry"] = df.apply(_buildPoly, x=x, y=y, res=res, axis=1)
+            gdf = gpd.GeoDataFrame(df)
+
+        centroids_shp = gdf.centroid.values
+        sparse = w.sparse
+        for idx in range(len(index)):
+            if sum(sparse[idx].indices) == 0:
+                continue
             origin = np.array(centroids_shp[idx].coords)[0]
-            for j in w.neighbors[idx]:
-                jdx = w.id2i[j]
+            for jdx in sparse[idx].indices:
                 dest = np.array(centroids_shp[jdx].coords)[0]
                 if (idx in node_has_nonplanar_join) and (jdx in w.non_planar_joins[idx]):
-                    # This is a non-planar edge
                     non_planar_segments.append([origin, dest])
                 else:
                     segments.append([origin, dest])
+
+    else:
+        centroids_shp = gdf.centroid.values
+        if indexed_on is not None:
+            dict_index = dict(zip(gdf[indexed_on].values, range(len(gdf))))
+            for idx in w.id_order:
+                if idx in w.islands:
+                    continue
+                # Find the centroid of the polygon we're looking at now
+                origin = np.array(centroids_shp[dict_index[idx]].coords)[0]
+                for jdx in w.neighbors[idx]:
+                    dest = np.array(centroids_shp[dict_index[jdx]].coords)[0]
+                    if (idx in node_has_nonplanar_join) and (jdx in w.non_planar_joins[idx]):
+                        # This is a non-planar edge
+                        non_planar_segments.append([origin, dest])
+                    else:
+                        segments.append([origin, dest])
+        else:
+            for idx in w.id_order:
+                if idx in w.islands:
+                    continue
+
+                # Find the centroid of the polygon we're looking at now
+                origin = np.array(centroids_shp[idx].coords)[0]
+                for j in w.neighbors[idx]:
+                    jdx = w.id2i[j]
+                    dest = np.array(centroids_shp[jdx].coords)[0]
+                    if (idx in node_has_nonplanar_join) and (jdx in w.non_planar_joins[idx]):
+                        # This is a non-planar edge
+                        non_planar_segments.append([origin, dest])
+                    else:
+                        segments.append([origin, dest])
 
     # Plot the polygons from the geodataframe as a base layer
     gdf.plot(ax=ax, color='#bababa', edgecolor='w')
@@ -154,11 +194,14 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
     gdf.centroid.plot(ax=ax, **node_kws)
 
     # plot weight edges
-    non_planar_segs_plot = LineCollection(np.array(non_planar_segments), **nonplanar_edge_kws)
+    non_planar_segs_plot = LineCollection(
+        np.array(non_planar_segments),
+        **nonplanar_edge_kws
+    )
     segs_plot = LineCollection(np.array(segments), **edge_kws)
     ax.add_collection(segs_plot)
     ax.add_collection(non_planar_segs_plot)
-
-    ax.set_axis_off()
+    if da is None:
+        ax.set_axis_off()
     ax.set_aspect('equal')
     return fig, ax
