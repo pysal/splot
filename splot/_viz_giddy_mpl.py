@@ -335,7 +335,6 @@ def dynamic_lisa_vectors(rose, ax=None,
         If True show arrowheads of vectors. Default =True
     **kwargs : keyword arguments, optional
         Keywords used for creating and designing the `matplotlib.pyplot.plot()`
-        Note: 'c' and 'color' cannot be passed when attribute is not None.
 
     Returns
     -------
