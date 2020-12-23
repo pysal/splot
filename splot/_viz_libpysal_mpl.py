@@ -22,7 +22,7 @@ def plot_spatial_weights(w, gdf=None, data=None, indexed_on=None, ax=None,
     """
     Plot spatial weights network.
     NOTE: Additionally plots `w.non_planar_joins` for
-    libpysal.W objects if `libpysal.weights.util.nonplanar_neighbors()`
+    libpysal.WSP/W objects if `libpysal.weights.util.nonplanar_neighbors()`
     was applied.
 
     Parameters
@@ -145,7 +145,13 @@ def plot_spatial_weights(w, gdf=None, data=None, indexed_on=None, ax=None,
                     (df[x]+res[0], df[y]+res[1]),
                     (df[x]-res[0], df[y]+res[1])])
             return geometry
-
+        
+        if not hasattr(w, 'index'):
+            raise ValueError('`libpysal.W/WSP object` does not match the '
+                             'passed `data`. A potential solution '
+                             'is to pass the `geopandas.GeoDataframe` used '
+                             'for modelling weights instead.')
+        
         index = w.index
         df = index.to_frame(False)
         y, x = data.dims[-2:]
