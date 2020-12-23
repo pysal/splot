@@ -290,12 +290,19 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
 def _add_arrow(line, position=None, direction='right', size=15, color=None):
     """
     add an arrow to a line.
-
-    line:       Line2D object
-    position:   x-position of the arrow. If None, mean of xdata is taken
-    direction:  'left' or 'right'
-    size:       size of the arrow in fontsize points
-    color:      if None, line color is taken.
+    
+    Parameters
+    ----------
+    line:
+        Line2D object
+    position: float
+        x-position of the arrow. If None, mean of xdata is taken
+    direction: str
+        'left' or 'right'
+    size: int
+        size of the arrow in fontsize points
+    color: str
+        if None, line color is taken.
 
     """
     if color is None:
@@ -328,7 +335,6 @@ def dynamic_lisa_vectors(rose, ax=None,
         If True show arrowheads of vectors. Default =True
     **kwargs : keyword arguments, optional
         Keywords used for creating and designing the `matplotlib.pyplot.plot()`
-        Note: 'c' and 'color' cannot be passed when attribute is not None.
 
     Returns
     -------
@@ -384,7 +390,7 @@ def dynamic_lisa_vectors(rose, ax=None,
 
     customize plot
 
-    >>> dynamic_lisa_vectors(rose, arrows=False, c='r')
+    >>> dynamic_lisa_vectors(rose, arrows=False, color='r')
     >>> plt.show()
 
     """
@@ -398,9 +404,13 @@ def dynamic_lisa_vectors(rose, ax=None,
 
     xlim = [rose.Y.min(), rose.Y.max()]
     ylim = [rose.wY.min(), rose.wY.max()]
-
-    color = kwargs.pop('color', 'b')
-    can_insert_colorbar = False
+    
+    if 'c' in kwargs.keys():
+        color = kwargs.pop('c', 'b')
+        can_insert_colorbar = False
+    else:
+        color = kwargs.pop('color', 'b')
+        can_insert_colorbar = False
 
     xs = []
     ys = []
