@@ -96,10 +96,17 @@ def plot_spatial_weights(w, gdf=None, data=None, indexed_on=None, ax=None,
     if gdf is not None:
         warnings.warn(
             '`gdf` will be replaced by `data` from the 1.1.5 release onwards,'
-             'use `data` to pass the geopandas.GeoDataFrame instead',
+            'use `data` to pass the geopandas.GeoDataFrame instead',
             FutureWarning, stacklevel=2
         )
-        
+        if data is not None:
+            raise ValueError('Cannot use both `gdf` and `data` simultaneously')
+
+    if any(isinstance(i, gpd.GeoDataFrame) for i in [data, gdf]):
+        if isinstance(w, libpysal.weights.WSP):
+            raise ValueError('`libpysal.WSP object` is not compatible to '
+                             'work with the `geopandas.GeoDataframe`')
+
     if ax is None:
         fig = plt.figure(figsize=figsize)
         ax = fig.add_subplot(111)
@@ -137,7 +144,7 @@ def plot_spatial_weights(w, gdf=None, data=None, indexed_on=None, ax=None,
     # test if data is not a GeoDataFrame, to avoid xarray import
     if gdf is None and not isinstance(data, gpd.GeoDataFrame):
         from shapely.geometry import Polygon
-        
+
         def _buildPoly(df, x, y, res):
             geometry = Polygon(
                 [(df[x]-res[0], df[y]-res[1]),
@@ -145,13 +152,13 @@ def plot_spatial_weights(w, gdf=None, data=None, indexed_on=None, ax=None,
                     (df[x]+res[0], df[y]+res[1]),
                     (df[x]-res[0], df[y]+res[1])])
             return geometry
-        
+
         if not hasattr(w, 'index'):
             raise ValueError('`libpysal.W/WSP object` does not match the '
                              'passed `data`. A potential solution '
                              'is to pass the `geopandas.GeoDataframe` used '
                              'for modelling weights instead.')
-        
+
         index = w.index
         df = index.to_frame(False)
         y, x = data.dims[-2:]
@@ -169,15 +176,12 @@ def plot_spatial_weights(w, gdf=None, data=None, indexed_on=None, ax=None,
             origin = np.array(centroids_shp[idx].coords)[0]
             for jdx in sparse[idx].indices:
                 dest = np.array(centroids_shp[jdx].coords)[0]
-                if (idx in node_has_nonplanar_join) and (jdx in w.non_planar_joins[idx]):
-                    non_planar_segments.append([origin, dest])
-                else:
-                    segments.append([origin, dest])
+                segments.append([origin, dest])
 
     else:
         if isinstance(data, gpd.GeoDataFrame):
             gdf = data
-        
+        data = gdf
         centroids_shp = gdf.centroid.values
         if indexed_on is not None:
             dict_index = dict(zip(gdf[indexed_on].values, range(len(gdf))))
@@ -189,7 +193,7 @@ def plot_spatial_weights(w, gdf=None, data=None, indexed_on=None, ax=None,
                 for jdx in w.neighbors[idx]:
                     dest = np.array(centroids_shp[dict_index[jdx]].coords)[0]
                     if (idx in node_has_nonplanar_join) and (
-                        jdx in w.non_planar_joins[idx]):
+                            jdx in w.non_planar_joins[idx]):
                         # This is a non-planar edge
                         non_planar_segments.append([origin, dest])
                     else:
@@ -205,7 +209,7 @@ def plot_spatial_weights(w, gdf=None, data=None, indexed_on=None, ax=None,
                     jdx = w.id2i[j]
                     dest = np.array(centroids_shp[jdx].coords)[0]
                     if (idx in node_has_nonplanar_join) and (
-                        jdx in w.non_planar_joins[idx]):
+                            jdx in w.non_planar_joins[idx]):
                         # This is a non-planar edge
                         non_planar_segments.append([origin, dest])
                     else:

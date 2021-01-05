@@ -4,18 +4,19 @@ from libpysal import examples
 from libpysal.weights import raster
 import matplotlib.pyplot as plt
 import geopandas as gpd
+from nose.tools import assert_raises
 
 from splot.libpysal import plot_spatial_weights
 
 def test_plot_spatial_weights():
     # get data for raster
-    da = raster.testDataArray((1,5,10), rand=True)
+    da = raster.testDataArray((1,5,10), rand=False)
     # get data for polygons
     rio_grande_do_sul = examples.load_example('Rio Grande do Sul')
     gdf = gpd.read_file(rio_grande_do_sul.get_path('43MUE250GC_SIR.shp'))
     gdf.head()
     # calculate weights
-    weights_rast = raster.da2WSP(data = da)
+    weights_rast = raster.da2WSP(da)
     weights = Queen.from_dataframe(gdf)
     #plot weights for raster
     fig, _ = plot_spatial_weights(weights_rast, data = da)
@@ -42,7 +43,7 @@ def test_plot_spatial_weights():
     plt.close(fig)
     
     #test for Errors
-    assert_raises(ValueError, plot_spatial_weights, weights, da)
+    assert_raises(ValueError, plot_spatial_weights, weights, None, da)
     assert_raises(ValueError, plot_spatial_weights, weights, gdf, da)
     assert_raises(ValueError, plot_spatial_weights, weights_rast, gdf, da)
     assert_raises(ValueError, plot_spatial_weights, weights_rast, gdf)
