@@ -22,10 +22,14 @@ from splot._viz_esda_mpl import (_moran_global_scatterplot,
                                  _moran_bv_scatterplot,
                                  _moran_loc_bv_scatterplot)
 
+def _test_data():
+    guerry = examples.load_example('Guerry')
+    link_to_data = guerry.get_path('guerry.shp')
+    gdf = gpd.read_file(link_to_data)
+    return gdf
 
 def test_moran_scatterplot():
-    link_to_data = examples.get_path('Guerry.shp')
-    gdf = gpd.read_file(link_to_data)
+    gdf = _test_data()
     x = gdf['Suicids'].values
     y = gdf['Donatns'].values
     w = Queen.from_dataframe(gdf)
@@ -48,9 +52,7 @@ def test_moran_scatterplot():
 
 def test_moran_global_scatterplot():
     # Load data and apply statistical analysis
-    guerry = examples.load_example('Guerry')
-    link_to_data = guerry.get_path('Guerry.shp')
-    gdf = gpd.read_file(link_to_data)
+    gdf = _test_data()
     y = gdf['Donatns'].values
     w = Queen.from_dataframe(gdf)
     w.transform = 'r'
@@ -69,9 +71,7 @@ def test_moran_global_scatterplot():
 
 def test_plot_moran_simulation():
     # Load data and apply statistical analysis
-    guerry = examples.load_example('Guerry')
-    link_to_data = guerry.get_path('Guerry.shp')
-    gdf = gpd.read_file(link_to_data)
+    gdf = _test_data()
     y = gdf['Donatns'].values
     w = Queen.from_dataframe(gdf)
     w.transform = 'r'
@@ -89,9 +89,7 @@ def test_plot_moran_simulation():
 
 def test_plot_moran():
     # Load data and apply statistical analysis
-    guerry = examples.load_example('Guerry')
-    link_to_data = guerry.get_path('Guerry.shp')
-    gdf = gpd.read_file(link_to_data)
+    gdf = _test_data()
     y = gdf['Donatns'].values
     w = Queen.from_dataframe(gdf)
     w.transform = 'r'
@@ -109,9 +107,7 @@ def test_plot_moran():
 
 
 def test_moran_bv_scatterplot():
-    guerry = examples.load_example('Guerry')
-    link_to_data = guerry.get_path('Guerry.shp')
-    gdf = gpd.read_file(link_to_data)
+    gdf = _test_data()
     x = gdf['Suicids'].values
     y = gdf['Donatns'].values
     w = Queen.from_dataframe(gdf)
@@ -129,9 +125,7 @@ def test_moran_bv_scatterplot():
 
 def test_plot_moran_bv_simulation():
     # Load data and calculate weights
-    guerry = examples.load_example('Guerry')
-    link_to_data = guerry.get_path('Guerry.shp')
-    gdf = gpd.read_file(link_to_data)
+    gdf = _test_data()
     x = gdf['Suicids'].values
     y = gdf['Donatns'].values
     w = Queen.from_dataframe(gdf)
@@ -149,9 +143,7 @@ def test_plot_moran_bv_simulation():
 
 def test_plot_moran_bv():
     # Load data and calculate weights
-    guerry = examples.load_example('Guerry')
-    link_to_data = guerry.get_path('Guerry.shp')
-    gdf = gpd.read_file(link_to_data)
+    gdf = _test_data()
     x = gdf['Suicids'].values
     y = gdf['Donatns'].values
     w = Queen.from_dataframe(gdf)
@@ -243,9 +235,7 @@ def test_plot_local_autocorrelation():
 
 
 def test_moran_loc_bv_scatterplot():
-    guerry = examples.load_example('Guerry')
-    link_to_data = guerry.get_path('Guerry.shp')
-    gdf = gpd.read_file(link_to_data)
+    gdf = _test_data()
     x = gdf['Suicids'].values
     y = gdf['Donatns'].values
     w = Queen.from_dataframe(gdf)
