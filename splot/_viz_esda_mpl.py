@@ -958,8 +958,9 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
         be colored by significance. Default = 0.05.
     region_column: string, optional
         Column name containing mask region of interest. Default = None
-    mask: str, optional
+    mask: str, float, int, optional
         Identifier or name of the region to highlight. Default = None
+        Use the same dtype to specifiy as in original dataset.
     mask_color: str, optional
         Color of mask. Default = '#636363'
     quadrant : int, optional
