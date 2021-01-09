@@ -232,7 +232,11 @@ def test_plot_local_autocorrelation():
                                         aspect_equal=False,
                                         mask=['1', '2', '3'], quadrant=1)
     plt.close(fig)
-
+    
+    # also test with quadrant and mask
+    assert_raises(ValueError, plot_local_autocorrelation, moran_loc,
+                  df, 'HOVAL', p=0.05, region_column='POLYID',
+                 mask=['100', '200', '300'], quadrant=1)
 
 def test_moran_loc_bv_scatterplot():
     gdf = _test_data()
