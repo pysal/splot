@@ -28,22 +28,22 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/cache@v2
-         env:
-           CACHE_NUMBER: 0
-         with:
-           path: ~/conda_pkgs_dir
-           key: ${{ matrix.os }}-conda-${{ env.CACHE_NUMBER }}-${{ hashFiles(matrix.environment-file) }}
+        env:
+          CACHE_NUMBER: 0
+        with:
+          path: ~/conda_pkgs_dir
+          key: ${{ matrix.os }}-conda-${{ env.CACHE_NUMBER }}-${{ hashFiles(matrix.environment-file) }}
       - uses: conda-incubator/setup-miniconda@v2
         with:
-           miniconda-version: 'latest'
-           mamba-version: '*'
-           channels: conda-forge
-           channel-priority: true
-           auto-update-conda: false
-           auto-activate-base: false
-           environment-file: ${{ matrix.environment-file }}
-           activate-environment: test
-           use-only-tar-bz2: true
+          miniconda-version: 'latest'
+          mamba-version: '*'
+          channels: conda-forge
+          channel-priority: true
+          auto-update-conda: false
+          auto-activate-base: false
+          environment-file: ${{ matrix.environment-file }}
+          activate-environment: test
+          use-only-tar-bz2: true
       - run: mamba info --all
       - run: mamba list
       - run: conda config --show-sources
