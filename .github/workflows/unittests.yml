@@ -27,6 +27,9 @@ jobs:
          shell: bash -l {0}
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: 0
       - uses: actions/cache@v2
         env:
           CACHE_NUMBER: 0
