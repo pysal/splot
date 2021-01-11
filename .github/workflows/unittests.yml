@@ -48,9 +48,11 @@ jobs:
       - run: mamba list
       - run: conda config --show-sources
       - run: conda config --show
+      - run: python -m pip install --no-deps -e .
       - run: cp utils/matplotlibrc .
       - run: python -c 'import libpysal; libpysal.examples.load_example("Guerry"); libpysal.examples.load_example("Rio Grande do Sul")'
-      - run: pytest -v splot --cov=splot --doctest-modules --cov-config=.coveragerc --cov-report=xml
+      - run: python -c 'import splot'
+      - run: pytest -v splot --cov=splot --cov-config=.coveragerc --cov-report=xml #--doctest-modules
       - name: codecov (${{ matrix.os }}, ${{ matrix.environment-file }})
         uses: codecov/codecov-action@v1
         with:

@@ -234,7 +234,7 @@ def test_plot_local_autocorrelation():
     plt.close(fig)
     
     # also test with quadrant and mask
-    assert_raises(ValueError, plot_local_autocorrelation, moran_loc,
+    raises(ValueError, plot_local_autocorrelation, moran_loc,
                   df, 'HOVAL', p=0.05, region_column='POLYID',
                  mask=['100', '200', '300'], quadrant=1)
 

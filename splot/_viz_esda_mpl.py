@@ -42,9 +42,6 @@ def _create_moran_fig_ax(ax, figsize, aspect_equal):
     ax.spines['top'].set_color('none')
     if aspect_equal is True:
         ax.set_aspect('equal')
-    else:
-        ax.spines['left'].set_smart_bounds(True)
-        ax.spines['bottom'].set_smart_bounds(True)
     return fig, ax
 
 
@@ -101,7 +98,8 @@ def moran_scatterplot(moran, zstandard=True, p=None,
     
     Load data and calculate weights
     
-    >>> link_to_data = examples.get_path('Guerry.shp')
+    >>> guerry = examples.load_example('Guerry')
+    >>> link_to_data = guerry.get_path('guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
     >>> x = gdf['Suicids'].values
     >>> y = gdf['Donatns'].values
@@ -202,7 +200,8 @@ def _moran_global_scatterplot(moran, zstandard=True,
     
     Load data and calculate weights
     
-    >>> link_to_data = examples.get_path('Guerry.shp')
+    >>> guerry = examples.load_example('Guerry')
+    >>> link_to_data = guerry.get_path('guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
     >>> y = gdf['Donatns'].values
     >>> w = Queen.from_dataframe(gdf)
@@ -317,7 +316,8 @@ def plot_moran_simulation(moran, aspect_equal=True,
     
     Load data and calculate weights
     
-    >>> link_to_data = examples.get_path('Guerry.shp')
+    >>> guerry = examples.load_example('Guerry')
+    >>> link_to_data = guerry.get_path('guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
     >>> y = gdf['Donatns'].values
     >>> w = Queen.from_dataframe(gdf)
@@ -407,7 +407,8 @@ def plot_moran(moran, zstandard=True, aspect_equal=True,
     
     Load data and calculate weights
     
-    >>> link_to_data = examples.get_path('Guerry.shp')
+    >>> guerry = examples.load_example('Guerry')
+    >>> link_to_data = guerry.get_path('guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
     >>> y = gdf['Donatns'].values
     >>> w = Queen.from_dataframe(gdf)
@@ -485,7 +486,8 @@ def _moran_bv_scatterplot(moran_bv, ax=None, aspect_equal=True,
     
     Load data and calculate weights
     
-    >>> link_to_data = examples.get_path('Guerry.shp')
+    >>> guerry = examples.load_example('Guerry')
+    >>> link_to_data = guerry.get_path('guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
     >>> x = gdf['Suicids'].values
     >>> y = gdf['Donatns'].values
@@ -586,7 +588,8 @@ def plot_moran_bv_simulation(moran_bv, ax=None, aspect_equal=True,
     
     Load data and calculate weights
     
-    >>> link_to_data = examples.get_path('Guerry.shp')
+    >>> guerry = examples.load_example('Guerry')
+    >>> link_to_data = guerry.get_path('guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
     >>> x = gdf['Suicids'].values
     >>> y = gdf['Donatns'].values
@@ -675,7 +678,8 @@ def plot_moran_bv(moran_bv, aspect_equal=True,
     
     Load data and calculate weights
     
-    >>> link_to_data = examples.get_path('Guerry.shp')
+    >>> guerry = examples.load_example('Guerry')
+    >>> link_to_data = guerry.get_path('guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
     >>> x = gdf['Suicids'].values
     >>> y = gdf['Donatns'].values
@@ -758,8 +762,9 @@ def _moran_loc_scatterplot(moran_loc, zstandard=True, p=None, aspect_equal=True,
     
     Load data and calculate Moran Local statistics
     
-    >>> link = examples.get_path('Guerry.shp')
-    >>> gdf = gpd.read_file(link)
+    >>> guerry = examples.load_example('Guerry')
+    >>> link_to_data = guerry.get_path('guerry.shp')
+    >>> gdf = gpd.read_file(link_to_data)
     >>> y = gdf['Donatns'].values
     >>> w = Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
@@ -900,8 +905,9 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
 
     Data preparation and statistical analysis
     
-    >>> link = examples.get_path('Guerry.shp')
-    >>> gdf = gpd.read_file(link)
+    >>> guerry = examples.load_example('Guerry')
+    >>> link_to_data = guerry.get_path('guerry.shp')
+    >>> gdf = gpd.read_file(link_to_data)
     >>> y = gdf['Donatns'].values
     >>> w = Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
@@ -1005,8 +1011,9 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
 
     Data preparation and analysis
     
-    >>> link = examples.get_path('Guerry.shp')
-    >>> gdf = gpd.read_file(link)
+    >>> guerry = examples.load_example('Guerry')
+    >>> link_to_data = guerry.get_path('guerry.shp')
+    >>> gdf = gpd.read_file(link_to_data)
     >>> y = gdf['Donatns'].values
     >>> w = Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
@@ -1165,8 +1172,9 @@ def _moran_loc_bv_scatterplot(moran_loc_bv, p=None,
     
     Load data and calculate Moran Local statistics
     
-    >>> link = examples.get_path('Guerry.shp')
-    >>> gdf = gpd.read_file(link)
+    >>> guerry = examples.load_example('Guerry')
+    >>> link_to_data = guerry.get_path('guerry.shp')
+    >>> gdf = gpd.read_file(link_to_data)
     >>> x = gdf['Suicids'].values
     >>> y = gdf['Donatns'].values
     >>> w = Queen.from_dataframe(gdf)
