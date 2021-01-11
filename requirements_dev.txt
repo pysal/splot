@@ -1,7 +1,6 @@
 bokeh
 codecov
 coverage
-descartes
 ipywidgets
 jupyter
 nbconvert
