@@ -605,7 +605,7 @@ def plot_moran_bv_simulation(moran_bv, ax=None, aspect_equal=True,
     customize plot
     
     >>> plot_moran_bv_simulation(moran_bv,
-        ...                      fitline_kwds=dict(color='#4393c3'))
+    ...                          fitline_kwds=dict(color='#4393c3'))
     >>> plt.show()
     
     """
