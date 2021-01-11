@@ -1096,8 +1096,6 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
                           " to dtype of first observation in region_column.")
             data_type = type(gdf[region_column][0].item())
             mask = list(map(data_type, mask))
-        else:
-            pass
 
         ix = gdf[region_column].isin(mask)
 
