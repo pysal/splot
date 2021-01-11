@@ -36,7 +36,6 @@ def _create_moran_fig_ax(ax, figsize, aspect_equal):
         ax = fig.add_subplot(111)
     else:
         fig = ax.get_figure()
-    
     ax.spines['left'].set_position(('axes', -0.05))
     ax.spines['right'].set_color('none')
     ax.spines['bottom'].set_position(('axes', -0.05))
@@ -959,8 +958,9 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
         be colored by significance. Default = 0.05.
     region_column: string, optional
         Column name containing mask region of interest. Default = None
-    mask: str, optional
+    mask: str, float, int, optional
         Identifier or name of the region to highlight. Default = None
+        Use the same dtype to specifiy as in original dataset.
     mask_color: str, optional
         Color of mask. Default = '#636363'
     quadrant : int, optional
@@ -1089,7 +1089,19 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     # REGION MASKING
     if region_column is not None:
         # masking inside axs[0] or Moran Scatterplot
+        # enforce the same dtype of list and mask
+        if gdf[region_column].dtype != type(mask[0]):
+            warnings.warn("Values in `mask` are not the same dtype as" +
+                          " values in `region_column`. Converting `mask` values" +
+                          " to dtype of first observation in region_column.")
+            data_type = type(gdf[region_column][0].item())
+            mask = list(map(data_type, mask))
+
         ix = gdf[region_column].isin(mask)
+
+        if not ix.any():
+             raise ValueError('Specified values {} in `mask` not in `region_column`'.format(mask))
+
         df_mask = gdf[ix]
         x_mask = moran_loc.z[ix]
         y_mask = lag_spatial(moran_loc.w, moran_loc.z)[ix]
