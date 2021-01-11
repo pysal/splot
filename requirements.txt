@@ -1,10 +1,10 @@
-numpy
+descartes
+esda
 geopandas>=0.4.0
-matplotlib
-seaborn
+giddy
 libpysal
 mapclassify
-esda
+matplotlib
+numpy
+seaborn
 spreg
-giddy
-descartes
