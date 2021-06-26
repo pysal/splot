@@ -3,8 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from esda.moran import Moran_Local
-import ipywidgets as widgets
-from ipywidgets import interact, fixed
 from giddy.directional import Rose
 
 from ._viz_utils import moran_hot_cold_spots
@@ -108,7 +106,7 @@ def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
     >>> for year in range(1969, 2010):
     ...     income_table[str(year) + '_rel'] = (
     ...         income_table[str(year)] / income_table[str(year)].mean())
-    
+
     merge to one gdf
 
     >>> gdf = df.merge(income_table,left_on='STATE_NAME',right_on='Name')
@@ -218,9 +216,9 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
     >>> for year in range(1969, 2010):
     ...     income_table[str(year) + '_rel'] = (
     ...         income_table[str(year)] / income_table[str(year)].mean())
-    
+
     merge to one gdf
-    
+
     >>> gdf = df.merge(income_table,left_on='STATE_NAME',right_on='Name')
 
     retrieve spatial weights and data for two points in time
@@ -290,7 +288,7 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
 def _add_arrow(line, position=None, direction='right', size=15, color=None):
     """
     add an arrow to a line.
-    
+
     Parameters
     ----------
     line:
@@ -404,7 +402,7 @@ def dynamic_lisa_vectors(rose, ax=None,
 
     xlim = [rose.Y.min(), rose.Y.max()]
     ylim = [rose.wY.min(), rose.wY.max()]
-    
+
     if 'c' in kwargs.keys():
         color = kwargs.pop('c', 'b')
         can_insert_colorbar = False
@@ -656,6 +654,13 @@ def dynamic_lisa_composite_explore(rose, gdf, pattern='',
     >>> # plt.show()
 
     """
+    try:
+        from ipywidgets import interact, fixed
+    except (ImportError, ModuleNotFoundError):
+        raise ImportError(
+            "`ipywidgets` package is required to use dynamic_lisa_composite_explore."
+            "You can install it using `conda install ipywidgets` or `pip install ipywidgets`."
+        )
     coldict = {col: col for col in gdf.columns if
                col.endswith(pattern)}
     interact(_dynamic_lisa_widget_update,
