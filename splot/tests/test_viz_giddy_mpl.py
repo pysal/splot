@@ -4,7 +4,7 @@ from libpysal.weights.contiguity import Queen
 from libpysal import examples
 import numpy as np
 import matplotlib.pyplot as plt
-from nose.tools import assert_raises
+from pytest import raises
 import pytest
 
 try:
