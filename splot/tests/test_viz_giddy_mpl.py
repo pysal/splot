@@ -64,7 +64,7 @@ def test_dynamic_lisa_rose():
     fig3, _ = dynamic_lisa_rose(rose, c="r")
     plt.close(fig3)
 
-    assert_raises(ValueError, dynamic_lisa_rose, rose, attribute=y1, color="blue")
+    raises(ValueError, dynamic_lisa_rose, rose, attribute=y1, color="blue")
 
 
 def test_dynamic_lisa_vectors():
