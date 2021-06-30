@@ -4,7 +4,7 @@ from libpysal.weights.contiguity import Queen
 from libpysal import examples
 import numpy as np
 import matplotlib.pyplot as plt
-from nose.tools import assert_raises
+from pytest import raises
 
 from giddy.directional import Rose
 from splot.giddy import (dynamic_lisa_heatmap,
@@ -55,7 +55,7 @@ def test_dynamic_lisa_rose():
     fig3, _ = dynamic_lisa_rose(rose, c='r')
     plt.close(fig3)
     
-    assert_raises(ValueError, dynamic_lisa_rose,
+    raises(ValueError, dynamic_lisa_rose,
                   rose, attribute=y1, color='blue')
 
 

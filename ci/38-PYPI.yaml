@@ -1,0 +1,22 @@
+ name: test
+ channels:
+   - conda-forge
+ dependencies:
+   - python=3.8
+   # testing
+   - codecov
+   - pytest
+   - pytest-cov
+   # required
+   - bokeh
+   - descartes
+   - esda
+   - geopandas>=0.4.0
+   - giddy
+   - ipywidgets
+   - libpysal
+   - mapclassify
+   - matplotlib
+   - numpy
+   - seaborn
+   - spreg
