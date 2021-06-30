@@ -13,7 +13,7 @@
    - esda
    - geopandas>=0.4.0
    - giddy
-   - ipywidgets
+   # - ipywidgets
    - libpysal
    - mapclassify
    - matplotlib
