@@ -1,5 +1,62 @@
 # Changes
 
+# Version 1.1.4 (2021-07-27)
+
+We closed a total of 39 issues (enhancements and bug fixes) through 12 pull requests, since our last release on 2020-03-23.
+
+## Issues Closed
+  - Streamline & upgrade CI (#135)
+  - update conf.py (#134)
+  - Migrating testing & coverage services (#124)
+  - [MAINT] rename 'master' to 'main' (#121)
+  - ipywidgets dependency (#130)
+  - REF: make ipywidgets optional dependency (#132)
+  - [WIP] update testing procedure with new datasets (#133)
+  - MatplotlibDeprecationWarning from ax.spines[label].set_smart_bounds() (#115)
+  - [DOC] include libpysal.example api changes & reinstall splot for testing (#128)
+  - [MAINT] remove `.set_smart_bounds()` (#125)
+  - Gha testing (#126)
+  - GitHub Actions for continuous integration (#111)
+  - [MAINT] change in`pandas.isin()` affecting `plot_local_autocorrelation` (#123)
+  - [BUG] enforce dtype in `mask` in `plot_local_autocorrelation()` (#122)
+  - [MAINT] AttributeError: 'NoneType' object has no attribute 'startswith' in all Moran plots (#117)
+  - [BUG] 'color' and 'c' in `test_viz_giddy_mpl.test_dynamic_lisa_vectors` (#116)
+  - [MAINT] update links to Guerry dataset in `_test_data()` (#119)
+  - [BUG] Build failing due to change in Seaborn (#110)
+  - [BUG] pin seaborn to v0.10.0 for testing new functionality (#114)
+  - Topological colouring (#94)
+  - vba_choropleth --> ValueError: Invalid RGBA argument: (#100)
+  - Pyviz affiliation (#75)
+  - BUG: Bokeh needed for testing (#107)
+  - [JOSS] add Joss badge to README.md (#106)
+  - [JOSS] doi reference correction (#105)
+  - Fixing BibTeX entry pages. (#104)
+  - Release1.1.3 (#103)
+
+## Pull Requests
+  - Streamline & upgrade CI (#135)
+  - REF: make ipywidgets optional dependency (#132)
+  - [DOC] include libpysal.example api changes & reinstall splot for testing (#128)
+  - [MAINT] remove `.set_smart_bounds()` (#125)
+  - Gha testing (#126)
+  - [BUG] enforce dtype in `mask` in `plot_local_autocorrelation()` (#122)
+  - [MAINT] update links to Guerry dataset in `_test_data()` (#119)
+  - BUG: Bokeh needed for testing (#107)
+  - [JOSS] add Joss badge to README.md (#106)
+  - [JOSS] doi reference correction (#105)
+  - Fixing BibTeX entry pages. (#104)
+  - Release1.1.3 (#103)
+
+The following individuals contributed to this release:
+
+  - Stefanie Lumnitz
+  - James Gaboardi
+  - Martin Fleischmann
+  - Dani Arribas-Bel
+  - Serge Rey
+  - Arfon Smith
+
+
 # Version 1.1.3 (2020-03-18)
 
 We closed a total of 15 issues (enhancements and bug fixes) through 6 pull requests, since our last release on 2020-01-18.
