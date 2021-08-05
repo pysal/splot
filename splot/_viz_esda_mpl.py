@@ -932,7 +932,7 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
         fig = ax.get_figure()
     
     # check for Polygon, else no edgecolor
-    if gdf.geom_type[0] == 'Polygon':
+    if gdf.geom_type[0].isin(['Polygon', 'MultiPolygon']):
         gdf.assign(cl=labels).plot(column='cl', categorical=True,
                                    k=2, cmap=hmap, linewidth=0.1, ax=ax,
                                    edgecolor='white', legend=legend,
