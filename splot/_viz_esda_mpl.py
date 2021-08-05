@@ -930,11 +930,18 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
         fig, ax = plt.subplots(1, figsize=figsize)
     else:
         fig = ax.get_figure()
-
-    gdf.assign(cl=labels).plot(column='cl', categorical=True,
-                               k=2, cmap=hmap, linewidth=0.1, ax=ax,
-                               edgecolor='white', legend=legend,
-                               legend_kwds=legend_kwds, **kwargs)
+    
+    # check for Polygon, else no edgecolor
+    if gdf.geom_type[0] == 'Polygon':
+        gdf.assign(cl=labels).plot(column='cl', categorical=True,
+                                   k=2, cmap=hmap, linewidth=0.1, ax=ax,
+                                   edgecolor='white', legend=legend,
+                                   legend_kwds=legend_kwds, **kwargs)
+    else:
+        gdf.assign(cl=labels).plot(column='cl', categorical=True,
+                                   k=2, cmap=hmap, linewidth=1.5, ax=ax,
+                                   legend=legend,
+                                   legend_kwds=legend_kwds, **kwargs)
     ax.set_axis_off()
     ax.set_aspect('equal')
     return fig, ax
