@@ -38,7 +38,7 @@ def _test_data_columbus():
 
 
 def _test_LineString():
-    link_to_data = examples.get_path('streets.shape')
+    link_to_data = examples.get_path('streets.shp')
     gdf = gpd.read_file(link_to_data)
     return gdf
 
