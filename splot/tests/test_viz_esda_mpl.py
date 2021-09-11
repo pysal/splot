@@ -214,7 +214,7 @@ def _test_calc_moran_loc(gdf, var='HOVAL'):
     y = gdf[var].values
     w = Queen.from_dataframe(gdf)
     w.transform = 'r'
-    
+
     moran_loc = Moran_Local(y, w)
     return moran_loc
 
@@ -225,12 +225,12 @@ def test_lisa_cluster():
 
     fig, _ = lisa_cluster(moran_loc, df)
     plt.close(fig)
-    
+
     # test LineStrings
     df_line = _test_LineString()
-    moran_loc = _test_calc_moran_loc(df_line)
-    
-    fig, _ = lisa_cluster(moran_loc, df)
+    moran_loc = _test_calc_moran_loc(df_line, var="Length")
+
+    fig, _ = lisa_cluster(moran_loc, df_line)
     plt.close(fig)
 
 
@@ -247,7 +247,7 @@ def test_plot_local_autocorrelation():
                                         aspect_equal=False,
                                         mask=['1', '2', '3'], quadrant=1)
     plt.close(fig)
-    
+
     # also test with quadrant and mask
     raises(ValueError, plot_local_autocorrelation, moran_loc,
                   df, 'HOVAL', p=0.05, region_column='POLYID',
