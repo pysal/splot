@@ -1,2 +1,4 @@
 include splot/tests/*.py
 include *.txt
+include versioneer.py
+include splot/_version.py
