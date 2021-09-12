@@ -61,7 +61,7 @@ install:
 
 
 script:
-  - python -c 'import libpysal; libpysal.examples.load_example("Guerry"); libpysal.examples.load_example("Columbus"); libpysal.examples.load_example("Rio Grande do Sul")'
+  - python -c 'import libpysal; libpysal.examples.load_example("Guerry"); libpysal.examples.load_example("Rio Grande do Sul")'
   - nosetests --verbose --with-doctest --with-coverage --cover-package=splot;
 #  - cd notebooks
 #  - make test

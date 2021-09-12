@@ -4,7 +4,7 @@ import libpysal as lp
 from libpysal import examples
 import geopandas as gpd
 import numpy as np
-from nose.tools import assert_raises, assert_warns
+from pytest import raises, warns
 
 from esda.moran import (Moran_Local, Moran, Moran_BV,
                         Moran_Local_BV, Moran_BV_matrix)
@@ -192,8 +192,8 @@ def test_moran_loc_scatterplot():
                                     fitline_kwds=dict(color='#4393c3'))
     plt.close(fig)
 
-    assert_raises(ValueError, _moran_loc_scatterplot, moran_bv, p=0.5)
-    assert_warns(UserWarning, _moran_loc_scatterplot, moran_loc, p=0.5,
+    raises(ValueError, _moran_loc_scatterplot, moran_bv, p=0.5)
+    warns(UserWarning, _moran_loc_scatterplot, moran_loc, p=0.5,
                  scatter_kwds=dict(c='#4393c3'))
 
 
@@ -234,7 +234,7 @@ def test_plot_local_autocorrelation():
     plt.close(fig)
     
     # also test with quadrant and mask
-    assert_raises(ValueError, plot_local_autocorrelation, moran_loc,
+    raises(ValueError, plot_local_autocorrelation, moran_loc,
                   df, 'HOVAL', p=0.05, region_column='POLYID',
                  mask=['100', '200', '300'], quadrant=1)
 
@@ -256,8 +256,8 @@ def test_moran_loc_bv_scatterplot():
                                        aspect_equal=False)
     plt.close(fig)
 
-    assert_raises(ValueError, _moran_loc_bv_scatterplot, moran_loc, p=0.5)
-    assert_warns(UserWarning, _moran_loc_bv_scatterplot, moran_loc_bv, p=0.5,
+    raises(ValueError, _moran_loc_bv_scatterplot, moran_loc, p=0.5)
+    warns(UserWarning, _moran_loc_bv_scatterplot, moran_loc_bv, p=0.5,
                  scatter_kwds=dict(c='r'))
 
 
