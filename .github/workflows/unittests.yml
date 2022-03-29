@@ -19,7 +19,8 @@ on:
 jobs:
   unittests:
     env:
-      RUN_TEST: pytest -v -n auto splot --cov splot --cov-config .coveragerc --cov-report xml --color yes --cov-append --cov-report term-missing
+      #RUN_TEST: pytest -v -n auto splot --cov splot --cov-config .coveragerc --cov-report xml --color yes --cov-append --cov-report term-missing
+      RUN_TEST: pytest -v splot --cov splot --cov-config .coveragerc --cov-report xml --color yes --cov-append --cov-report term-missing
     name: ${{ matrix.os }}, ${{ matrix.environment-file }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
