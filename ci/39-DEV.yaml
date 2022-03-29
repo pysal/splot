@@ -2,7 +2,7 @@
  channels:
    - conda-forge
  dependencies:
-   - python=3.6
+   - python=3.9
    # testing
    - codecov
    - pytest
@@ -10,13 +10,9 @@
    # required
    - bokeh
    - descartes
-   - esda
    - geopandas>=0.4.0
-   - giddy
    - ipywidgets
-   - libpysal
-   - mapclassify
    - matplotlib
    - numpy
+   - pip
    - seaborn
-   - spreg

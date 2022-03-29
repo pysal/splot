@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib import colors
 from matplotlib import patches
-import collections
+import collections.abc
 import matplotlib.cm as cm
 import mapclassify as classify
 import numpy as np
@@ -89,7 +89,7 @@ def value_by_alpha_cmap(x, y, cmap='GnBu', revert_alpha=False, divergent=False):
     # option for cmap or colorlist input
     if isinstance(cmap, str):
         cmap = cm.get_cmap(cmap)
-    elif isinstance(cmap, collections.Sequence):
+    elif isinstance(cmap, collections.abc.Sequence):
         cmap = colors.LinearSegmentedColormap.from_list('newmap', cmap)
 
     rgba = cmap((x - x.min()) / (x.max() - x.min()))
