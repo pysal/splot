@@ -2,14 +2,13 @@
  channels:
    - conda-forge
  dependencies:
-   - python=3.9
+   - python=3.10
    # testing
    - codecov
    - pytest
    - pytest-cov
    # required
    - bokeh
-   - descartes
    - geopandas>=0.4.0
    - ipywidgets
    - matplotlib
