@@ -7,7 +7,6 @@ nbconvert
 numpydoc
 pytest
 pytest-cov
-pytest-xdist
 sphinx>=1.4.3
 sphinx_bootstrap_theme
 sphinxcontrib-bibtex

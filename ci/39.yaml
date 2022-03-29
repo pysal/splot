@@ -7,7 +7,6 @@
    - codecov
    - pytest
    - pytest-cov
-   - pytest-xdist
    # required
    - bokeh
    - esda
