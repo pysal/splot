@@ -6,7 +6,7 @@ Installation
 Installing dependencies
 -----------------------
 
-`splot` is compatible with Python `3.6`_ and `3.7`_ and
+`splot` is compatible with Python `3.8+` and
 depends on GeoPandas 0.4.0 or later and matplotlib 2.2.2 or later.
 Please make sure that you are operating in a Python 3 environment.
 
@@ -38,7 +38,7 @@ the PySAL 2.0 metapackage through:
 
 ```$ pip install -U pysal```
 
-or 
+or
 
 ```$ conda install -c conda-forge pysal```
 
@@ -64,9 +64,8 @@ before installing splot (preferably also from conda, alternatively from pip).
 
 For more information on troubleshooting the installation of GeoPandas with pip, see the `GeoPandas`_ docuemntation.
 
-It is also possible to install splot with a later Python version (>3.7)
+It is also possible to install splot with a later Python version (>3.8)
 through the separate installation of GeoPandas or through installation with conda-forge.
-(Note that splot is currently only tested for Python version 3.6 and 3.7)
 
 
 Installing the development version
@@ -84,8 +83,7 @@ your fork. By making changes
 to your local clone and submitting a pull request to `pysal/splot`_, you can
 contribute to the splot development.
 
-.. _3.6: https://docs.python.org/3.6/
-.. _3.7: https://docs.python.org/3.7/
+
 .. _GeoPandas: http://geopandas.org/install.html
 .. _pysal/splot: https://github.com/pysal/splot
 .. _fork: https://help.github.com/articles/fork-a-repo/

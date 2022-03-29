@@ -20,64 +20,63 @@ If you are new to `splot` and `PySAL` you will best get started with our [docume
 
 ## Installing splot
 
-### Installing dependencies:
+### Installing dependencies
 
-`splot` is compatible with `Python` 3.6 and 3.7 and depends on `geopandas` 0.4.0 or later and `matplotlib` 2.2.2 or later.
+`splot` is compatible with `Python` 3.8+ and depends on `geopandas` 0.4.0 or later and `matplotlib` 2.2.2 or later.
 
 splot also uses
+
 * `numpy`
 * `seaborn`
 * `mapclassify`
 * `Ipywidgets`
 
 Depending on your spatial analysis workflow and the `PySAL` objects you would like to visualize, `splot` relies on:
+
 * PySAL 2.0
 
 or separate packages found in the `PySAL` stack:
+
 * esda
 * libpysal
 * spreg
 * giddy
 
-### Installing splot:
+### Installing splot
 
 There are two ways of accessing `splot`. First, `splot` is installed with the [PySAL 2.0](https://pysal.readthedocs.io/en/latest/installation.html) metapackage through:
 
     $ pip install -U pysal
-    
-    or 
-    
-    $ conda install -c conda-forge pysal
 
+    or
+
+    $ conda install -c conda-forge pysal
 
 Second, `splot` can be installed as a separate package. If you are using Anaconda, install `splot` via the `conda` utility:
 
-    $ conda install -c conda-forge splot
-
+    conda install -c conda-forge splot
 
 Otherwise you can install `splot` from `PyPI` with pip:
 
-    $ pip install splot
-
+    pip install splot
 
 ## Usage
 
-Usage examples for different spatial statistical workflows are provided as [notebooks](https://github.com/pysal/splot/tree/master/notebooks):
-* [for creating value-by-alpha maps](https://github.com/pysal/splot/blob/master/notebooks/mapping_vba.ipynb)
-* [for assessing the relationship between neighboring polygons](https://github.com/pysal/splot/blob/master/notebooks/libpysal_non_planar_joins_viz.ipynb)
-* [for the visualization of space-time autocorrelation](https://github.com/pysal/splot/blob/master/notebooks/giddy_space_time.ipynb), also documented in [giddy](https://github.com/pysal/giddy/blob/master/notebooks/directional.ipynb)
-* for visualizing spatial autocorrelation of [univariate](https://github.com/pysal/splot/blob/master/notebooks/esda_morans_viz.ipynb) or [multivariate](https://github.com/pysal/splot/blob/master/notebooks/esda_moran_matrix_viz.ipynb) variable analysis
+Usage examples for different spatial statistical workflows are provided as [notebooks](https://github.com/pysal/splot/tree/main/notebooks):
+
+* [for creating value-by-alpha maps](https://github.com/pysal/splot/blob/main/notebooks/mapping_vba.ipynb)
+* [for assessing the relationship between neighboring polygons](https://github.com/pysal/splot/blob/main/notebooks/libpysal_non_planar_joins_viz.ipynb)
+* [for the visualization of space-time autocorrelation](https://github.com/pysal/splot/blob/main/notebooks/giddy_space_time.ipynb), also documented in [giddy](https://github.com/pysal/giddy/blob/main/notebooks/directional.ipynb)
+* for visualizing spatial autocorrelation of [univariate](https://github.com/pysal/splot/blob/main/notebooks/esda_morans_viz.ipynb) or [multivariate](https://github.com/pysal/splot/blob/main/notebooks/esda_moran_matrix_viz.ipynb) variable analysis
 
 You can also check our [documentation](https://splot.readthedocs.io/en/latest/) for examples on how to use each function. A detailed report about the development, structure and usage of `splot` can be found [here](https://gist.github.com/slumnitz/a86ef4a5b48b1b5fac41e91cfd05fff2). More tutorials for the whole `PySAL` ecosystem can be found in our [notebooks book](http://pysal.org/notebooks/intro.html) project.
 
-
-
-
 ## Contributing to splot
 
-`splot` is an open source project within the Python Spatial Analysis Library that is supported by a community of Geographers, visualization lovers, map fans, users and data scientists. As a community we work together to create splot as our own spatial visualization toolkit and will gratefully and humbly accept any contributions and ideas you might bring into this project. 
+`splot` is an open source project within the Python Spatial Analysis Library that is supported by a community of Geographers, visualization lovers, map fans, users and data scientists. As a community we work together to create splot as our own spatial visualization toolkit and will gratefully and humbly accept any contributions and ideas you might bring into this project.
 
 Feel free to check out our discussion spaces, add ideas and contributions:
+
 * [Idea collection](https://github.com/pysal/splot/issues/10) which PySAL objects to support and how new visualizations could look like
 * [Discussion](https://github.com/pysal/splot/issues/9) about the splot API
 * Ideas how to integrate [other popular visualization toolkits](https://github.com/pysal/splot/issues/22) like `Bokeh` or `Altair`
@@ -96,7 +95,7 @@ We are planning on extending `splot`'s visualization toolkit in future. Function
 * [cross-hatching fill styles](https://github.com/pysal/splot/issues/35) for maps (to allow choropleth visualizations without class intervals)
 * [legendgrams](https://github.com/pysal/splot/issues/34) (map legends that visualize the distribution of observations by color in a given map)
 
-If you are interested in working on one of these or any other methods, check out the linked issues or get in touch! 
+If you are interested in working on one of these or any other methods, check out the linked issues or get in touch!
 
 ## Community support
 

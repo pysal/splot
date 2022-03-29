@@ -22,11 +22,26 @@ from splot._viz_esda_mpl import (_moran_global_scatterplot,
                                  _moran_bv_scatterplot,
                                  _moran_loc_bv_scatterplot)
 
+
 def _test_data():
     guerry = examples.load_example('Guerry')
     link_to_data = guerry.get_path('guerry.shp')
     gdf = gpd.read_file(link_to_data)
     return gdf
+
+
+def _test_data_columbus():
+    columbus = examples.load_example('Columbus')
+    link_to_data = columbus.get_path('columbus.shp')
+    df = gpd.read_file(link_to_data)
+    return df
+
+
+def _test_LineString():
+    link_to_data = examples.get_path('streets.shp')
+    gdf = gpd.read_file(link_to_data)
+    return gdf
+
 
 def test_moran_scatterplot():
     gdf = _test_data()
@@ -160,9 +175,7 @@ def test_plot_moran_bv():
 
 
 def test_moran_loc_scatterplot():
-    columbus = examples.load_example('Columbus')
-    link_to_data = columbus.get_path('columbus.shp')
-    df = gpd.read_file(link_to_data)
+    df = _test_data_columbus()
 
     x = df['INC'].values
     y = df['HOVAL'].values
@@ -197,31 +210,33 @@ def test_moran_loc_scatterplot():
                  scatter_kwds=dict(c='#4393c3'))
 
 
-def test_lisa_cluster():
-    columbus = examples.load_example('Columbus')
-    link_to_data = columbus.get_path('columbus.shp')
-    df = gpd.read_file(link_to_data)
-
-    y = df['HOVAL'].values
-    w = Queen.from_dataframe(df)
+def _test_calc_moran_loc(gdf, var='HOVAL'):
+    y = gdf[var].values
+    w = Queen.from_dataframe(gdf)
     w.transform = 'r'
 
     moran_loc = Moran_Local(y, w)
+    return moran_loc
+
+
+def test_lisa_cluster():
+    df = _test_data_columbus()
+    moran_loc = _test_calc_moran_loc(df)
 
     fig, _ = lisa_cluster(moran_loc, df)
     plt.close(fig)
 
+    # test LineStrings
+    df_line = _test_LineString()
+    moran_loc = _test_calc_moran_loc(df_line, var="Length")
+
+    fig, _ = lisa_cluster(moran_loc, df_line)
+    plt.close(fig)
+
 
 def test_plot_local_autocorrelation():
-    columbus = examples.load_example('Columbus')
-    link_to_data = columbus.get_path('columbus.shp')
-    df = gpd.read_file(link_to_data)
-
-    y = df['HOVAL'].values
-    w = Queen.from_dataframe(df)
-    w.transform = 'r'
-
-    moran_loc = Moran_Local(y, w)
+    df = _test_data_columbus()
+    moran_loc = _test_calc_moran_loc(df)
 
     fig, _ = plot_local_autocorrelation(moran_loc, df, 'HOVAL', p=0.05)
     plt.close(fig)
@@ -232,11 +247,12 @@ def test_plot_local_autocorrelation():
                                         aspect_equal=False,
                                         mask=['1', '2', '3'], quadrant=1)
     plt.close(fig)
-    
+
     # also test with quadrant and mask
     raises(ValueError, plot_local_autocorrelation, moran_loc,
                   df, 'HOVAL', p=0.05, region_column='POLYID',
                  mask=['100', '200', '300'], quadrant=1)
+
 
 def test_moran_loc_bv_scatterplot():
     gdf = _test_data()
