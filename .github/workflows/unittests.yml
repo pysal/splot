@@ -78,7 +78,7 @@ jobs:
 
       - name: run tests - powershell
         shell: powershell
-        run: run: ${{ env.RUN_TEST }}
+        run: ${{ env.RUN_TEST }}
         if: matrix.os == 'windows-latest'
 
       - name: codecov
