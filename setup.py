@@ -1,12 +1,8 @@
 from setuptools import setup
 from os import path
+import versioneer
 
 package = "splot"
-
-# Get __version__ from package/__init__.py
-with open(package + "/__init__.py", "r") as f:
-    exec(f.readline())
-
 
 def _get_requirements_from_files(groups_files):
     groups_reqlist = {}
@@ -35,7 +31,7 @@ with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
 
 setup(
     name=package,  # name of package
-    version=__version__,
+    version=versioneer.get_version(),
     description="Visual analytics for spatial analysis with PySAL.",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -64,4 +60,5 @@ setup(
     install_requires=install_reqs,
     extras_require=extras_reqs,
     zip_safe=False,
+    cmdclass=versioneer.get_cmdclass(),
 )
