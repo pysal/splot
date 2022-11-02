@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import geopandas as gpd
-import numpy as np
+import numpy
 from libpysal.weights.contiguity import Queen
 from libpysal.weights.spatial_lag import lag_spatial
 import seaborn as sbn
