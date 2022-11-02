@@ -351,7 +351,7 @@ def plot_moran_simulation(moran, aspect_equal=True,
     # plot distribution
     shade = kwargs.pop('shade', True)
     color = kwargs.pop('color', splot_colors['moran_base'])
-    sbn.kdeplot(moran.sim, shade=shade, color=color, ax=ax, **kwargs)
+    sbn.kdeplot(moran.sim, fill=shade, color=color, ax=ax, **kwargs)
 
     # customize plot
     fitline_kwds.setdefault('color', splot_colors['moran_fit'])
@@ -625,7 +625,7 @@ def plot_moran_bv_simulation(moran_bv, ax=None, aspect_equal=True,
     # plot distribution
     shade = kwargs.pop('shade', True)
     color = kwargs.pop('color', splot_colors['moran_base'])
-    sbn.kdeplot(moran_bv.sim, shade=shade, color=color, ax=ax, **kwargs)
+    sbn.kdeplot(moran_bv.sim, fill=shade, color=color, ax=ax, **kwargs)
 
     # customize plot
     fitline_kwds.setdefault('color', splot_colors['moran_fit'])

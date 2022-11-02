@@ -5,5 +5,5 @@ libpysal
 mapclassify
 matplotlib
 numpy
-seaborn
+seaborn>=0.11.0
 spreg

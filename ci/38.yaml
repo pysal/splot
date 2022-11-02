@@ -18,5 +18,5 @@
    - matplotlib
    - numpy
    - pip
-   - seaborn
+   - seaborn>=0.11.0
    - spreg

@@ -19,7 +19,7 @@ on:
 jobs:
   unittests:
     env:
-      RUN_TEST: pytest -v splot --cov splot --cov-config .coveragerc --cov-report xml --color yes --cov-append --cov-report term-missing
+      RUN_TEST: pytest splot -v -r a --cov splot --cov-config .coveragerc --cov-report xml --color yes --cov-append --cov-report term-missing
     name: ${{ matrix.os }}, ${{ matrix.environment-file }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
@@ -31,11 +31,13 @@ jobs:
           - ci/39.yaml
           - ci/310.yaml
           - ci/310-DEV.yaml
+          - ci/310-DEV_shapely_dev.yaml
         include:
           - environment-file: ci/310.yaml
             os: macos-latest
           - environment-file: ci/310.yaml
             os: windows-latest
+      fail-fast: false
 
     steps:
       - name: checkout repo
@@ -45,15 +47,16 @@ jobs:
         uses: mamba-org/provision-with-micromamba@main
         with:
           environment-file: ${{ matrix.environment-file }}
-          micromamba-version: "latest"
+          micromamba-version: 'latest'
+          channel-priority: 'flexible'
 
       - name: install bleeding edge PySAL submodules (only Ubuntu / Python 3.10)
         shell: bash -l {0}
         run: |
           pip install git+https://github.com/pysal/libpysal.git@master
-          pip install git+https://github.com/pysal/mapclassify.git@master
+          pip install git+https://github.com/pysal/mapclassify.git@main
           pip install git+https://github.com/pysal/esda.git@master
-          pip install git+https://github.com/pysal/spreg.git@master
+          pip install git+https://github.com/pysal/spreg.git@main
           pip install git+https://github.com/pysal/giddy.git@master
         if: matrix.os == 'ubuntu-latest' && contains(matrix.environment-file, 'DEV')
 
@@ -70,6 +73,16 @@ jobs:
       - name: copy matplotlibrc
         shell: bash -l {0}
         run: cp utils/matplotlibrc .
+
+      - name: environment info
+        shell: bash -l {0}
+        run: |
+          micromamba info
+          micromamba list
+       
+      - name: spatial versions
+        shell: bash -l {0}
+        run: 'python -c "import geopandas; geopandas.show_versions();"'
 
       - name: run tests - bash
         shell: bash -l {0}
