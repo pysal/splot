@@ -260,7 +260,7 @@ def _moran_global_scatterplot(moran, zstandard=True,
         ax.axhline(0, alpha=0.5, color='k', linestyle='--')
     else:
         lag = lag_spatial(moran.w, moran.y)
-        b, a = np.polyfit(moran.y, lag, 1)
+        b, a = numpy.polyfit(moran.y, lag, 1)
         # plot
         ax.scatter(moran.y, lag, **scatter_kwds)
         ax.plot(moran.y, a + b*moran.y, **fitline_kwds)
@@ -836,7 +836,7 @@ def _moran_loc_scatterplot(moran_loc, zstandard=True, p=None, aspect_equal=True,
             ax.scatter(moran_loc.z, fit.predy, **scatter_kwds)
     else:
         lag = lag_spatial(moran_loc.w, moran_loc.y)
-        b, a = np.polyfit(moran_loc.y, lag, 1)
+        b, a = numpy.polyfit(moran_loc.y, lag, 1)
         # dashed vert at mean of the attribute
         ax.vlines(moran_loc.y.mean(), lag.min(), lag.max(), alpha=0.5,
                   linestyle='--')
@@ -1306,7 +1306,7 @@ def moran_facet(moran_matrix, figsize=(16,12),
     
     >>> f = gpd.read_file(lp.examples.get_path("sids2.dbf"))
     >>> varnames = ['SIDR74',  'SIDR79',  'NWR74',  'NWR79']
-    >>> vars = [np.array(f[var]) for var in varnames]
+    >>> vars = [numpy.array(f[var]) for var in varnames]
     >>> w = lp.io.open(lp.examples.get_path("sids2.gal")).read()
     >>> moran_matrix = Moran_BV_matrix(vars,  w,  varnames = varnames)
     
@@ -1322,7 +1322,7 @@ def moran_facet(moran_matrix, figsize=(16,12),
     >>> plt.show()
     
     """
-    nrows = int(np.sqrt(len(moran_matrix))) + 1
+    nrows = int(numpy.sqrt(len(moran_matrix))) + 1
     ncols = nrows
     
     fig, axarr = plt.subplots(nrows, ncols, figsize=figsize,
