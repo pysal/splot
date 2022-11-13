@@ -19,7 +19,7 @@ on:
 jobs:
   unittests:
     env:
-      RUN_TEST: pytest splot -v -r a --cov splot --cov-config .coveragerc --cov-report xml --color yes --cov-append --cov-report term-missing
+      RUN_TEST: pytest splot -v -r a -n auto --cov splot --cov-config .coveragerc --cov-report xml --color yes --cov-append --cov-report term-missing
     name: ${{ matrix.os }}, ${{ matrix.environment-file }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
@@ -57,7 +57,7 @@ jobs:
           pip install git+https://github.com/pysal/mapclassify.git@main
           pip install git+https://github.com/pysal/esda.git@master
           pip install git+https://github.com/pysal/spreg.git@main
-          pip install git+https://github.com/pysal/giddy.git@master
+          pip install git+https://github.com/pysal/giddy.git@main
         if: matrix.os == 'ubuntu-latest' && contains(matrix.environment-file, 'DEV')
 
       - name: install libpysal example datasets
