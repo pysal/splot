@@ -8,7 +8,6 @@
    - codecov
    - pytest
    - pytest-cov
-   - pytest-xdist
    # required
    - bokeh
    - geopandas>=0.12.0
