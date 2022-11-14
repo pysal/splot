@@ -1,11 +1,11 @@
 import geopandas as gpd
-import pandas as pd
-from libpysal.weights.contiguity import Queen
-from libpysal import examples
-import numpy as np
 import matplotlib.pyplot as plt
-from pytest import raises
+import numpy as np
+import pandas as pd
 import pytest
+from libpysal import examples
+from libpysal.weights.contiguity import Queen
+from pytest import raises
 
 try:
     import ipywidgets

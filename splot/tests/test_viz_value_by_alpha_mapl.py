@@ -1,17 +1,13 @@
-import libpysal as lp
-from libpysal import examples
 import geopandas as gpd
-import pandas as pd
-import matplotlib.pyplot as plt
+import libpysal as lp
 import matplotlib
+import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+from libpysal import examples
 
-from splot.mapping import (
-    value_by_alpha_cmap,
-    vba_choropleth,
-    mapclassify_bin,
-    vba_legend,
-)
+from splot.mapping import (mapclassify_bin, value_by_alpha_cmap,
+                           vba_choropleth, vba_legend)
 
 
 def test_value_by_alpha_cmap():

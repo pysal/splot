@@ -1,10 +1,11 @@
-import matplotlib.pyplot as plt
-from matplotlib import colors
-from matplotlib import patches
 import collections.abc
-import matplotlib.cm as cm
+
 import mapclassify as classify
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib import colors, patches
+
 from ._viz_utils import _classifiers, format_legend
 
 """

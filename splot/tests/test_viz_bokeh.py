@@ -3,18 +3,14 @@
 ## Bokeh versions are not intended for release
 ## but will be picked up later
 
-from libpysal.weights.contiguity import Queen
-from libpysal import examples
-import geopandas as gpd
 import esda
+import geopandas as gpd
 import pytest
+from libpysal import examples
+from libpysal.weights.contiguity import Queen
 
-from splot._bk import (
-    plot_choropleth,
-    lisa_cluster,
-    moran_scatterplot,
-    plot_local_autocorrelation,
-)
+from splot._bk import (lisa_cluster, moran_scatterplot, plot_choropleth,
+                       plot_local_autocorrelation)
 
 
 @pytest.mark.skip(reason="to be deprecated")

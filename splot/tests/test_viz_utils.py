@@ -1,5 +1,6 @@
-from splot._viz_utils import shift_colormap, truncate_colormap
 import matplotlib as mpl
+
+from splot._viz_utils import shift_colormap, truncate_colormap
 
 
 def test_shift_colormap():

@@ -1,15 +1,15 @@
-import matplotlib.pyplot as plt
-import matplotlib as mpl
+import warnings
+
 import geopandas as gpd
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 import numpy
+import seaborn as sbn
+from esda.moran import Moran, Moran_BV, Moran_Local, Moran_Local_BV
 from libpysal.weights.contiguity import Queen
 from libpysal.weights.spatial_lag import lag_spatial
-import seaborn as sbn
-from esda.moran import Moran_Local, Moran_Local_BV, Moran, Moran_BV
-import warnings
+from matplotlib import colors, patches
 from spreg import OLS
-
-from matplotlib import patches, colors
 
 from ._viz_utils import mask_local_auto, moran_hot_cold_spots, splot_colors
 

@@ -1,12 +1,12 @@
-import seaborn as sns
-import numpy as np
-import matplotlib.pyplot as plt
 import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
 from esda.moran import Moran_Local
 from giddy.directional import Rose
 
-from ._viz_utils import moran_hot_cold_spots
 from ._viz_esda_mpl import lisa_cluster
+from ._viz_utils import moran_hot_cold_spots
 
 """
 Lightweight visualizations for pysal dynamics using Matplotlib and Geopandas
@@ -675,7 +675,7 @@ def dynamic_lisa_composite_explore(rose, gdf, pattern="", p=0.05, figsize=(13, 1
 
     """
     try:
-        from ipywidgets import interact, fixed
+        from ipywidgets import fixed, interact
     except (ImportError, ModuleNotFoundError):
         raise ImportError(
             "`ipywidgets` package is required to use dynamic_lisa_composite_explore."

@@ -1,26 +1,15 @@
 import pandas as pd
-
 # import pysal as ps
 import spreg
-from esda.moran import Moran_Local
-from bokeh.plotting import figure
-from bokeh.models import (
-    GeoJSONDataSource,
-    ColumnDataSource,
-    CategoricalColorMapper,
-    Span,
-    HoverTool,
-    Legend,
-)
-from bokeh.layouts import gridplot
 from bokeh import palettes
+from bokeh.layouts import gridplot
+from bokeh.models import (CategoricalColorMapper, ColumnDataSource,
+                          GeoJSONDataSource, HoverTool, Legend, Span)
+from bokeh.plotting import figure
+from esda.moran import Moran_Local
 
-from ._viz_utils import (
-    bin_labels_choropleth,
-    add_legend,
-    mask_local_auto,
-    calc_data_aspect,
-)
+from ._viz_utils import (add_legend, bin_labels_choropleth, calc_data_aspect,
+                         mask_local_auto)
 
 """
 Leightweight interactive visualizations in Bokeh.

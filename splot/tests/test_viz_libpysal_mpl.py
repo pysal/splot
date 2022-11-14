@@ -1,8 +1,8 @@
-from libpysal.weights.contiguity import Queen
-import libpysal
-from libpysal import examples
-import matplotlib.pyplot as plt
 import geopandas as gpd
+import libpysal
+import matplotlib.pyplot as plt
+from libpysal import examples
+from libpysal.weights.contiguity import Queen
 
 from splot.libpysal import plot_spatial_weights
 

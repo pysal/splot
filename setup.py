@@ -1,5 +1,7 @@
-from setuptools import setup
 from os import path
+
+from setuptools import setup
+
 import versioneer
 
 package = "splot"

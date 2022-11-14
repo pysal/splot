@@ -1,8 +1,8 @@
-import numpy as np
 import mapclassify as classify
 import matplotlib as mpl
-import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import matplotlib.pyplot as plt
+import numpy as np
 
 """
 Utility functions for lightweight visualizations in splot
