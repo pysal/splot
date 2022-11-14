@@ -17,7 +17,15 @@ on:
         required: false
 
 jobs:
-  unittests:
+   linting:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - uses: actions/setup-python@v4
+        - uses: pre-commit/action@v3.0.0
+
+   testing:
+     needs: linting
     env:
       RUN_TEST: pytest splot -v -r a --cov splot --cov-config .coveragerc --cov-report xml --color yes --cov-append --cov-report term-missing
     name: ${{ matrix.os }}, ${{ matrix.environment-file }}
