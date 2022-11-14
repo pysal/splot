@@ -1,4 +1,6 @@
-from ._viz_bokeh import (lisa_cluster,
-                         plot_local_autocorrelation,
-                         plot_choropleth,
-                         moran_scatterplot)
+from ._viz_bokeh import (  # noqa F401
+    lisa_cluster,
+    moran_scatterplot,
+    plot_choropleth,
+    plot_local_autocorrelation,
+)

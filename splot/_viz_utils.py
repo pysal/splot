@@ -1,14 +1,14 @@
-import numpy as np
 import mapclassify as classify
 import matplotlib as mpl
-import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import matplotlib.pyplot as plt
+import numpy as np
 
 """
 Utility functions for lightweight visualizations in splot
 """
 
-__author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
+__author__ = "Stefanie Lumnitz <stefanie.lumitz@gmail.com>"
 
 
 def moran_hot_cold_spots(moran_loc, p=0.05):
@@ -22,7 +22,7 @@ def moran_hot_cold_spots(moran_loc, p=0.05):
 
 
 def mask_local_auto(moran_loc, p=0.5):
-    '''
+    """
     Create Mask for coloration and labeling of local spatial autocorrelation
 
     Parameters
@@ -44,27 +44,25 @@ def mask_local_auto(moran_loc, p=0.5):
         Array containing coloration for each input value/ shape.
     labels : list of str
         List of label for each attribute value/ polygon.
-    '''
+    """
     # create a mask for local spatial autocorrelation
     cluster = moran_hot_cold_spots(moran_loc, p)
 
-    cluster_labels = ['ns', 'HH', 'LH', 'LL', 'HL']
+    cluster_labels = ["ns", "HH", "LH", "LL", "HL"]
     labels = [cluster_labels[i] for i in cluster]
 
-    colors5 = {0: 'lightgrey',
-               1: '#d7191c',
-               2: '#abd9e9',
-               3: '#2c7bb6',
-               4: '#fdae61'}
+    colors5 = {0: "lightgrey", 1: "#d7191c", 2: "#abd9e9", 3: "#2c7bb6", 4: "#fdae61"}
     colors = [colors5[i] for i in cluster]  # for Bokeh
     # for MPL, keeps colors even if clusters are missing:
     x = np.array(labels)
     y = np.unique(x)
-    colors5_mpl = {'HH': '#d7191c',
-                   'LH': '#abd9e9',
-                   'LL': '#2c7bb6',
-                   'HL': '#fdae61',
-                   'ns': 'lightgrey'}
+    colors5_mpl = {
+        "HH": "#d7191c",
+        "LH": "#abd9e9",
+        "LL": "#2c7bb6",
+        "HL": "#fdae61",
+        "ns": "lightgrey",
+    }
     colors5 = [colors5_mpl[i] for i in y]  # for mpl
 
     # HACK need this, because MPL sorts these labels while Bokeh does not
@@ -73,25 +71,24 @@ def mask_local_auto(moran_loc, p=0.5):
 
 
 _classifiers = {
-    'box_plot': classify.BoxPlot,
-    'equal_interval': classify.EqualInterval,
-    'fisher_jenks': classify.FisherJenks,
-    'headtail_breaks': classify.HeadTailBreaks,
-    'jenks_caspall': classify.JenksCaspall,
-    'jenks_caspall_forced': classify.JenksCaspallForced,
-    'max_p_classifier': classify.MaxP,
-    'maximum_breaks': classify.MaximumBreaks,
-    'natural_breaks': classify.NaturalBreaks,
-    'quantiles': classify.Quantiles,
-    'percentiles': classify.Percentiles,
-    'std_mean': classify.StdMean,
-    'user_defined': classify.UserDefined,
-    }
+    "box_plot": classify.BoxPlot,
+    "equal_interval": classify.EqualInterval,
+    "fisher_jenks": classify.FisherJenks,
+    "headtail_breaks": classify.HeadTailBreaks,
+    "jenks_caspall": classify.JenksCaspall,
+    "jenks_caspall_forced": classify.JenksCaspallForced,
+    "max_p_classifier": classify.MaxP,
+    "maximum_breaks": classify.MaximumBreaks,
+    "natural_breaks": classify.NaturalBreaks,
+    "quantiles": classify.Quantiles,
+    "percentiles": classify.Percentiles,
+    "std_mean": classify.StdMean,
+    "user_defined": classify.UserDefined,
+}
 
 
-def bin_values_choropleth(attribute_values, method='quantiles',
-                          k=5):
-    '''
+def bin_values_choropleth(attribute_values, method="quantiles", k=5):
+    """
     Create bins based on different classification methods.
     Needed for legend labels and Choropleth coloring.
 
@@ -113,16 +110,16 @@ def bin_values_choropleth(attribute_values, method='quantiles',
         Object containing bin ids for each observation (.yb),
         upper bounds of each class (.bins), number of classes (.k)
         and number of onservations falling in each class (.counts)
-    '''
-    if method not in ['quantiles', 'fisher_jenks', 'equal_interval']:
+    """
+    if method not in ["quantiles", "fisher_jenks", "equal_interval"]:
         raise ValueError("Method {} not supported".format(method))
 
     bin_values = _classifiers[method](attribute_values, k)
     return bin_values
 
 
-def bin_labels_choropleth(gdf, attribute_values, method='quantiles', k=5):
-    '''
+def bin_labels_choropleth(gdf, attribute_values, method="quantiles", k=5):
+    """
     Create labels for each bin in the legend
 
     Parameters
@@ -143,7 +140,7 @@ def bin_labels_choropleth(gdf, attribute_values, method='quantiles', k=5):
     -------
     bin_labels : list of str
         List of label for each bin.
-    '''
+    """
     # Retrieve bin values from bin_values_choropleth()
     bin_values = bin_values_choropleth(attribute_values, method=method, k=k)
 
@@ -155,11 +152,11 @@ def bin_labels_choropleth(gdf, attribute_values, method='quantiles', k=5):
     bin_edges = bins.tolist()
     bin_labels = []
     for i in range(k):
-        bin_labels.append('<{:1.1f}'.format(bin_edges[i]))
+        bin_labels.append("<{:1.1f}".format(bin_edges[i]))
 
     # Add labels (which are the labels printed in the legend) to each row of gdf
     labels = np.array([bin_labels[c] for c in yb])
-    gdf['labels_choro'] = [str(l) for l in labels]
+    gdf["labels_choro"] = [str(l_) for l_ in labels]
     return bin_labels
 
 
@@ -177,6 +174,7 @@ def add_legend(fig, labels, colors):
         Palette instance containing colours of choice.
     """
     from bokeh.models import Legend
+
     # add labels to figure (workaround,
     # legend with geojsondatasource doesn't work,
     # see https://github.com/bokeh/bokeh/issues/5904)
@@ -185,18 +183,19 @@ def add_legend(fig, labels, colors):
         patch = fig.patches(xs=[], ys=[], fill_color=color)
         items.append((label, [patch]))
 
-    legend = Legend(items=items, location='top_left', margin=0,
-                    orientation='horizontal')
+    legend = Legend(
+        items=items, location="top_left", margin=0, orientation="horizontal"
+    )
     # possibility to define glyph_width=10, glyph_height=10)
-    legend.label_text_font_size = '8pt'
-    fig.add_layout(legend, 'below')
+    legend.label_text_font_size = "8pt"
+    fig.add_layout(legend, "below")
     return legend
 
 
 def format_legend(values):
     """
     Helper to return sensible legend values
-    
+
     Parameters
     ----------
     values: array
@@ -212,7 +211,7 @@ def format_legend(values):
 def calc_data_aspect(plot_height, plot_width, bounds):
     # Deal with data ranges in Bokeh:
     # make a meter in x and a meter in y the same in pixel lengths
-    aspect_box = plot_height / plot_width   # 2 / 1 = 2
+    aspect_box = plot_height / plot_width  # 2 / 1 = 2
     xmin, ymin, xmax, ymax = bounds
     x_range = xmax - xmin  # 1 = 1 - 0
     y_range = ymax - ymin  # 3 = 3 - 0
@@ -241,12 +240,13 @@ def calc_data_aspect(plot_height, plot_width, bounds):
 
 # Utility functions for colormaps
 # Color design
-splot_colors = dict(moran_base='#bababa',
-                    moran_fit='#d6604d')
+splot_colors = dict(moran_base="#bababa", moran_fit="#d6604d")
 
 # Utility function #1 - forces continuous diverging colormap to be centered at zero
-def shift_colormap(cmap, start=0, midpoint=0.5, stop=1.0, name='shiftedcmap'):
-    '''
+def shift_colormap(  # noqa E302
+    cmap, start=0, midpoint=0.5, stop=1.0, name="shiftedcmap"
+):
+    """
     Function to offset the "center" of a colormap. Useful for
     data with a negative min and positive max and you want the
     middle of the colormap's dynamic range to be at zero
@@ -272,37 +272,34 @@ def shift_colormap(cmap, start=0, midpoint=0.5, stop=1.0, name='shiftedcmap'):
         Default =1.0 (no upper ofset).
     name : str, optional
         Name of the new colormap.
-    
+
     Returns
     -------
-    new_cmap : A new colormap that has been shifted. 
-    '''
+    new_cmap : A new colormap that has been shifted.
+    """
     if isinstance(cmap, str):
-        cmap = cm.get_cmap(cmap) 
+        cmap = cm.get_cmap(cmap)
 
-    cdict = {
-        'red': [],
-        'green': [],
-        'blue': [],
-        'alpha': []
-    }
+    cdict = {"red": [], "green": [], "blue": [], "alpha": []}
 
     # regular index to compute the colors
     reg_index = np.linspace(start, stop, 257)
 
     # shifted index to match the data
-    shift_index = np.hstack([
-        np.linspace(0.0, midpoint, 128, endpoint=False), 
-        np.linspace(midpoint, 1.0, 129, endpoint=True)
-    ])
+    shift_index = np.hstack(
+        [
+            np.linspace(0.0, midpoint, 128, endpoint=False),
+            np.linspace(midpoint, 1.0, 129, endpoint=True),
+        ]
+    )
 
     for ri, si in zip(reg_index, shift_index):
         r, g, b, a = cmap(ri)
 
-        cdict['red'].append((si, r, r))
-        cdict['green'].append((si, g, g))
-        cdict['blue'].append((si, b, b))
-        cdict['alpha'].append((si, a, a))
+        cdict["red"].append((si, r, r))
+        cdict["green"].append((si, g, g))
+        cdict["blue"].append((si, b, b))
+        cdict["alpha"].append((si, a, a))
 
     new_cmap = mpl.colors.LinearSegmentedColormap(name, cdict)
     plt.register_cmap(cmap=new_cmap)
@@ -311,7 +308,7 @@ def shift_colormap(cmap, start=0, midpoint=0.5, stop=1.0, name='shiftedcmap'):
 
 # Utility #2 - truncate colorcap in order to grab only positive or negative portion
 def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
-    '''
+    """
     Function to truncate a colormap by selecting a subset of
     the original colormap's values
 
@@ -327,15 +324,16 @@ def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
     n : int, optional
         Number of intervals between the min and max values
         for the gradient of the truncated colormap. Default =100.
-          
+
     Returns
     -------
-    new_cmap : A new colormap that has been shifted. 
-    '''
+    new_cmap : A new colormap that has been shifted.
+    """
     if isinstance(cmap, str):
-        cmap = cm.get_cmap(cmap) 
+        cmap = cm.get_cmap(cmap)
 
     new_cmap = mpl.colors.LinearSegmentedColormap.from_list(
-        'trunc({n},{a:.2f},{b:.2f})'.format(n=cmap.name, a=minval, b=maxval),
-        cmap(np.linspace(minval, maxval, n)))
+        "trunc({n},{a:.2f},{b:.2f})".format(n=cmap.name, a=minval, b=maxval),
+        cmap(np.linspace(minval, maxval, n)),
+    )
     return new_cmap

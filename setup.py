@@ -1,8 +1,11 @@
-from setuptools import setup
 from os import path
+
+from setuptools import setup
+
 import versioneer
 
 package = "splot"
+
 
 def _get_requirements_from_files(groups_files):
     groups_reqlist = {}

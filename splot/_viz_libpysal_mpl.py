@@ -1,5 +1,5 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.collections import LineCollection
 
 """
@@ -9,13 +9,19 @@ TODO
 * make gdf argument in plot_spatial_weights optional
 """
 
-__author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
+__author__ = "Stefanie Lumnitz <stefanie.lumitz@gmail.com>"
 
 
-
-def plot_spatial_weights(w, gdf, indexed_on=None, ax=None, 
-                         figsize=(10,10), node_kws=None, edge_kws=None,
-                         nonplanar_edge_kws=None):
+def plot_spatial_weights(
+    w,
+    gdf,
+    indexed_on=None,
+    ax=None,
+    figsize=(10, 10),
+    node_kws=None,
+    edge_kws=None,
+    nonplanar_edge_kws=None,
+):
     """
     Plot spatial weights network.
     NOTE: Additionally plots `w.non_planar_joins` if
@@ -25,14 +31,14 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
     ----------
     w : libpysal.W object
         Values of libpysal weights object.
-    gdf : geopandas dataframe 
-        The original shapes whose topological relations are 
+    gdf : geopandas dataframe
+        The original shapes whose topological relations are
         modelled in W.
     indexed_on : str, optional
         Column of gdf which the weights object uses as an index.
         Default =None, so the geodataframe's index is used.
     ax : matplotlib axis, optional
-        Axis on which to plot the weights. 
+        Axis on which to plot the weights.
         Default =None, so plots on the current figure.
     figsize : tuple, optional
         W, h of figure. Default =(10,10)
@@ -55,35 +61,35 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
     fig : matplotlip Figure instance
         Figure of spatial weight network.
     ax : matplotlib Axes instance
-        Axes in which the figure is plotted. 
+        Axes in which the figure is plotted.
 
     Examples
     --------
     Imports
-    
+
     >>> from libpysal.weights.contiguity import Queen
     >>> import geopandas as gpd
     >>> import libpysal
     >>> from libpysal import examples
     >>> import matplotlib.pyplot as plt
     >>> from splot.libpysal import plot_spatial_weights
-    
+
     Data preparation and statistical analysis
-    
+
     >>> gdf = gpd.read_file(examples.get_path('map_RS_BR.shp'))
     >>> weights = Queen.from_dataframe(gdf)
     >>> wnp = libpysal.weights.util.nonplanar_neighbors(weights, gdf)
-    
+
     Plot weights
-    
+
     >>> plot_spatial_weights(weights, gdf)
     >>> plt.show()
-    
+
     Plot corrected weights
-    
+
     >>> plot_spatial_weights(wnp, gdf)
     >>> plt.show()
-    
+
     """
     if ax is None:
         fig = plt.figure(figsize=figsize)
@@ -93,20 +99,20 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
 
         # default for node_kws
     if node_kws is None:
-        node_kws = dict(markersize=10, facecolor='#4d4d4d', edgecolor='#4d4d4d')
+        node_kws = dict(markersize=10, facecolor="#4d4d4d", edgecolor="#4d4d4d")
 
         # default for edge_kws
     if edge_kws is None:
-        edge_kws = dict(colors='#4393c3')
+        edge_kws = dict(colors="#4393c3")
 
         # default for nonplanar_edge_kws
     if nonplanar_edge_kws is None:
-        edge_kws.setdefault('lw', 0.7)
+        edge_kws.setdefault("lw", 0.7)
         nonplanar_edge_kws = edge_kws.copy()
-        nonplanar_edge_kws['colors'] = '#d6604d'
+        nonplanar_edge_kws["colors"] = "#d6604d"
 
     node_has_nonplanar_join = []
-    if hasattr(w, 'non_planar_joins'):
+    if hasattr(w, "non_planar_joins"):
         # This attribute is present when an instance is created by the user
         # calling `weights.util.nonplanar_neighbors`. If so, treat those
         # edges differently by default.
@@ -126,7 +132,9 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
             origin = np.array(centroids_shp[dict_index[idx]].coords)[0]
             for jdx in w.neighbors[idx]:
                 dest = np.array(centroids_shp[dict_index[jdx]].coords)[0]
-                if (idx in node_has_nonplanar_join) and (jdx in w.non_planar_joins[idx]):
+                if (idx in node_has_nonplanar_join) and (
+                    jdx in w.non_planar_joins[idx]
+                ):
                     # This is a non-planar edge
                     non_planar_segments.append([origin, dest])
                 else:
@@ -141,24 +149,28 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
             for j in w.neighbors[idx]:
                 jdx = w.id2i[j]
                 dest = np.array(centroids_shp[jdx].coords)[0]
-                if (idx in node_has_nonplanar_join) and (jdx in w.non_planar_joins[idx]):
+                if (idx in node_has_nonplanar_join) and (
+                    jdx in w.non_planar_joins[idx]
+                ):
                     # This is a non-planar edge
                     non_planar_segments.append([origin, dest])
                 else:
                     segments.append([origin, dest])
 
     # Plot the polygons from the geodataframe as a base layer
-    gdf.plot(ax=ax, color='#bababa', edgecolor='w')
+    gdf.plot(ax=ax, color="#bababa", edgecolor="w")
 
     # plot polygon centroids
     gdf.centroid.plot(ax=ax, **node_kws)
 
     # plot weight edges
-    non_planar_segs_plot = LineCollection(np.array(non_planar_segments), **nonplanar_edge_kws)
+    non_planar_segs_plot = LineCollection(
+        np.array(non_planar_segments), **nonplanar_edge_kws
+    )
     segs_plot = LineCollection(np.array(segments), **edge_kws)
     ax.add_collection(segs_plot)
     ax.add_collection(non_planar_segs_plot)
 
     ax.set_axis_off()
-    ax.set_aspect('equal')
+    ax.set_aspect("equal")
     return fig, ax

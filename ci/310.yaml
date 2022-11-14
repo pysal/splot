@@ -20,3 +20,8 @@ dependencies:
   - pip
   - seaborn>=0.11.0
   - spreg
+  # formatting
+  - black
+  - flake8
+  - isort
+  - pyflakes
