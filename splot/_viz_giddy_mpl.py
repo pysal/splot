@@ -17,14 +17,14 @@ TODO
     in dynamic_lisa_composite_explore()
 """
 
-__author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
+__author__ = "Stefanie Lumnitz <stefanie.lumitz@gmail.com>"
 
 
 def _dynamic_lisa_heatmap_data(moran_locy, moran_locx, p=0.05):
-    '''
+    """
     Utility function to calculate dynamic lisa heatmap table
     and diagonal color mask
-    '''
+    """
     clustery = moran_hot_cold_spots(moran_locy, p=p)
     clusterx = moran_hot_cold_spots(moran_locx, p=p)
 
@@ -135,8 +135,7 @@ def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
 
     """
     moran_locy, moran_locx = _moran_loc_from_rose_calc(rose)
-    fig, ax = _dynamic_lisa_heatmap(moran_locy, moran_locx,
-                                    p=p, ax=ax, **kwargs)
+    fig, ax = _dynamic_lisa_heatmap(moran_locy, moran_locx, p=p, ax=ax, **kwargs)
     return fig, ax
 
 
@@ -144,24 +143,32 @@ def _dynamic_lisa_heatmap(moran_locy, moran_locx, p, ax, **kwargs):
     """
     Create dynamic_lisa_heatmap figure from esda.moran.Moran_local values
     """
-    heatmap_data, diagonal_mask = _dynamic_lisa_heatmap_data(moran_locy,
-                                                             moran_locx, p)
+    heatmap_data, diagonal_mask = _dynamic_lisa_heatmap_data(moran_locy, moran_locx, p)
     # set default plot style
-    annot = kwargs.pop('annot', True)
-    cmap = kwargs.pop('cmap', "YlGnBu")
-    mask = kwargs.pop('mask', diagonal_mask)
-    cbar = kwargs.pop('cbar', False)
-    square = kwargs.pop('square', True)
+    annot = kwargs.pop("annot", True)
+    cmap = kwargs.pop("cmap", "YlGnBu")
+    mask = kwargs.pop("mask", diagonal_mask)
+    cbar = kwargs.pop("cbar", False)
+    square = kwargs.pop("square", True)
 
     # set name for tick labels
-    xticklabels = kwargs.pop('xticklabels', ['ns', 'HH', 'HL', 'LH', 'LL'])
-    yticklabels = kwargs.pop('yticklabels', ['ns', 'HH', 'HL', 'LH', 'LL'])
+    xticklabels = kwargs.pop("xticklabels", ["ns", "HH", "HL", "LH", "LL"])
+    yticklabels = kwargs.pop("yticklabels", ["ns", "HH", "HL", "LH", "LL"])
 
-    ax = sns.heatmap(heatmap_data, annot=annot, cmap=cmap,
-                     xticklabels=xticklabels, yticklabels=yticklabels,
-                     mask=mask, ax=ax, cbar=cbar, square=square, **kwargs)
-    ax.set_xlabel('End time')
-    ax.set_ylabel('Start time')
+    ax = sns.heatmap(
+        heatmap_data,
+        annot=annot,
+        cmap=cmap,
+        xticklabels=xticklabels,
+        yticklabels=yticklabels,
+        mask=mask,
+        ax=ax,
+        cbar=cbar,
+        square=square,
+        **kwargs
+    )
+    ax.set_xlabel("End time")
+    ax.set_ylabel("Start time")
     fig = ax.get_figure()
     return fig, ax
 
@@ -245,19 +252,19 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
 
     """
     # save_old default values
-    old_gridcolor = mpl.rcParams['grid.color']
-    old_facecolor = mpl.rcParams['axes.facecolor']
-    old_edgecolor = mpl.rcParams['axes.edgecolor']
+    old_gridcolor = mpl.rcParams["grid.color"]
+    old_facecolor = mpl.rcParams["axes.facecolor"]
+    old_edgecolor = mpl.rcParams["axes.edgecolor"]
     # define plotting style
-    mpl.rcParams['grid.color'] = 'w'
-    mpl.rcParams['axes.edgecolor'] = 'w'
-    mpl.rcParams['axes.facecolor'] = '#E5E5E5'
-    alpha = kwargs.pop('alpha', 0.9)
-    cmap = kwargs.pop('cmap', 'YlGnBu')
+    mpl.rcParams["grid.color"] = "w"
+    mpl.rcParams["axes.edgecolor"] = "w"
+    mpl.rcParams["axes.facecolor"] = "#E5E5E5"
+    alpha = kwargs.pop("alpha", 0.9)
+    cmap = kwargs.pop("cmap", "YlGnBu")
 
     if ax is None:
         fig = plt.figure()
-        ax = fig.add_subplot(111, projection='polar')
+        ax = fig.add_subplot(111, projection="polar")
         can_insert_colorbar = True
     else:
         fig = ax.get_figure()
@@ -266,26 +273,28 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
     ax.set_rlabel_position(315)
 
     if attribute is None:
-        c = ax.scatter(rose.theta, rose.r,
-                       alpha=alpha, cmap=cmap, **kwargs)
+        c = ax.scatter(rose.theta, rose.r, alpha=alpha, cmap=cmap, **kwargs)
     else:
-        if 'c' in kwargs.keys() or 'color' in kwargs.keys():
-            raise ValueError('c and color are not valid keywords here; '
-                             'attribute is used for coloring')
+        if "c" in kwargs.keys() or "color" in kwargs.keys():
+            raise ValueError(
+                "c and color are not valid keywords here; "
+                "attribute is used for coloring"
+            )
 
-        c = ax.scatter(rose.theta, rose.r, c=attribute,
-                       alpha=alpha, cmap=cmap, **kwargs)
+        c = ax.scatter(
+            rose.theta, rose.r, c=attribute, alpha=alpha, cmap=cmap, **kwargs
+        )
         if can_insert_colorbar:
             fig.colorbar(c)
 
     # reset style to old default values
-    mpl.rcParams['grid.color'] = old_gridcolor
-    mpl.rcParams['axes.facecolor'] = old_facecolor
-    mpl.rcParams['axes.edgecolor'] = old_edgecolor
+    mpl.rcParams["grid.color"] = old_gridcolor
+    mpl.rcParams["axes.facecolor"] = old_facecolor
+    mpl.rcParams["axes.edgecolor"] = old_edgecolor
     return fig, ax
 
 
-def _add_arrow(line, position=None, direction='right', size=15, color=None):
+def _add_arrow(line, position=None, direction="right", size=15, color=None):
     """
     add an arrow to a line.
 
@@ -308,14 +317,16 @@ def _add_arrow(line, position=None, direction='right', size=15, color=None):
 
     xdata = line.get_xdata()
     ydata = line.get_ydata()
-    line.axes.annotate('', xytext=(xdata[0], ydata[0]),
-                       xy=(xdata[1], ydata[1]),
-                       arrowprops=dict(arrowstyle="->", color=color),
-                       size=size)
+    line.axes.annotate(
+        "",
+        xytext=(xdata[0], ydata[0]),
+        xy=(xdata[1], ydata[1]),
+        arrowprops=dict(arrowstyle="->", color=color),
+        size=size,
+    )
 
 
-def dynamic_lisa_vectors(rose, ax=None,
-                         arrows=True, **kwargs):
+def dynamic_lisa_vectors(rose, ax=None, arrows=True, **kwargs):
     """
     Plot vectors of positional transition of LISA values
     in Moran scatterplot
@@ -403,11 +414,11 @@ def dynamic_lisa_vectors(rose, ax=None,
     xlim = [rose.Y.min(), rose.Y.max()]
     ylim = [rose.wY.min(), rose.wY.max()]
 
-    if 'c' in kwargs.keys():
-        color = kwargs.pop('c', 'b')
+    if "c" in kwargs.keys():
+        color = kwargs.pop("c", "b")
         can_insert_colorbar = False
     else:
-        color = kwargs.pop('color', 'b')
+        color = kwargs.pop("color", "b")
         can_insert_colorbar = False
 
     xs = []
@@ -427,14 +438,13 @@ def dynamic_lisa_vectors(rose, ax=None,
         for line in lines:
             _add_arrow(line)
 
-    ax.axis('equal')
+    ax.axis("equal")
     ax.set_xlim(xlim)
     ax.set_ylim(ylim)
     return fig, ax
 
 
-def dynamic_lisa_composite(rose, gdf,
-                           p=0.05, figsize=(13, 10)):
+def dynamic_lisa_composite(rose, gdf, p=0.05, figsize=(13, 10)):
     """
     Composite visualisation for dynamic LISA values over two points in time.
     Includes dynamic lisa heatmap, dynamic lisa rose plot,
@@ -520,49 +530,60 @@ def dynamic_lisa_composite(rose, gdf,
 
     # initialize figure
     fig = plt.figure(figsize=figsize)
-    fig.suptitle('Space-time autocorrelation', fontsize=20)
+    fig.suptitle("Space-time autocorrelation", fontsize=20)
     axs = []
     axs.append(plt.subplot(221))
     axs.append(plt.subplot(222))
     # save_old default values
-    old_gridcolor = mpl.rcParams['grid.color']
-    old_facecolor = mpl.rcParams['axes.facecolor']
-    old_edgecolor = mpl.rcParams['axes.edgecolor']
+    old_gridcolor = mpl.rcParams["grid.color"]
+    old_facecolor = mpl.rcParams["axes.facecolor"]
+    old_edgecolor = mpl.rcParams["axes.edgecolor"]
     # define plotting style
-    mpl.rcParams['grid.color'] = 'w'
-    mpl.rcParams['axes.edgecolor'] = 'w'
-    mpl.rcParams['axes.facecolor'] = '#E5E5E5'
+    mpl.rcParams["grid.color"] = "w"
+    mpl.rcParams["axes.edgecolor"] = "w"
+    mpl.rcParams["axes.facecolor"] = "#E5E5E5"
     # define axs[2]
-    axs.append(plt.subplot(223, projection='polar'))
+    axs.append(plt.subplot(223, projection="polar"))
     # reset style to old default values
-    mpl.rcParams['grid.color'] = old_gridcolor
-    mpl.rcParams['axes.facecolor'] = old_facecolor
-    mpl.rcParams['axes.edgecolor'] = old_edgecolor
+    mpl.rcParams["grid.color"] = old_gridcolor
+    mpl.rcParams["axes.facecolor"] = old_facecolor
+    mpl.rcParams["axes.edgecolor"] = old_edgecolor
     # define axs[3]
     axs.append(plt.subplot(224))
 
     # space_time_heatmap
     _dynamic_lisa_heatmap(moran_locy, moran_locx, p=p, ax=axs[0])
-    axs[0].xaxis.set_ticks_position('top')
-    axs[0].xaxis.set_label_position('top')
+    axs[0].xaxis.set_ticks_position("top")
+    axs[0].xaxis.set_label_position("top")
 
     # Lisa_cluster maps
-    lisa_cluster(moran_locy, gdf, p=p, ax=axs[1], legend=True,
-                 legend_kwds={'loc': 'upper left',
-                 'bbox_to_anchor': (0.92, 1.05)})
-    axs[1].set_title('Start time')
-    lisa_cluster(moran_locx, gdf, p=p, ax=axs[3], legend=True,
-                 legend_kwds={'loc': 'upper left',
-                 'bbox_to_anchor': (0.92, 1.05)})
-    axs[3].set_title('End time')
+    lisa_cluster(
+        moran_locy,
+        gdf,
+        p=p,
+        ax=axs[1],
+        legend=True,
+        legend_kwds={"loc": "upper left", "bbox_to_anchor": (0.92, 1.05)},
+    )
+    axs[1].set_title("Start time")
+    lisa_cluster(
+        moran_locx,
+        gdf,
+        p=p,
+        ax=axs[3],
+        legend=True,
+        legend_kwds={"loc": "upper left", "bbox_to_anchor": (0.92, 1.05)},
+    )
+    axs[3].set_title("End time")
 
     # Rose diagram: Moran movement vectors:
     dynamic_lisa_rose(rose, ax=axs[2])
     return fig, axs
 
 
-def _dynamic_lisa_widget_update(rose, gdf, start_time, end_time,
-                                p=0.05, figsize=(13, 10)):
+def _dynamic_lisa_widget_update(
+    rose, gdf, start_time, end_time, p=0.05, figsize=(13, 10)
+):
     """
     Update rose values if widgets are used
     """
@@ -576,8 +597,7 @@ def _dynamic_lisa_widget_update(rose, gdf, start_time, end_time,
     fig, _ = dynamic_lisa_composite(rose_update, gdf, p=p, figsize=figsize)
 
 
-def dynamic_lisa_composite_explore(rose, gdf, pattern='',
-                                   p=0.05, figsize=(13, 10)):
+def dynamic_lisa_composite_explore(rose, gdf, pattern="", p=0.05, figsize=(13, 10)):
     """
     Interactive exploration of dynamic LISA values
     for different dates in a dataframe.
@@ -661,8 +681,13 @@ def dynamic_lisa_composite_explore(rose, gdf, pattern='',
             "`ipywidgets` package is required to use dynamic_lisa_composite_explore."
             "You can install it using `conda install ipywidgets` or `pip install ipywidgets`."
         )
-    coldict = {col: col for col in gdf.columns if
-               col.endswith(pattern)}
-    interact(_dynamic_lisa_widget_update,
-             start_time=coldict, end_time=coldict, rose=fixed(rose),
-             gdf=fixed(gdf), p=fixed(p), figsize=fixed(figsize))
+    coldict = {col: col for col in gdf.columns if col.endswith(pattern)}
+    interact(
+        _dynamic_lisa_widget_update,
+        start_time=coldict,
+        end_time=coldict,
+        rose=fixed(rose),
+        gdf=fixed(gdf),
+        p=fixed(p),
+        figsize=fixed(figsize),
+    )

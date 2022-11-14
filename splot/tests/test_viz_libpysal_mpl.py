@@ -6,10 +6,11 @@ import geopandas as gpd
 
 from splot.libpysal import plot_spatial_weights
 
+
 def test_plot_spatial_weights():
     # get data
-    rio_grande_do_sul = examples.load_example('Rio Grande do Sul')
-    gdf = gpd.read_file(rio_grande_do_sul.get_path('43MUE250GC_SIR.shp'))
+    rio_grande_do_sul = examples.load_example("Rio Grande do Sul")
+    gdf = gpd.read_file(rio_grande_do_sul.get_path("43MUE250GC_SIR.shp"))
     gdf.head()
     # calculate weights
     weights = Queen.from_dataframe(gdf)
@@ -21,11 +22,11 @@ def test_plot_spatial_weights():
     # plot new joins
     fig2, _ = plot_spatial_weights(wnp, gdf)
     plt.close(fig2)
-    #customize
-    fig3, _ = plot_spatial_weights(wnp, gdf, nonplanar_edge_kws=dict(color='#4393c3'))
+    # customize
+    fig3, _ = plot_spatial_weights(wnp, gdf, nonplanar_edge_kws=dict(color="#4393c3"))
     plt.close(fig3)
     # plot in existing figure
-    fig4, axs = plt.subplots(1,3)
+    fig4, axs = plt.subplots(1, 3)
     plot_spatial_weights(wnp, gdf, ax=axs[0])
     plt.close(fig4)
 

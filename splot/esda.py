@@ -22,11 +22,13 @@ Moran analytics
 
 """
 
-from ._viz_esda_mpl import (moran_scatterplot,
-                            plot_moran_simulation,
-                            plot_moran,
-                            plot_moran_bv_simulation,
-                            plot_moran_bv,
-                            lisa_cluster,
-                            plot_local_autocorrelation,
-                            moran_facet)
+from ._viz_esda_mpl import (
+    moran_scatterplot,
+    plot_moran_simulation,
+    plot_moran,
+    plot_moran_bv_simulation,
+    plot_moran_bv,
+    lisa_cluster,
+    plot_local_autocorrelation,
+    moran_facet,
+)
