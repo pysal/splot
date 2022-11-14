@@ -2,19 +2,27 @@ import geopandas as gpd
 import libpysal as lp
 import matplotlib.pyplot as plt
 import numpy as np
-from esda.moran import (Moran, Moran_BV, Moran_BV_matrix, Moran_Local,
-                        Moran_Local_BV)
+from esda.moran import Moran, Moran_BV, Moran_BV_matrix, Moran_Local, Moran_Local_BV
 from libpysal import examples
 from libpysal.weights.contiguity import Queen
 from pytest import raises, warns
 
-from splot._viz_esda_mpl import (_moran_bv_scatterplot,
-                                 _moran_global_scatterplot,
-                                 _moran_loc_bv_scatterplot,
-                                 _moran_loc_scatterplot)
-from splot.esda import (lisa_cluster, moran_facet, moran_scatterplot,
-                        plot_local_autocorrelation, plot_moran, plot_moran_bv,
-                        plot_moran_bv_simulation, plot_moran_simulation)
+from splot._viz_esda_mpl import (
+    _moran_bv_scatterplot,
+    _moran_global_scatterplot,
+    _moran_loc_bv_scatterplot,
+    _moran_loc_scatterplot,
+)
+from splot.esda import (
+    lisa_cluster,
+    moran_facet,
+    moran_scatterplot,
+    plot_local_autocorrelation,
+    plot_moran,
+    plot_moran_bv,
+    plot_moran_bv_simulation,
+    plot_moran_simulation,
+)
 
 
 def _test_data():

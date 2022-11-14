@@ -9,8 +9,12 @@ import pytest
 from libpysal import examples
 from libpysal.weights.contiguity import Queen
 
-from splot._bk import (lisa_cluster, moran_scatterplot, plot_choropleth,
-                       plot_local_autocorrelation)
+from splot._bk import (
+    lisa_cluster,
+    moran_scatterplot,
+    plot_choropleth,
+    plot_local_autocorrelation,
+)
 
 
 @pytest.mark.skip(reason="to be deprecated")

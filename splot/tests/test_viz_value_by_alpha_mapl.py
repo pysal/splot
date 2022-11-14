@@ -6,8 +6,12 @@ import numpy as np
 import pandas as pd
 from libpysal import examples
 
-from splot.mapping import (mapclassify_bin, value_by_alpha_cmap,
-                           vba_choropleth, vba_legend)
+from splot.mapping import (
+    mapclassify_bin,
+    value_by_alpha_cmap,
+    vba_choropleth,
+    vba_legend,
+)
 
 
 def test_value_by_alpha_cmap():

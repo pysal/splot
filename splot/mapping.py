@@ -28,5 +28,9 @@ Colormap utilities
 """
 
 from ._viz_utils import shift_colormap, truncate_colormap
-from ._viz_value_by_alpha_mpl import (mapclassify_bin, value_by_alpha_cmap,
-                                      vba_choropleth, vba_legend)
+from ._viz_value_by_alpha_mpl import (
+    mapclassify_bin,
+    value_by_alpha_cmap,
+    vba_choropleth,
+    vba_legend,
+)
