@@ -1,110 +1,110 @@
-name: Continuous Integration
-
-on:
-  push:
-    branches:
-      - "*"
-  pull_request:
-    branches:
-      - "*"
-  schedule:
-    - cron: "59 23 * * 1,4"
-  workflow_dispatch:
-    inputs:
-      version:
-        description: Manual Unittest Run
-        default: test
-        required: false
-
-jobs:
-  linting:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-      - uses: pre-commit/action@v3.0.0
-
-  testing:
-    needs: linting
-    env:
-      RUN_TEST: pytest splot -v -r a --cov splot --cov-config .coveragerc --cov-report xml --color yes --cov-append --cov-report term-missing
-    name: ${{ matrix.os }}, ${{ matrix.environment-file }}
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        environment-file:
-          - ci/38.yaml
-          - ci/39.yaml
-          - ci/310.yaml
-          - ci/310-DEV.yaml
-          - ci/310-DEV_shapely_dev.yaml
-        include:
-          - environment-file: ci/310.yaml
-            os: macos-latest
-          - environment-file: ci/310.yaml
-            os: windows-latest
-      fail-fast: false
-
-    steps:
-      - name: checkout repo
-        uses: actions/checkout@v3
+ name: Continuous Integration
  
-      - name: setup micromamba
-        uses: mamba-org/provision-with-micromamba@main
-        with:
-          environment-file: ${{ matrix.environment-file }}
-          micromamba-version: 'latest'
-          channel-priority: 'flexible'
+ on:
+   push:
+     branches:
+       - "*"
+   pull_request:
+     branches:
+       - "*"
+   schedule:
+     - cron: "59 23 * * 1,4"
+   workflow_dispatch:
+     inputs:
+       version:
+         description: Manual Unittest Run
+         default: test
+         required: false
  
-      - name: install bleeding edge PySAL submodules (only Ubuntu / Python 3.10)
-        shell: bash -l {0}
-        run: |
-          pip install git+https://github.com/pysal/libpysal.git@master
-          pip install git+https://github.com/pysal/mapclassify.git@main
-          pip install git+https://github.com/pysal/esda.git@master
-          pip install git+https://github.com/pysal/spreg.git@main
-          pip install git+https://github.com/pysal/giddy.git@main
-        if: matrix.os == 'ubuntu-latest' && contains(matrix.environment-file, 'DEV')
+ jobs:
+   linting:
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v3
+       - uses: actions/setup-python@v4
+       - uses: pre-commit/action@v3.0.0
  
-      - name: install libpysal example datasets
-        shell: bash -l {0}
-        run: python -c 'import libpysal; libpysal.examples.load_example("Guerry"); libpysal.examples.load_example("Rio  Grande do Sul")'
+   testing:
+     needs: linting
+     env:
+       RUN_TEST: pytest splot -v -r a --cov splot --cov-config .coveragerc --cov-report xml --color yes --cov-append  --cov-report term-missing
+     name: ${{ matrix.os }}, ${{ matrix.environment-file }}
+     runs-on: ${{ matrix.os }}
+     timeout-minutes: 30
+     strategy:
+       matrix:
+         os: [ubuntu-latest]
+         environment-file:
+           - ci/38.yaml
+           - ci/39.yaml
+           - ci/310.yaml
+           - ci/310-DEV.yaml
+           - ci/310-DEV_shapely_dev.yaml
+         include:
+           - environment-file: ci/310.yaml
+             os: macos-latest
+           - environment-file: ci/310.yaml
+             os: windows-latest
+       fail-fast: false
  
-      - name: install and import splot
-        shell: bash -l {0}
-        run: |
-          python -m pip install --no-deps -e .
-          python -c 'import splot'
+     steps:
+       - name: checkout repo
+         uses: actions/checkout@v3
  
-      - name: copy matplotlibrc
-        shell: bash -l {0}
-        run: cp utils/matplotlibrc .
+       - name: setup micromamba
+         uses: mamba-org/provision-with-micromamba@main
+         with:
+           environment-file: ${{ matrix.environment-file }}
+           micromamba-version: 'latest'
+           channel-priority: 'flexible'
  
-      - name: environment info
-        shell: bash -l {0}
-        run: |
-          micromamba info
-          micromamba list
-      
-      - name: spatial versions
-        shell: bash -l {0}
-        run: 'python -c "import geopandas; geopandas.show_versions();"'
+       - name: install bleeding edge PySAL submodules (only Ubuntu / Python 3.10)
+         shell: bash -l {0}
+         run: |
+           pip install git+https://github.com/pysal/libpysal.git@master
+           pip install git+https://github.com/pysal/mapclassify.git@main
+           pip install git+https://github.com/pysal/esda.git@master
+           pip install git+https://github.com/pysal/spreg.git@main
+           pip install git+https://github.com/pysal/giddy.git@main
+         if: matrix.os == 'ubuntu-latest' && contains(matrix.environment-file, 'DEV')
  
-      - name: run tests - bash
-        shell: bash -l {0}
-        run: ${{ env.RUN_TEST }}
-        if: matrix.os != 'windows-latest'
+       - name: install libpysal example datasets
+         shell: bash -l {0}
+         run: python -c 'import libpysal; libpysal.examples.load_example("Guerry"); libpysal.examples.load_example("Rio   Grande do Sul")'
  
-      - name: run tests - powershell
-        shell: powershell
-        run: ${{ env.RUN_TEST }}
-        if: matrix.os == 'windows-latest'
+       - name: install and import splot
+         shell: bash -l {0}
+         run: |
+           python -m pip install --no-deps -e .
+           python -c 'import splot'
  
-      - name: codecov
-        uses: codecov/codecov-action@v2
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.xml
-          name: splot-codecov
+       - name: copy matplotlibrc
+         shell: bash -l {0}
+         run: cp utils/matplotlibrc .
+ 
+       - name: environment info
+         shell: bash -l {0}
+         run: |
+           micromamba info
+           micromamba list
+ 
+       - name: spatial versions
+         shell: bash -l {0}
+         run: 'python -c "import geopandas; geopandas.show_versions();"'
+ 
+       - name: run tests - bash
+         shell: bash -l {0}
+         run: ${{ env.RUN_TEST }}
+         if: matrix.os != 'windows-latest'
+ 
+       - name: run tests - powershell
+         shell: powershell
+         run: ${{ env.RUN_TEST }}
+         if: matrix.os == 'windows-latest'
+ 
+       - name: codecov
+         uses: codecov/codecov-action@v2
+         with:
+           token: ${{ secrets.CODECOV_TOKEN }}
+           file: ./coverage.xml
+           name: splot-codecov
