@@ -1,5 +1,5 @@
  name: Continuous Integration
- 
+ 
  on:
    push:
      branches:
@@ -15,7 +15,7 @@
          description: Manual Unittest Run
          default: test
          required: false
- 
+ 
  jobs:
    linting:
      runs-on: ubuntu-latest
