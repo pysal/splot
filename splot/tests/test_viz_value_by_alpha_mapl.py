@@ -1,9 +1,5 @@
 import geopandas as gpd
-import libpysal as lp
-import matplotlib
 import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
 from libpysal import examples
 
 from splot.mapping import (

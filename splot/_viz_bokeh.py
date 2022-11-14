@@ -9,7 +9,6 @@ from bokeh.models import (
     ColumnDataSource,
     GeoJSONDataSource,
     HoverTool,
-    Legend,
     Span,
 )
 from bokeh.plotting import figure

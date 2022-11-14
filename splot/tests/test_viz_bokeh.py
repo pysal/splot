@@ -1,7 +1,7 @@
-## Tests are enabled even though Bokeh functionality is private for now,
-## in order to keep code coverage good.
-## Bokeh versions are not intended for release
-## but will be picked up later
+# Tests are enabled even though Bokeh functionality is private for now,
+# in order to keep code coverage good.
+# Bokeh versions are not intended for release
+# but will be picked up later
 
 import esda
 import geopandas as gpd
@@ -26,9 +26,7 @@ def test_plot_choropleth():
     w.transform = "r"
 
     TOOLS = "tap,help"
-    fig = plot_choropleth(
-        df, "HOVAL", title="columbus", reverse_colors=True, tools=TOOLS
-    )
+    plot_choropleth(df, "HOVAL", title="columbus", reverse_colors=True, tools=TOOLS)
 
 
 @pytest.mark.skip(reason="to be deprecated")
@@ -43,7 +41,7 @@ def test_lisa_cluster():
     moran_loc = esda.moran.Moran_Local(y, w)
 
     TOOLS = "tap,reset,help"
-    fig = lisa_cluster(moran_loc, df, p=0.05, tools=TOOLS)
+    lisa_cluster(moran_loc, df, p=0.05, tools=TOOLS)
 
 
 @pytest.mark.skip(reason="to be deprecated")
@@ -57,7 +55,7 @@ def test_moran_scatterplot():
 
     moran_loc = esda.moran.Moran_Local(y, w)
 
-    fig = moran_scatterplot(moran_loc, p=0.05)
+    moran_scatterplot(moran_loc, p=0.05)
 
 
 @pytest.mark.skip(reason="to be deprecated")
@@ -71,4 +69,4 @@ def test_plot_local_autocorrelation():
 
     moran_loc = esda.moran.Moran_Local(y, w)
 
-    fig = plot_local_autocorrelation(moran_loc, df, "HOVAL")
+    plot_local_autocorrelation(moran_loc, df, "HOVAL")

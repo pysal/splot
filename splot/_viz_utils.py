@@ -156,7 +156,7 @@ def bin_labels_choropleth(gdf, attribute_values, method="quantiles", k=5):
 
     # Add labels (which are the labels printed in the legend) to each row of gdf
     labels = np.array([bin_labels[c] for c in yb])
-    gdf["labels_choro"] = [str(l) for l in labels]
+    gdf["labels_choro"] = [str(l_) for l_ in labels]
     return bin_labels
 
 
@@ -243,7 +243,9 @@ def calc_data_aspect(plot_height, plot_width, bounds):
 splot_colors = dict(moran_base="#bababa", moran_fit="#d6604d")
 
 # Utility function #1 - forces continuous diverging colormap to be centered at zero
-def shift_colormap(cmap, start=0, midpoint=0.5, stop=1.0, name="shiftedcmap"):
+def shift_colormap(  # noqa E302
+    cmap, start=0, midpoint=0.5, stop=1.0, name="shiftedcmap"
+):
     """
     Function to offset the "center" of a colormap. Useful for
     data with a negative min and positive max and you want the

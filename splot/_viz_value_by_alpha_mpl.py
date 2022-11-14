@@ -1,6 +1,5 @@
 import collections.abc
 
-import mapclassify as classify
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 import numpy as np

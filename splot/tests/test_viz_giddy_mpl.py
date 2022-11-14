@@ -8,7 +8,7 @@ from libpysal.weights.contiguity import Queen
 from pytest import raises
 
 try:
-    import ipywidgets
+    import ipywidgets  # noqa F401
 
     HAS_IPYWIDGETS = True
 except (ImportError, ModuleNotFoundError):

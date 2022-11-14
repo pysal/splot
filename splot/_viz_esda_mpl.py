@@ -1,12 +1,10 @@
 import warnings
 
 import geopandas as gpd
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy
 import seaborn as sbn
 from esda.moran import Moran, Moran_BV, Moran_Local, Moran_Local_BV
-from libpysal.weights.contiguity import Queen
 from libpysal.weights.spatial_lag import lag_spatial
 from matplotlib import colors, patches
 from spreg import OLS
@@ -1201,7 +1199,7 @@ def plot_local_autocorrelation(
     if region_column is not None:
         # masking inside axs[0] or Moran Scatterplot
         # enforce the same dtype of list and mask
-        if gdf[region_column].dtype != type(mask[0]):
+        if not isinstance(mask[0], type(gdf[region_column].iloc[0])):
             warnings.warn(
                 "Values in `mask` are not the same dtype as"
                 + " values in `region_column`. Converting `mask` values"

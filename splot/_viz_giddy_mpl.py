@@ -678,8 +678,10 @@ def dynamic_lisa_composite_explore(rose, gdf, pattern="", p=0.05, figsize=(13, 1
         from ipywidgets import fixed, interact
     except (ImportError, ModuleNotFoundError):
         raise ImportError(
-            "`ipywidgets` package is required to use dynamic_lisa_composite_explore."
-            "You can install it using `conda install ipywidgets` or `pip install ipywidgets`."
+            "`ipywidgets` package is required to use "
+            "dynamic_lisa_composite_explore."
+            "You can install it using `conda install ipywidgets` "
+            "or `pip install ipywidgets`."
         )
     coldict = {col: col for col in gdf.columns if col.endswith(pattern)}
     interact(
