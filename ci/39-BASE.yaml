@@ -10,12 +10,12 @@ dependencies:
   # required
   - bokeh
   - esda
-  - geopandas>=0.4.0
+  - geopandas
   - giddy
   - ipywidgets
   - libpysal
   - mapclassify
-  - matplotlib>=2.2.2
+  - matplotlib
   - numpy
   - packaging
   - pip

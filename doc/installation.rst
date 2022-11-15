@@ -7,7 +7,7 @@ Installing dependencies
 -----------------------
 
 `splot` is compatible with Python `3.8+` and
-depends on GeoPandas 0.4.0 or later and matplotlib 2.2.4 or later.
+depends on GeoPandas 0.8.2 or later and matplotlib 3.3.3 or later.
 Please make sure that you are operating in a Python 3 environment.
 
 splot also uses
