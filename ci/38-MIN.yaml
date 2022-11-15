@@ -14,7 +14,7 @@ dependencies:
   - giddy
   - libpysal
   - mapclassify
-  - matplotlib==2.2.2
+  - matplotlib==2.2.4
   - numpy
   - packaging
   - pip
