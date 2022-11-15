@@ -89,7 +89,6 @@ jobs:
       - name: spatial versions
         shell: bash -l {0}
         run: 'python -c "import geopandas; geopandas.show_versions();"'
-        if: contains(matrix.environment-file, 'DEV') || contains(matrix.environment-file, 'BASE')
 
       - name: run tests - bash
         shell: bash -l {0}

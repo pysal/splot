@@ -10,7 +10,7 @@ dependencies:
   # required
   - bokeh
   - esda
-  - geopandas==0.8.2
+  - geopandas==0.9.0
   - giddy
   - libpysal
   - mapclassify
