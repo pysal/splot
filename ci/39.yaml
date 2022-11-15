@@ -15,7 +15,7 @@ dependencies:
   - ipywidgets
   - libpysal
   - mapclassify
-  - matplotlib
+  - matplotlib>=2.2.2
   - numpy
   - packaging
   - pip

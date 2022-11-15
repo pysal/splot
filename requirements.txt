@@ -3,7 +3,7 @@ geopandas>=0.4.0
 giddy
 libpysal
 mapclassify
-matplotlib
+matplotlib>=2.2.2
 numpy
 packaging
 seaborn>=0.11.0

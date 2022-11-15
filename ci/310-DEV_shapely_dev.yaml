@@ -12,7 +12,7 @@ dependencies:
   - bokeh
   - geopandas>=0.12.0
   - ipywidgets
-  - matplotlib
+  - matplotlib>=2.2.2
   - numpy
   - packaging
   - pip
