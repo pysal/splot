@@ -22,7 +22,7 @@ If you are new to `splot` and `PySAL` you will best get started with our [docume
 
 ### Installing dependencies
 
-`splot` is compatible with `Python` 3.8+ and depends on `geopandas` 0.4.0 or later and `matplotlib` 2.2.2 or later.
+`splot` is compatible with `Python` 3.8+ and depends on `geopandas` 0.4.0 or later and `matplotlib` 2.2.4 or later.
 
 splot also uses
 
