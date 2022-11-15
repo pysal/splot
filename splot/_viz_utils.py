@@ -1,8 +1,17 @@
 import mapclassify as classify
+import matplotlib
 import matplotlib as mpl
-import matplotlib.cm as cm
-import matplotlib.pyplot as plt
 import numpy as np
+from packaging.version import Version
+
+# isolate MPL version - GH#162
+MPL_36 = Version(matplotlib.__version__) >= Version("3.6")
+if MPL_36:
+    from matplotlib import colormaps as cm
+else:
+    import matplotlib.cm as cm
+    import matplotlib.pyplot as plt
+
 
 """
 Utility functions for lightweight visualizations in splot
@@ -301,8 +310,17 @@ def shift_colormap(  # noqa E302
         cdict["blue"].append((si, b, b))
         cdict["alpha"].append((si, a, a))
 
+    """
     new_cmap = mpl.colors.LinearSegmentedColormap(name, cdict)
     plt.register_cmap(cmap=new_cmap)
+    return new_cmap
+    """
+
+    new_cmap = mpl.colors.LinearSegmentedColormap(name, cdict)
+    if MPL_36:
+        cm.register(new_cmap)
+    else:
+        plt.register_cmap(cmap=new_cmap)
     return new_cmap
 
 
@@ -329,6 +347,7 @@ def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
     -------
     new_cmap : A new colormap that has been shifted.
     """
+
     if isinstance(cmap, str):
         cmap = cm.get_cmap(cmap)
 

@@ -14,8 +14,9 @@ dependencies:
   - ipywidgets
   - matplotlib
   - numpy
+  - packaging
   - pip
-  - seaborn>=0.11.0
+  - seaborn
   - shapely>=2.0b1
   # formatting
   - black

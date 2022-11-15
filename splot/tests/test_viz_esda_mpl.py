@@ -2,10 +2,10 @@ import geopandas as gpd
 import libpysal as lp
 import matplotlib.pyplot as plt
 import numpy as np
+import pytest
 from esda.moran import Moran, Moran_BV, Moran_BV_matrix, Moran_Local, Moran_Local_BV
 from libpysal import examples
 from libpysal.weights.contiguity import Queen
-from pytest import raises, warns
 
 from splot._viz_esda_mpl import (
     _moran_bv_scatterplot,
@@ -51,18 +51,25 @@ def test_moran_scatterplot():
     y = gdf["Donatns"].values
     w = Queen.from_dataframe(gdf)
     w.transform = "r"
+
     # Calculate `esda.moran` Objects
     moran = Moran(y, w)
     moran_bv = Moran_BV(y, x, w)
     moran_loc = Moran_Local(y, w)
     moran_loc_bv = Moran_Local_BV(y, x, w)
+
     # try with p value so points are colored or warnings apply
-    fig, _ = moran_scatterplot(moran, p=0.05, aspect_equal=False)
-    plt.close(fig)
+    with pytest.warns(UserWarning, match="`p` is only used for plotting"):
+        fig, _ = moran_scatterplot(moran, p=0.05, aspect_equal=False)
+        plt.close(fig)
+
     fig, _ = moran_scatterplot(moran_loc, p=0.05)
     plt.close(fig)
-    fig, _ = moran_scatterplot(moran_bv, p=0.05)
-    plt.close(fig)
+
+    with pytest.warns(UserWarning, match="`p` is only used for plotting"):
+        fig, _ = moran_scatterplot(moran_bv, p=0.05)
+        plt.close(fig)
+
     fig, _ = moran_scatterplot(moran_loc_bv, p=0.05)
     plt.close(fig)
 
@@ -211,8 +218,8 @@ def test_moran_loc_scatterplot():
     )
     plt.close(fig)
 
-    raises(ValueError, _moran_loc_scatterplot, moran_bv, p=0.5)
-    warns(
+    pytest.raises(ValueError, _moran_loc_scatterplot, moran_bv, p=0.5)
+    pytest.warns(
         UserWarning,
         _moran_loc_scatterplot,
         moran_loc,
@@ -253,30 +260,32 @@ def test_plot_local_autocorrelation():
     plt.close(fig)
 
     # also test with quadrant and mask
-    fig, _ = plot_local_autocorrelation(
-        moran_loc,
-        df,
-        "HOVAL",
-        p=0.05,
-        region_column="POLYID",
-        aspect_equal=False,
-        mask=["1", "2", "3"],
-        quadrant=1,
-    )
-    plt.close(fig)
+    with pytest.warns(UserWarning, match="Values in `mask` are not the same dtype"):
+        fig, _ = plot_local_autocorrelation(
+            moran_loc,
+            df,
+            "HOVAL",
+            p=0.05,
+            region_column="POLYID",
+            aspect_equal=False,
+            mask=["1", "2", "3"],
+            quadrant=1,
+        )
+        plt.close(fig)
 
     # also test with quadrant and mask
-    raises(
-        ValueError,
-        plot_local_autocorrelation,
-        moran_loc,
-        df,
-        "HOVAL",
-        p=0.05,
-        region_column="POLYID",
-        mask=["100", "200", "300"],
-        quadrant=1,
-    )
+    with pytest.warns(UserWarning, match="Values in `mask` are not the same dtype"):
+        pytest.raises(
+            ValueError,
+            plot_local_autocorrelation,
+            moran_loc,
+            df,
+            "HOVAL",
+            p=0.05,
+            region_column="POLYID",
+            mask=["100", "200", "300"],
+            quadrant=1,
+        )
 
 
 def test_moran_loc_bv_scatterplot():
@@ -296,8 +305,8 @@ def test_moran_loc_bv_scatterplot():
     fig, _ = _moran_loc_bv_scatterplot(moran_loc_bv, p=0.05, aspect_equal=False)
     plt.close(fig)
 
-    raises(ValueError, _moran_loc_bv_scatterplot, moran_loc, p=0.5)
-    warns(
+    pytest.raises(ValueError, _moran_loc_bv_scatterplot, moran_loc, p=0.5)
+    pytest.warns(
         UserWarning,
         _moran_loc_bv_scatterplot,
         moran_loc_bv,

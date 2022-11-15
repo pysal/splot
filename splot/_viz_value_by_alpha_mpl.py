@@ -1,11 +1,20 @@
 import collections.abc
 
-import matplotlib.cm as cm
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import colors, patches
+from packaging.version import Version
 
 from ._viz_utils import _classifiers, format_legend
+
+# isolate MPL version - GH#162
+MPL_36 = Version(matplotlib.__version__) >= Version("3.6")
+if MPL_36:
+    from matplotlib import colormaps as cm
+else:
+    import matplotlib.cm as cm
+
 
 """
 Creating Maps with splot

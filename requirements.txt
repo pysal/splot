@@ -1,9 +1,10 @@
 esda
-geopandas>=0.4.0
+geopandas>=0.9.0
 giddy
 libpysal
 mapclassify
-matplotlib
+matplotlib>=3.3.3
 numpy
+packaging
 seaborn>=0.11.0
 spreg
