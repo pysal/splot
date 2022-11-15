@@ -17,6 +17,7 @@ dependencies:
   - mapclassify
   - matplotlib
   - numpy
+  - packaging
   - pip
   - seaborn>=0.11.0
   - spreg

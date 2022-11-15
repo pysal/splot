@@ -143,8 +143,8 @@ def moran_scatterplot(
     elif isinstance(moran, Moran_BV):
         if p is not None:
             warnings.warn(
-                "`p` is only used for plotting `esda.moran.Moran_Local`\n"
-                "or `Moran_Local_BV` objects"
+                "`p` is only used for plotting `esda.moran.Moran_Local` "
+                "or `Moran_Local_BV` objects."
             )
         fig, ax = _moran_bv_scatterplot(
             moran_bv=moran,
