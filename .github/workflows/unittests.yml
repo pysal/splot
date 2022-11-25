@@ -61,7 +61,7 @@ jobs:
         run: |
           pip install git+https://github.com/pysal/libpysal.git@master
           pip install git+https://github.com/pysal/mapclassify.git@main
-          pip install git+https://github.com/pysal/esda.git@master
+          pip install git+https://github.com/pysal/esda.git@main
           pip install git+https://github.com/pysal/spreg.git@main
           pip install git+https://github.com/pysal/giddy.git@main
         if: matrix.os == 'ubuntu-latest' && contains(matrix.environment-file, 'DEV')
