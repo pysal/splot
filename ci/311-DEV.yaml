@@ -1,23 +1,21 @@
 name: test
 channels:
   - conda-forge
-  - conda-forge/label/shapely_dev
 dependencies:
-  - python=3.10
+  - python=3.11
   # testing
   - codecov
   - pytest
   - pytest-cov
   # required
   - bokeh
-  - geopandas>=0.12.0
+  - geopandas
   - ipywidgets
   - matplotlib
   - numpy
   - packaging
   - pip
-  - seaborn
-  - shapely>=2.0b1
+  - seaborn>=0.11.0
   # formatting
   - black
   - flake8

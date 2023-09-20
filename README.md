@@ -1,6 +1,6 @@
 # splot
 
-[![unittests](https://github.com/pysal/splot/workflows/.github/workflows/unittests.yml/badge.svg)](https://github.com/pysal/splot/actions?query=workflow%3A.github%2Fworkflows%2Funittests.yml)
+[![Continuous Integration](https://github.com/pysal/splot/actions/workflows/unittests.yml/badge.svg)](https://github.com/pysal/splot/actions/workflows/unittests.yml)
 [![codecov](https://codecov.io/gh/pysal/splot/branch/main/graph/badge.svg)](https://codecov.io/gh/pysal/splot)
 [![Documentation Status](https://readthedocs.org/projects/splot/badge/?version=latest)](https://splot.readthedocs.io/en/latest/?badge=latest)
 [![PyPI version](https://badge.fury.io/py/splot.svg)](https://badge.fury.io/py/splot)
