@@ -6,6 +6,7 @@ import numpy
 import seaborn as sbn
 from esda.moran import Moran, Moran_BV, Moran_Local, Moran_Local_BV
 from libpysal.weights.spatial_lag import lag_spatial
+from libpysal.weights import W
 from matplotlib import colors, patches
 from spreg import OLS
 
@@ -275,7 +276,10 @@ def _moran_global_scatterplot(
 
     # plot and set standards
     if zstandard is True:
-        lag = lag_spatial(moran.w, moran.z)
+        if isinstance(moran.w, W):
+            lag = lag_spatial(moran.w, moran.z)
+        else:
+            lag = moran.w.lag(moran.z)
         fit = OLS(moran.z[:, None], lag[:, None])
         # plot
         ax.scatter(moran.z, lag, **scatter_kwds)
@@ -284,7 +288,10 @@ def _moran_global_scatterplot(
         ax.axvline(0, alpha=0.5, color="k", linestyle="--")
         ax.axhline(0, alpha=0.5, color="k", linestyle="--")
     else:
-        lag = lag_spatial(moran.w, moran.y)
+        if isinstance(moran.w, W):
+            lag = lag_spatial(moran.w, moran.y)
+        else:
+            lag = moran.w.lag(moran.y)
         b, a = numpy.polyfit(moran.y, lag, 1)
         # plot
         ax.scatter(moran.y, lag, **scatter_kwds)
