@@ -573,7 +573,10 @@ def _moran_bv_scatterplot(
     ax.set_title("Bivariate Moran Scatterplot" + " (" + str(round(moran_bv.I, 2)) + ")")
 
     # plot and set standards
-    lag = lag_spatial(moran_bv.w, moran_bv.zy)
+    if isinstance(moran_bv.w, W):
+        lag = lag_spatial(moran_bv.w, moran_bv.zy)
+    else:
+        lag = moran_bv.w.lag(moran_bv.zy)
     fit = OLS(moran_bv.zy[:, None], lag[:, None])
     # plot
     ax.scatter(moran_bv.zx, lag, **scatter_kwds)
@@ -869,7 +872,10 @@ def _moran_loc_scatterplot(
 
     # plot and set standards
     if zstandard is True:
-        lag = lag_spatial(moran_loc.w, moran_loc.z)
+        if isinstance(moran_loc.w, W):
+            lag = lag_spatial(moran_loc.w, moran_loc.z)
+        else:
+            lag = moran_loc.w.lag(moran_loc.z)
         fit = OLS(moran_loc.z[:, None], lag[:, None])
         # v- and hlines
         ax.axvline(0, alpha=0.5, color="k", linestyle="--")
@@ -886,7 +892,10 @@ def _moran_loc_scatterplot(
             ax.plot(lag, fit.predy, **fitline_kwds)
             ax.scatter(moran_loc.z, fit.predy, **scatter_kwds)
     else:
-        lag = lag_spatial(moran_loc.w, moran_loc.y)
+        if isinstance(moran_loc.w, W):
+            lag = lag_spatial(moran_loc.w, moran_loc.y)
+        else:
+            lag = moran_loc.w.lag(moran_loc.y)
         b, a = numpy.polyfit(moran_loc.y, lag, 1)
         # dashed vert at mean of the attribute
         ax.vlines(moran_loc.y.mean(), lag.min(), lag.max(), alpha=0.5, linestyle="--")
@@ -1224,7 +1233,10 @@ def plot_local_autocorrelation(
 
         df_mask = gdf[ix]
         x_mask = moran_loc.z[ix]
-        y_mask = lag_spatial(moran_loc.w, moran_loc.z)[ix]
+        if isinstance(moran_loc.w, W):
+            y_mask = lag_spatial(moran_loc.w, moran_loc.z)[ix]
+        else:
+            y_mask = moran_loc.w.lag(moran_loc.z)[ix]
         axs[0].plot(
             x_mask,
             y_mask,
@@ -1355,7 +1367,10 @@ def _moran_loc_bv_scatterplot(
     ax.set_title("Moran BV Local Scatterplot")
 
     # plot and set standards
-    lag = lag_spatial(moran_loc_bv.w, moran_loc_bv.zy)
+    if isinstance(moran_loc_bv.w, W):
+        lag = lag_spatial(moran_loc_bv.w, moran_loc_bv.zy)
+    else:
+        lag = moran_loc_bv.w.lag(moran_loc_bv.zy)
     fit = OLS(moran_loc_bv.zy[:, None], lag[:, None])
     # v- and hlines
     ax.axvline(0, alpha=0.5, color="k", linestyle="--")
