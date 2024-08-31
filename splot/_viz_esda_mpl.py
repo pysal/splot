@@ -6,7 +6,6 @@ import numpy
 import seaborn as sbn
 from esda.moran import Moran, Moran_BV, Moran_Local, Moran_Local_BV
 from libpysal.weights.spatial_lag import lag_spatial
-from libpysal.weights import W
 from matplotlib import colors, patches
 from spreg import OLS
 
@@ -276,10 +275,7 @@ def _moran_global_scatterplot(
 
     # plot and set standards
     if zstandard is True:
-        if isinstance(moran.w, W):
-            lag = lag_spatial(moran.w, moran.z)
-        else:
-            lag = moran.w.lag(moran.z)
+        lag = lag_spatial(moran.w, moran.z)
         fit = OLS(moran.z[:, None], lag[:, None])
         # plot
         ax.scatter(moran.z, lag, **scatter_kwds)
@@ -288,10 +284,7 @@ def _moran_global_scatterplot(
         ax.axvline(0, alpha=0.5, color="k", linestyle="--")
         ax.axhline(0, alpha=0.5, color="k", linestyle="--")
     else:
-        if isinstance(moran.w, W):
-            lag = lag_spatial(moran.w, moran.y)
-        else:
-            lag = moran.w.lag(moran.y)
+        lag = lag_spatial(moran.w, moran.y)
         b, a = numpy.polyfit(moran.y, lag, 1)
         # plot
         ax.scatter(moran.y, lag, **scatter_kwds)
@@ -573,10 +566,7 @@ def _moran_bv_scatterplot(
     ax.set_title("Bivariate Moran Scatterplot" + " (" + str(round(moran_bv.I, 2)) + ")")
 
     # plot and set standards
-    if isinstance(moran_bv.w, W):
-        lag = lag_spatial(moran_bv.w, moran_bv.zy)
-    else:
-        lag = moran_bv.w.lag(moran_bv.zy)
+    lag = lag_spatial(moran_bv.w, moran_bv.zy)
     fit = OLS(moran_bv.zy[:, None], lag[:, None])
     # plot
     ax.scatter(moran_bv.zx, lag, **scatter_kwds)
@@ -853,9 +843,8 @@ def _moran_loc_scatterplot(
 
         # colors
         spots = moran_hot_cold_spots(moran_loc, p)
-        hmap = colors.ListedColormap(
-            ["#bababa", "#d7191c", "#abd9e9", "#2c7bb6", "#fdae61"]
-        )
+        color_all = numpy.array(["#bababa", "#d7191c", "#abd9e9", "#2c7bb6", "#fdae61"])
+        hmap = colors.ListedColormap(color_all[list(numpy.unique(spots))])
 
     # define customization
     scatter_kwds.setdefault("alpha", 0.6)
@@ -872,10 +861,7 @@ def _moran_loc_scatterplot(
 
     # plot and set standards
     if zstandard is True:
-        if isinstance(moran_loc.w, W):
-            lag = lag_spatial(moran_loc.w, moran_loc.z)
-        else:
-            lag = moran_loc.w.lag(moran_loc.z)
+        lag = lag_spatial(moran_loc.w, moran_loc.z)
         fit = OLS(moran_loc.z[:, None], lag[:, None])
         # v- and hlines
         ax.axvline(0, alpha=0.5, color="k", linestyle="--")
@@ -883,19 +869,17 @@ def _moran_loc_scatterplot(
         if p is not None:
             fitline_kwds.setdefault("color", "k")
             scatter_kwds.setdefault("cmap", hmap)
-            scatter_kwds.setdefault("c", spots)
+            scatter_kwds.setdefault("c", numpy.sort(spots))
             ax.plot(lag, fit.predy, **fitline_kwds)
-            ax.scatter(moran_loc.z, fit.predy, **scatter_kwds)
+            ax.scatter(moran_loc.z[spots.argsort()], fit.predy[spots.argsort()],
+                       **scatter_kwds)
         else:
             scatter_kwds.setdefault("color", splot_colors["moran_base"])
             fitline_kwds.setdefault("color", splot_colors["moran_fit"])
             ax.plot(lag, fit.predy, **fitline_kwds)
             ax.scatter(moran_loc.z, fit.predy, **scatter_kwds)
     else:
-        if isinstance(moran_loc.w, W):
-            lag = lag_spatial(moran_loc.w, moran_loc.y)
-        else:
-            lag = moran_loc.w.lag(moran_loc.y)
+        lag = lag_spatial(moran_loc.w, moran_loc.y)
         b, a = numpy.polyfit(moran_loc.y, lag, 1)
         # dashed vert at mean of the attribute
         ax.vlines(moran_loc.y.mean(), lag.min(), lag.max(), alpha=0.5, linestyle="--")
@@ -906,9 +890,10 @@ def _moran_loc_scatterplot(
         if p is not None:
             fitline_kwds.setdefault("color", "k")
             scatter_kwds.setdefault("cmap", hmap)
-            scatter_kwds.setdefault("c", spots)
+            scatter_kwds.setdefault("c", numpy.sort(spots))
             ax.plot(moran_loc.y, a + b * moran_loc.y, **fitline_kwds)
-            ax.scatter(moran_loc.y, lag, **scatter_kwds)
+            ax.scatter(moran_loc.y[spots.argsort()], lag[spots.argsort()],
+                       **scatter_kwds)
         else:
             scatter_kwds.setdefault("c", splot_colors["moran_base"])
             fitline_kwds.setdefault("color", splot_colors["moran_fit"])
@@ -1233,10 +1218,7 @@ def plot_local_autocorrelation(
 
         df_mask = gdf[ix]
         x_mask = moran_loc.z[ix]
-        if isinstance(moran_loc.w, W):
-            y_mask = lag_spatial(moran_loc.w, moran_loc.z)[ix]
-        else:
-            y_mask = moran_loc.w.lag(moran_loc.z)[ix]
+        y_mask = lag_spatial(moran_loc.w, moran_loc.z)[ix]
         axs[0].plot(
             x_mask,
             y_mask,
@@ -1367,10 +1349,7 @@ def _moran_loc_bv_scatterplot(
     ax.set_title("Moran BV Local Scatterplot")
 
     # plot and set standards
-    if isinstance(moran_loc_bv.w, W):
-        lag = lag_spatial(moran_loc_bv.w, moran_loc_bv.zy)
-    else:
-        lag = moran_loc_bv.w.lag(moran_loc_bv.zy)
+    lag = lag_spatial(moran_loc_bv.w, moran_loc_bv.zy)
     fit = OLS(moran_loc_bv.zy[:, None], lag[:, None])
     # v- and hlines
     ax.axvline(0, alpha=0.5, color="k", linestyle="--")
