@@ -276,10 +276,10 @@ def _moran_global_scatterplot(
     # plot and set standards
     if zstandard is True:
         lag = lag_spatial(moran.w, moran.z)
-        fit = OLS(moran.z[:, None], lag[:, None])
+        fit = OLS(lag[:, None], moran.z[:, None])
         # plot
         ax.scatter(moran.z, lag, **scatter_kwds)
-        ax.plot(lag, fit.predy, **fitline_kwds)
+        ax.plot(moran.z, fit.predy, **fitline_kwds)
         # v- and hlines
         ax.axvline(0, alpha=0.5, color="k", linestyle="--")
         ax.axhline(0, alpha=0.5, color="k", linestyle="--")
@@ -390,7 +390,7 @@ def plot_moran(
     aspect_equal=True,
     scatter_kwds=None,
     fitline_kwds=None,
-    **kwargs
+    **kwargs,
 ):
     """
     Global Moran's I simulated reference distribution and scatterplot.
@@ -567,10 +567,10 @@ def _moran_bv_scatterplot(
 
     # plot and set standards
     lag = lag_spatial(moran_bv.w, moran_bv.zy)
-    fit = OLS(moran_bv.zy[:, None], lag[:, None])
+    fit = OLS(lag[:, None], moran_bv.zx[:, None])
     # plot
     ax.scatter(moran_bv.zx, lag, **scatter_kwds)
-    ax.plot(lag, fit.predy, **fitline_kwds)
+    ax.plot(moran_bv.zx, fit.predy, **fitline_kwds)
     # v- and hlines
     ax.axvline(0, alpha=0.5, color="k", linestyle="--")
     ax.axhline(0, alpha=0.5, color="k", linestyle="--")
@@ -862,7 +862,10 @@ def _moran_loc_scatterplot(
     # plot and set standards
     if zstandard is True:
         lag = lag_spatial(moran_loc.w, moran_loc.z)
-        fit = OLS(moran_loc.z[:, None], lag[:, None])
+        fit = OLS(
+            lag[:, None],
+            moran_loc.z[:, None],
+        )
         # v- and hlines
         ax.axvline(0, alpha=0.5, color="k", linestyle="--")
         ax.axhline(0, alpha=0.5, color="k", linestyle="--")
@@ -870,14 +873,14 @@ def _moran_loc_scatterplot(
             fitline_kwds.setdefault("color", "k")
             scatter_kwds.setdefault("cmap", hmap)
             scatter_kwds.setdefault("c", numpy.sort(spots))
-            ax.plot(lag, fit.predy, **fitline_kwds)
-            ax.scatter(moran_loc.z[spots.argsort()], fit.predy[spots.argsort()],
+            ax.plot(moran_loc.z, fit.predy, **fitline_kwds)
+            ax.scatter(moran_loc.z[spots.argsort()], lag[spots.argsort()],
                        **scatter_kwds)
         else:
             scatter_kwds.setdefault("color", splot_colors["moran_base"])
             fitline_kwds.setdefault("color", splot_colors["moran_fit"])
-            ax.plot(lag, fit.predy, **fitline_kwds)
-            ax.scatter(moran_loc.z, fit.predy, **scatter_kwds)
+            ax.plot(moran_loc.z, fit.predy, **fitline_kwds)
+            ax.scatter(moran_loc.z, lag, **scatter_kwds)
     else:
         lag = lag_spatial(moran_loc.w, moran_loc.y)
         b, a = numpy.polyfit(moran_loc.y, lag, 1)
@@ -989,7 +992,7 @@ def lisa_cluster(
             edgecolor="white",
             legend=legend,
             legend_kwds=legend_kwds,
-            **kwargs
+            **kwargs,
         )
     else:
         gdf.assign(cl=labels).plot(
@@ -1001,7 +1004,7 @@ def lisa_cluster(
             ax=ax,
             legend=legend,
             legend_kwds=legend_kwds,
-            **kwargs
+            **kwargs,
         )
     ax.set_axis_off()
     ax.set_aspect("equal")
@@ -1350,7 +1353,7 @@ def _moran_loc_bv_scatterplot(
 
     # plot and set standards
     lag = lag_spatial(moran_loc_bv.w, moran_loc_bv.zy)
-    fit = OLS(moran_loc_bv.zy[:, None], lag[:, None])
+    fit = OLS(lag[:, None], moran_loc_bv.zx[:, None])
     # v- and hlines
     ax.axvline(0, alpha=0.5, color="k", linestyle="--")
     ax.axhline(0, alpha=0.5, color="k", linestyle="--")
@@ -1358,13 +1361,13 @@ def _moran_loc_bv_scatterplot(
         fitline_kwds.setdefault("color", "k")
         scatter_kwds.setdefault("cmap", hmap)
         scatter_kwds.setdefault("c", spots_bv)
-        ax.plot(lag, fit.predy, **fitline_kwds)
-        ax.scatter(moran_loc_bv.zx, fit.predy, **scatter_kwds)
+        ax.plot(moran_loc_bv.zx, fit.predy, **fitline_kwds)
+        ax.scatter(moran_loc_bv.zx, lag, **scatter_kwds)
     else:
         scatter_kwds.setdefault("color", splot_colors["moran_base"])
         fitline_kwds.setdefault("color", splot_colors["moran_fit"])
-        ax.plot(lag, fit.predy, **fitline_kwds)
-        ax.scatter(moran_loc_bv.zy, fit.predy, **scatter_kwds)
+        ax.plot(moran_loc_bv.zx, fit.predy, **fitline_kwds)
+        ax.scatter(moran_loc_bv.zx, lag, **scatter_kwds)
     return fig, ax
 
 
