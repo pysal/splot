@@ -843,9 +843,8 @@ def _moran_loc_scatterplot(
 
         # colors
         spots = moran_hot_cold_spots(moran_loc, p)
-        hmap = colors.ListedColormap(
-            ["#bababa", "#d7191c", "#abd9e9", "#2c7bb6", "#fdae61"]
-        )
+        color_all = numpy.array(["#bababa", "#d7191c", "#abd9e9", "#2c7bb6", "#fdae61"])
+        hmap = colors.ListedColormap(color_all[list(numpy.unique(spots))])
 
     # define customization
     scatter_kwds.setdefault("alpha", 0.6)
@@ -873,9 +872,10 @@ def _moran_loc_scatterplot(
         if p is not None:
             fitline_kwds.setdefault("color", "k")
             scatter_kwds.setdefault("cmap", hmap)
-            scatter_kwds.setdefault("c", spots)
+            scatter_kwds.setdefault("c", numpy.sort(spots))
             ax.plot(moran_loc.z, fit.predy, **fitline_kwds)
-            ax.scatter(moran_loc.z, lag, **scatter_kwds)
+            ax.scatter(moran_loc.z[spots.argsort()], lag[spots.argsort()],
+                       **scatter_kwds)
         else:
             scatter_kwds.setdefault("color", splot_colors["moran_base"])
             fitline_kwds.setdefault("color", splot_colors["moran_fit"])
@@ -893,9 +893,10 @@ def _moran_loc_scatterplot(
         if p is not None:
             fitline_kwds.setdefault("color", "k")
             scatter_kwds.setdefault("cmap", hmap)
-            scatter_kwds.setdefault("c", spots)
+            scatter_kwds.setdefault("c", numpy.sort(spots))
             ax.plot(moran_loc.y, a + b * moran_loc.y, **fitline_kwds)
-            ax.scatter(moran_loc.y, lag, **scatter_kwds)
+            ax.scatter(moran_loc.y[spots.argsort()], lag[spots.argsort()],
+                       **scatter_kwds)
         else:
             scatter_kwds.setdefault("c", splot_colors["moran_base"])
             fitline_kwds.setdefault("color", splot_colors["moran_fit"])
