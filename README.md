@@ -1,3 +1,5 @@
+**`splot` is in the process of being archived. It's functionality is being integrated into associated PySAL project.**
+
 # splot
 
 [![Continuous Integration](https://github.com/pysal/splot/actions/workflows/unittests.yml/badge.svg)](https://github.com/pysal/splot/actions/workflows/unittests.yml)
