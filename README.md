@@ -1,4 +1,4 @@
-**`splot` is in the process of being archived. It's functionality is being integrated into associated PySAL project.**
+**`splot` is in the process of being archived. It's functionality is being integrated into associated PySAL projects.**
 
 # splot
 
