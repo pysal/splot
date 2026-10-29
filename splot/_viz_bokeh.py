@@ -156,8 +156,8 @@ def _plot_choropleth_fig(
     # Create figure
     fig = figure(
         title=title,
-        plot_width=plot_width,
-        plot_height=plot_height,
+        width=plot_width,
+        height=plot_height,
         tools=tools,
         x_range=(x_min, x_max),
         y_range=(y_min, y_max),
@@ -199,7 +199,7 @@ def _plot_choropleth_fig(
     # change layout
     fig.xgrid.grid_line_color = None
     fig.ygrid.grid_line_color = None
-    fig.axis.visible = None
+    fig.axis.visible = False
     return fig
 
 
@@ -308,8 +308,8 @@ def _lisa_cluster_fig(
     fig = figure(
         title=title,
         toolbar_location="right",
-        plot_width=plot_width,
-        plot_height=plot_height,
+        width=plot_width,
+        height=plot_height,
         x_range=(x_min, x_max),
         y_range=(y_min, y_max),
         tools=tools,
@@ -348,7 +348,7 @@ def _lisa_cluster_fig(
     # change layout
     fig.xgrid.grid_line_color = None
     fig.ygrid.grid_line_color = None
-    fig.axis.visible = None
+    fig.axis.visible = False
     return fig
 
 
@@ -471,8 +471,8 @@ def _moran_scatterplot_fig(
         x_axis_label="Response",
         y_axis_label="Spatial Lag",
         toolbar_location="left",
-        plot_width=plot_width,
-        plot_height=plot_height,
+        width=plot_width,
+        height=plot_height,
         tools=tools,
     )
     fig.scatter(
